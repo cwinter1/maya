@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>יומן הכוכבים · מאיה — מבדקים</title>
+<style>
+  :root {
+    --bg: #faf9f5;
+    --card: #fff;
+    --border: #e8e0d8;
+    --mauve: #8B3A52;
+    --mauve-light: #b5627a;
+    --gold: #C9A55C;
+    --text: #2B1F2D;
+    --muted: #7a6e74;
+    --green: #3a7d55;
+    --red: #a33;
+    --tab-active: #8B3A52;
+    --tab-inactive: #e8dde7;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #2B1F2D 0%, #4a2d3c 100%);
+    color: #fff;
+    padding: 28px 24px 20px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 {
+    font-family: serif;
+    font-size: 2rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  header p {
+    font-size: 0.85rem;
+    color: #c9b8c4;
+    margin-top: 4px;
+  }
+  .stars {
+    position: absolute;
+    top: 12px; left: 20px;
+    font-size: 0.7rem;
+    color: var(--gold);
+    opacity: 0.6;
+    letter-spacing: 6px;
+  }
+  .lucy {
+    position: absolute;
+    top: 14px; right: 20px;
+    font-size: 1.1rem;
+    opacity: 0.7;
+  }
+
+  /* Score bar */
+  .score-bar {
+    background: #3c2840;
+    padding: 10px 24px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #c9b8c4;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+  }
+  .score-bar span { color: var(--gold); font-weight: 700; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    background: var(--card);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 14px 8px;
+    border: none;
+    background: var(--tab-inactive);
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    font-family: inherit;
+  }
+  .tab-btn.active {
+    background: var(--card);
+    color: var(--mauve);
+    border-bottom-color: var(--mauve);
+  }
+  .tab-btn:hover:not(.active) {
+    background: #f0e8ed;
+  }
+
+  /* Content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .section-intro {
+    background: linear-gradient(135deg, #f5ebdd, #e8dde7);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .section-intro h2 {
+    font-family: serif;
+    font-size: 1.4rem;
+    color: var(--mauve);
+  }
+  .section-intro p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Questions */
+  .questions-list {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .q-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green); }
+  .q-card.wrong { border-color: var(--red); }
+
+  .q-header {
+    padding: 16px 18px 12px;
+  }
+  .q-num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  .q-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Answer area */
+  .q-answer {
+    padding: 12px 18px 14px;
+    border-top: 1px solid var(--border);
+    background: #fdf9f6;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .answer-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .ans-input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    flex: 1;
+    min-width: 120px;
+    text-align: right;
+    direction: rtl;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .ans-input:focus { border-color: var(--mauve-light); }
+  .ans-input.correct { border-color: var(--green); background: #f0faf5; }
+  .ans-input.wrong { border-color: var(--red); background: #fff5f5; }
+
+  .check-btn {
+    background: var(--mauve);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .check-btn:hover { background: var(--mauve-light); }
+  .check-btn:disabled { opacity: 0.5; cursor: default; }
+
+  .feedback {
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 20px;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+
+  /* Solution box */
+  .solution-box {
+    border-top: 1px dashed var(--border);
+    padding: 12px 18px;
+    background: #f5f0fa;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    color: #3d2b50;
+    display: none;
+  }
+  .solution-box.visible { display: block; }
+  .solution-label {
+    font-weight: 700;
+    color: var(--mauve);
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .show-solution-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    align-self: flex-start;
+  }
+  .show-solution-btn:hover { background: var(--border); }
+
+  /* Multiple choice */
+  .mc-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 18px 14px;
+    border-top: 1px solid var(--border);
+    background: #fdf9f6;
+  }
+  .mc-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.95rem;
+    text-align: right;
+    direction: rtl;
+  }
+  .mc-option:hover { border-color: var(--mauve-light); background: #fdf5f8; }
+  .mc-option.selected { border-color: var(--mauve); background: #fdf5f8; }
+  .mc-option.correct { border-color: var(--green); background: #f0faf5; }
+  .mc-option.wrong { border-color: var(--red); background: #fff5f5; }
+  .mc-option.reveal-correct { border-color: var(--green); background: #f0faf5; }
+
+  /* Formula reference */
+  .formula-ref {
+    background: linear-gradient(135deg, #2B1F2D, #3d2545);
+    color: #e8dde7;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 0 16px;
+    max-width: 720px;
+    margin: 0 auto 4px;
+  }
+  .formula-ref h3 {
+    color: var(--gold);
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+  .formula-item {
+    background: rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 8px 12px;
+    line-height: 1.5;
+  }
+  .formula-item strong { color: var(--gold); }
+
+  /* Progress */
+  .progress-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    background: var(--border);
+    border-radius: 99px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--mauve);
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* Reset */
+  .reset-btn {
+    display: block;
+    margin: 24px auto 0;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .reset-btn:hover { border-color: var(--mauve-light); color: var(--mauve); }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.5rem; }
+    .formula-grid { grid-template-columns: 1fr; }
+    .answer-row { flex-direction: column; align-items: stretch; }
+    .check-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="stars">✦ ✦ ✦</div>
+  <div class="lucy"><a href="index.html" style="color:inherit;text-decoration:none;font-size:0.75rem;opacity:0.7;">← דף הבית</a></div>
+  <h1>יומן הכוכבים · מאיה</h1>
+  <p>תרגול לקראת המבדקים — עיגול ומעגל · קנה-מידה ויחס</p>
+</header>
+
+<div class="score-bar">
+  <div>מבדק 1 — עיגול: <span id="score1">0</span> / <span id="total1">0</span></div>
+  <div>מבדק 2 — יחס: <span id="score2">0</span> / <span id="total2">0</span></div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(1)">מבדק 1 — עיגול ומעגל</button>
+  <button class="tab-btn" onclick="switchTab(2)">מבדק 2 — קנה-מידה ויחס</button>
+</div>
+
+<!-- TAB 1: CIRCLES -->
+<div id="tab1" class="tab-content active">
+  <div class="section-intro">
+    <h2>עיגול ומעגל</h2>
+    <p>מושגים · היקף · שטח · רדיוס · קוטר · מיתר · קשת</p>
+  </div>
+
+  <div class="questions-list" style="padding-top:8px;">
+    <div class="formula-ref">
+      <h3>נוסחאות — מסמכי עזר</h3>
+      <div class="formula-grid">
+        <div class="formula-item"><strong>היקף</strong> = 2 × R × 3.14</div>
+        <div class="formula-item"><strong>שטח</strong> = R × R × 3.14</div>
+        <div class="formula-item"><strong>קוטר</strong> = 2 × R</div>
+        <div class="formula-item"><strong>π</strong> ≈ 3.14</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <span id="prog1-text">0 מתוך 0</span>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog1-bar"></div></div>
+  </div>
+
+  <div class="questions-list" id="questions1"></div>
+  <button class="reset-btn" onclick="resetTab(1)">אפס תרגול</button>
+</div>
+
+<!-- TAB 2: SCALE & RATIO -->
+<div id="tab2" class="tab-content">
+  <div class="section-intro">
+    <h2>קנה-מידה ויחס</h2>
+    <p>קנה-מידה · מרחקים במפה · יחס מצומצם · בעיות יחס</p>
+  </div>
+
+  <div class="progress-section">
+    <span id="prog2-text">0 מתוך 0</span>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog2-bar"></div></div>
+  </div>
+
+  <div class="questions-list" id="questions2"></div>
+  <button class="reset-btn" onclick="resetTab(2)">אפס תרגול</button>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+
+const Q1 = [
+  // Concepts
+  {
+    id: 'c1', type: 'mc',
+    text: 'מה ההבדל בין מעגל לעיגול?',
+    options: [
+      'מעגל הוא הקו החיצוני (היקף), עיגול הוא השטח שבתוכו',
+      'עיגול הוא הקו החיצוני, מעגל הוא השטח שבתוכו',
+      'אין הבדל — שני המונחים זהים',
+      'מעגל הוא קטן, עיגול הוא גדול'
+    ],
+    answer: 0,
+    hint: 'מעגל = קו. עיגול = שטח. מה אתה מצייר עם מחוגה — הקו עצמו?',
+    solution: 'מעגל = אוסף הנקודות הנמצאות במרחק שווה (= הרדיוס) ממרכז. זהו הקו החיצוני בלבד.\nעיגול = השטח התחום בתוך המעגל.'
+  },
+  {
+    id: 'c2', type: 'mc',
+    text: 'מהו מיתר?',
+    options: [
+      'קטע המחבר את מרכז המעגל לנקודה על המעגל',
+      'קטע המחבר שתי נקודות על שפת המעגל',
+      'חלק מהמעגל בין שתי נקודות',
+      'קטע העובר דרך מרכז המעגל בלבד'
+    ],
+    answer: 1,
+    hint: 'מיתר הוא קו ישר. היכן נמצאות שתי נקודות הקצה שלו?',
+    solution: 'מיתר = קטע המחבר שתי נקודות על שפת המעגל.\nהמיתר הארוך ביותר הוא הקוטר — הוא עובר דרך המרכז.'
+  },
+  {
+    id: 'c3', type: 'mc',
+    text: 'קוטר שווה ל...',
+    options: [
+      'רדיוס אחד',
+      'שלושה רדיוסים',
+      'שני רדיוסים',
+      'מחצית הרדיוס'
+    ],
+    answer: 2,
+    hint: 'קוטר עובר דרך המרכז. בכמה רדיוסים הוא מחולק?',
+    solution: 'קוטר = 2 × רדיוס\nהקוטר עובר דרך מרכז המעגל ומחבר שתי נקודות על המעגל.'
+  },
+  {
+    id: 'c4', type: 'mc',
+    text: 'האם ייתכן מיתר שארוך מהקוטר?',
+    options: [
+      'כן, תמיד',
+      'לא — הקוטר הוא המיתר הארוך ביותר',
+      'כן, אם המיתר עובר קרוב למרכז',
+      'תלוי בגודל המעגל'
+    ],
+    answer: 1,
+    hint: 'קוטר הוא גם מיתר. האם יש מיתר שיכול להיות ארוך ממנו?',
+    solution: 'הקוטר הוא המיתר הארוך ביותר בכל מעגל. שום מיתר לא יכול להיות ארוך ממנו.\nלכן: "מיתר שאורכו גדול מאורך הקוטר" — אי אפשר לשרטט כזה!'
+  },
+  {
+    id: 'c5', type: 'mc',
+    text: 'מהי קשת?',
+    options: [
+      'קטע המחבר שתי נקודות על המעגל',
+      'חלק מהמעגל (הקו) המוגבל בשתי נקודות',
+      'השטח של גזרה',
+      'זווית בין שני רדיוסים'
+    ],
+    answer: 1,
+    hint: 'קשת היא חלק מהמעגל עצמו — לא קו ישר, אלא קשת מעוגלת.',
+    solution: 'קשת = חלק מהמעגל (מהקו עצמו) הנמצא בין שתי נקודות.\nהיא שונה ממיתר: מיתר הוא קו ישר, קשת היא הקשת המעוגלת.'
+  },
+  // Calculations
+  {
+    id: 'c6', type: 'input',
+    text: 'מעגל שרדיוסו 5 ס"מ.\nמה ההיקף? (עגלו לאחד אחרי הנקודה)',
+    note: 'השתמש בנוסחה: 2 × R × 3.14',
+    answer: ['31.4'],
+    hint: 'היקף = 2 × 5 × 3.14. כמה זה 2 × 5?',
+    solution: 'היקף = 2 × R × 3.14\n= 2 × 5 × 3.14\n= 10 × 3.14\n= 31.4 ס"מ'
+  },
+  {
+    id: 'c7', type: 'input',
+    text: 'מעגל שרדיוסו 5 ס"מ.\nמה השטח?',
+    note: 'השתמש בנוסחה: R × R × 3.14',
+    answer: ['78.5'],
+    hint: 'שטח = 5 × 5 × 3.14. כמה זה 5 × 5?',
+    solution: 'שטח = R × R × 3.14\n= 5 × 5 × 3.14\n= 25 × 3.14\n= 78.5 ס"מ²'
+  },
+  {
+    id: 'c8', type: 'input',
+    text: 'היקף מעגל הוא 62.8 ס"מ.\nמה הקוטר?',
+    note: 'היקף = 2 × R × 3.14 → R = היקף ÷ (2 × 3.14)',
+    answer: ['20'],
+    hint: 'קודם מצא את R: 62.8 ÷ 6.28 = R. ואז קוטר = 2 × R.',
+    solution: 'היקף = 2 × R × 3.14\n62.8 = 2 × R × 3.14\n62.8 = 6.28 × R\nR = 62.8 ÷ 6.28 = 10 ס"מ\nקוטר = 2 × R = 2 × 10 = 20 ס"מ'
+  },
+  {
+    id: 'c9', type: 'input',
+    text: 'היקף מעגל הוא 62.8 ס"מ.\nמה הרדיוס?',
+    answer: ['10'],
+    hint: 'היקף = 2 × R × 3.14. לכן R = 62.8 ÷ (2 × 3.14) = ?',
+    solution: 'היקף = 2 × R × 3.14\n62.8 = 6.28 × R\nR = 62.8 ÷ 6.28 = 10 ס"מ'
+  },
+  {
+    id: 'c10', type: 'input',
+    text: 'היקף מעגל הוא 62.8 ס"מ.\nמה השטח?',
+    answer: ['314'],
+    hint: 'R = 10. שטח = 10 × 10 × 3.14. כמה זה 100 × 3.14?',
+    solution: 'R = 10 ס"מ (מהשאלה הקודמת)\nשטח = R × R × 3.14\n= 10 × 10 × 3.14\n= 100 × 3.14\n= 314 ס"מ²'
+  },
+  {
+    id: 'c11', type: 'input',
+    text: 'מעגל שרדיוסו 7 ס"מ.\nמה ההיקף? (עגלו לאחד אחרי הנקודה)',
+    answer: ['43.96', '43.9'],
+    hint: 'היקף = 2 × 7 × 3.14 = 14 × 3.14. חשב.',
+    solution: 'היקף = 2 × 7 × 3.14\n= 14 × 3.14\n= 43.96 ס"מ'
+  },
+  {
+    id: 'c12', type: 'input',
+    text: 'מעגל שקוטרו 10 ס"מ.\nמה הרדיוס? ומה ההיקף?',
+    note: 'כתוב: רדיוס,היקף (מופרדים בפסיק)',
+    answer: ['5,31.4', '5, 31.4'],
+    hint: 'רדיוס = קוטר ÷ 2 = 5. היקף = 2 × 5 × 3.14.',
+    solution: 'קוטר = 10 → רדיוס = 10 ÷ 2 = 5 ס"מ\nהיקף = 2 × 5 × 3.14 = 31.4 ס"מ'
+  },
+  // Ratio of circles
+  {
+    id: 'c13', type: 'mc',
+    text: 'מעגל א עם רדיוס 3 ס"מ, מעגל ב עם רדיוס 6 ס"מ.\nפי כמה גדול היקף ב מהיקף א?',
+    options: ['פי 2', 'פי 4', 'פי 3', 'פי 6'],
+    answer: 0,
+    hint: 'הרדיוס של ב גדול פי 2 מ-א. מה קורה להיקף כשהרדיוס מוכפל ב-2?',
+    solution: 'היקף א = 2 × 3 × 3.14 = 18.84\nהיקף ב = 2 × 6 × 3.14 = 37.68\n37.68 ÷ 18.84 = 2\nכשהרדיוס מוכפל ב-2, ההיקף מוכפל ב-2 (יחס ישר).'
+  },
+  {
+    id: 'c14', type: 'mc',
+    text: 'אותם מעגלים (א רדיוס 3, ב רדיוס 6).\nפי כמה גדול שטח ב משטח א?',
+    options: ['פי 2', 'פי 4', 'פי 3', 'פי 6'],
+    answer: 1,
+    hint: 'שטח = R². אם R מוכפל ב-2, השטח מוכפל ב-2² = ?',
+    solution: 'שטח א = 3² × 3.14 = 9 × 3.14 = 28.26\nשטח ב = 6² × 3.14 = 36 × 3.14 = 113.04\n113.04 ÷ 28.26 = 4\nכשהרדיוס מוכפל ב-2, השטח מוכפל ב-4 (בריבוע)!'
+  },
+  {
+    id: 'c15', type: 'mc',
+    text: 'מדוע יחס ההיקפים שונה מיחס השטחים כשמשווים שני מעגלים?',
+    options: [
+      'כי היקף תלוי ב-R (יחס ישר), ושטח תלוי ב-R² (יחס ריבועי)',
+      'כי π שונה בשני המעגלים',
+      'כי שטח תמיד גדול מהיקף',
+      'אין הבדל — היחסים תמיד שווים'
+    ],
+    answer: 0,
+    hint: 'נוסחת היקף: 2πR. נוסחת שטח: πR². מה ההבדל בין R לבין R²?',
+    solution: 'היקף = 2πR → תלוי ב-R בחזקה ראשונה\nשטח = πR² → תלוי ב-R בחזקה שנייה\n\nאם R מוכפל ב-k:\n• היקף מוכפל ב-k\n• שטח מוכפל ב-k²\n\nלכן היחסים שונים!'
+  },
+  // Purim mask bonus
+  {
+    id: 'c16', type: 'input',
+    text: 'מסיכת פורים עם קוטר 14 ס"מ.\nמתוכה גזרו: 2 עיניים (קוטר 2 ס"מ כ"א) ופה (קוטר 4 ס"מ).\nהוסיפו 2 אוזניים (רדיוס 2 ס"מ כ"א).\nמה שטח המסיכה הסופית?',
+    note: 'שטח = המסיכה + 2 אוזניים − 2 עיניים − פה',
+    answer: ['153.86', '153.9', '160.14', '160.1'],
+    hint: 'מסיכה R=7, עין R=1, פה R=2, אוזן R=2. חשב כל אחד ואז חבר/חסר.',
+    solution: 'שטח מסיכה: R=7 → 49×3.14 = 153.86\nשטח 2 עיניים: R=1 → 2×(1×3.14) = 6.28\nשטח פה: R=2 → 4×3.14 = 12.56\nשטח 2 אוזניים: R=2 → 2×(4×3.14) = 25.12\n\nסה"כ = 153.86 + 25.12 − 6.28 − 12.56 = 160.14 ס"מ²'
+  },
+];
+
+const Q2 = [
+  // Scale concepts
+  {
+    id: 's1', type: 'mc',
+    text: 'קנה-המידה במפה הוא 1 : 25,000\nמה פירוש הדבר?',
+    options: [
+      '1 ס"מ במפה = 25,000 ס"מ במציאות (= 250 מ\')',
+      '25,000 ס"מ במפה = 1 ס"מ במציאות',
+      '1 ק"מ במפה = 25,000 ק"מ במציאות',
+      'המפה גדולה פי 25,000 מהמציאות'
+    ],
+    answer: 0,
+    hint: 'קנה-מידה 1:N אומר: 1 יחידה במפה = N יחידות במציאות. מי גדול יותר — המפה או המציאות?',
+    solution: 'קנה-מידה 1:25,000 אומר:\nכל יחידה במפה = 25,000 יחידות זהות במציאות.\n\n1 ס"מ במפה = 25,000 ס"מ = 250 מ\' = 0.25 ק"מ במציאות.'
+  },
+  {
+    id: 's2', type: 'input',
+    text: 'שביל מסומן במפה באורך 4 ס"מ.\nקנה-המידה הוא 1 : 25,000.\nמה אורך השביל במציאות בס"מ?',
+    answer: ['100000', '100,000'],
+    hint: 'מרחק במציאות = מרחק במפה × קנה-מידה = 4 × 25,000.',
+    solution: '4 ס"מ × 25,000 = 100,000 ס"מ במציאות\n(= 1,000 מ\' = 1 ק"מ)'
+  },
+  {
+    id: 's3', type: 'input',
+    text: 'מרחק על מפה בין בית לבית-ספר הוא 3 ס"מ.\nקנה-מידה: 1 : 1,000\nמה המרחק במציאות? (בס"מ)',
+    answer: ['3000', '3,000'],
+    hint: '3 × 1,000 = ?',
+    solution: '3 × 1,000 = 3,000 ס"מ = 30 מ\'.'
+  },
+  {
+    id: 's4', type: 'input',
+    text: 'מרחק על מפה בין בית לבית-ספר הוא 3 ס"מ.\nקנה-מידה: 1 : 400\nמה המרחק במציאות? (בס"מ)',
+    answer: ['1200', '1,200'],
+    hint: '3 × 400 = ?',
+    solution: '3 × 400 = 1,200 ס"מ = 12 מ\'.'
+  },
+  {
+    id: 's5', type: 'input',
+    text: 'מרחק בין הבית לקולנוע על המפה הוא 5 ס"מ.\nקנה-מידה: 1 : 500\nמה המרחק במציאות? (בס"מ)',
+    answer: ['2500', '2,500'],
+    hint: '5 × 500 = ?',
+    solution: '5 × 500 = 2,500 ס"מ = 25 מ\'.'
+  },
+  // Finding the scale
+  {
+    id: 's6', type: 'input',
+    text: 'המרחק על המפה בין נתניה לתל-אביב הוא 7 ס"מ.\nהמרחק האמיתי הוא 35 ק"מ = 3,500,000 ס"מ.\nמהו קנה-המידה? (כתוב: 1 : ____)',
+    note: 'קנה-מידה = מרחק במציאות ÷ מרחק במפה',
+    answer: ['1:500000', '1 : 500000', '1 : 500,000', '500000'],
+    hint: 'קנה-מידה = 3,500,000 ÷ 7 = ?',
+    solution: '3,500,000 ÷ 7 = 500,000\nקנה-המידה: 1 : 500,000\n\nאימות: 7 × 500,000 = 3,500,000 ס"מ = 35 ק"מ ✓'
+  },
+  // Ratio concepts
+  {
+    id: 's7', type: 'input',
+    text: 'בכיתה יש 20 בנות ו-16 בנים.\nמה היחס בין מספר הבנים למספר הבנות?',
+    note: 'כתוב כ: א : ב',
+    answer: ['16:20', '4:5'],
+    hint: 'בנים : בנות = 16 : 20. מה המחלק המשותף של 16 ו-20?',
+    solution: 'בנים : בנות = 16 : 20\nמצמצמים ב-4: 4 : 5'
+  },
+  {
+    id: 's8', type: 'input',
+    text: 'בכיתה יש 20 בנות ו-16 בנים (סה"כ 36 תלמידים).\nמה היחס המצומצם בין מספר הבנים למספר כל התלמידים?',
+    answer: ['16:36', '4:9'],
+    hint: 'בנים : כולם = 16 : 36. מה המחלק המשותף של 16 ו-36?',
+    solution: 'בנים : כולם = 16 : 36\nמצמצמים ב-4: 4 : 9'
+  },
+  {
+    id: 's9', type: 'input',
+    text: 'לכיתה נוספו 2 בנים ו-2 בנות (היו 20 בנות ו-16 בנים).\nמה היחס המצומצם בין בנים לבנות עכשיו?',
+    answer: ['18:22', '9:11'],
+    hint: 'בנים: 16+2=18, בנות: 20+2=22. יחס 18:22 — מה המחלק המשותף?',
+    solution: 'בנים: 16 + 2 = 18\nבנות: 20 + 2 = 22\nיחס: 18:22, מצמצמים ב-2: 9:11'
+  },
+  // Age ratio
+  {
+    id: 's10', type: 'mc',
+    text: 'היחס בין גיל רועי לגיל אמו הוא 2 : 9.\nאיזו מהאפשרויות הבאה אפשרית?',
+    options: [
+      'רועי בן 2, אמא בת 9',
+      'רועי בן 4, אמא בת 18',
+      'רועי בן 6, אמא בת 27',
+      'רועי בן 10, אמא בת 45'
+    ],
+    answer: 2,
+    hint: 'בדוק כל אפשרות: חלק את גיל הילד ב-2 ואז כפל ב-9 — האם מקבלת את גיל האמא?',
+    solution: 'צריך שיחס הגילים יהיה 2:9.\n6 ÷ 2 × 9 = 27 ✓ → רועי 6, אמא 27.\n\nאמא בת 9 — היא ילדה, לא הגיוני.\nאמא בת 18 עם ילד בן 4 — לידה בגיל 14, לא הגיוני.\nרועי 10, אמא 45 — נכון מבחינה מתמטית אך פחות הגיוני.'
+  },
+  {
+    id: 's11', type: 'mc',
+    text: 'אותו יחס: 2 : 9 (רועי : אמא).\nהאם ייתכן שרועי בן שנה?',
+    options: [
+      'כן, אמא תהיה בת 4.5',
+      'לא — גיל לא יכול להיות שבר (4.5)',
+      'כן, כל יחס מתאים',
+      'לא — הגיל חייב להיות לפחות 5'
+    ],
+    answer: 1,
+    hint: 'אם רועי = 1: אמא = 1 × 9 ÷ 2 = 4.5. האם גיל יכול להיות שבר?',
+    solution: 'אם רועי בן 1: אמא = 1 × (9/2) = 4.5 שנים.\nגיל אינו יכול להיות שבר (אנחנו עובדים עם שנים שלמות).\nלכן — לא ייתכן שרועי בן שנה.'
+  },
+  // Library ratio
+  {
+    id: 's12', type: 'input',
+    text: 'בספרייה 400 ספרים בעברית ו-50 באנגלית.\nמה היחס המצומצם: ספרים בעברית : ספרים באנגלית?',
+    answer: ['8:1', '400:50'],
+    hint: '400 : 50. חלק את שניהם ב-50.',
+    solution: '400 : 50\nמחלקים ב-50: 8 : 1'
+  },
+  {
+    id: 's13', type: 'input',
+    text: 'בספרייה 400 ספרים בעברית ו-50 באנגלית (סה"כ 450 ספרים).\nמה היחס המצומצם: כל הספרים : ספרים באנגלית?',
+    answer: ['9:1', '450:50'],
+    hint: '450 : 50. חלק את שניהם ב-50.',
+    solution: '450 : 50\nמחלקים ב-50: 9 : 1'
+  },
+  // Rectangle ratio
+  {
+    id: 's14', type: 'input',
+    text: 'מלבן עם היקף 40 ס"מ.\nהיחס בין צלע א לצלע ב הוא 3 : 2.\nמה אורך צלע א?',
+    note: 'סכום כל צלעות = 40. צלע א + צלע ב = 20 (מחצית היקף)',
+    answer: ['12'],
+    hint: 'א+ב=20. יחס 3:2 → א=3k, ב=2k. לכן 5k=20 → k=?. צלע א = 3k.',
+    solution: 'היקף = 2(א + ב) = 40 → א + ב = 20\nיחס 3:2 → א = 3k, ב = 2k\n3k + 2k = 20 → k = 4\nצלע א = 3 × 4 = 12 ס"מ'
+  },
+  {
+    id: 's15', type: 'input',
+    text: 'אותו מלבן (היקף 40 ס"מ, יחס 3:2).\nמה אורך צלע ב?',
+    answer: ['8'],
+    hint: 'k=4 (מהשאלה הקודמת). צלע ב = 2 × 4.',
+    solution: 'k = 4 (מהשאלה הקודמת)\nצלע ב = 2 × 4 = 8 ס"מ'
+  },
+  // Ratio reduction
+  {
+    id: 's16', type: 'input',
+    text: 'צמצמו את היחס: 24 : 36',
+    answer: ['2:3', '2 : 3'],
+    hint: 'מהו המחלק המשותף הגדול של 24 ו-36? (רמז: זה 12)',
+    solution: 'מ.מ.ג(24, 36) = 12\n24 ÷ 12 = 2\n36 ÷ 12 = 3\nיחס מצומצם: 2 : 3'
+  },
+  {
+    id: 's17', type: 'input',
+    text: 'צמצמו את היחס: 15 : 25',
+    answer: ['3:5', '3 : 5'],
+    hint: 'מהו המחלק המשותף הגדול של 15 ו-25? (רמז: זה 5)',
+    solution: 'מ.מ.ג(15, 25) = 5\n15 ÷ 5 = 3\n25 ÷ 5 = 5\nיחס מצומצם: 3 : 5'
+  },
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+
+const state = {
+  1: { answered: {}, correct: {}, attempts: {} },
+  2: { answered: {}, correct: {}, attempts: {} },
+};
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+
+function renderQuestions(tab, questions) {
+  const container = document.getElementById('questions' + tab);
+  container.innerHTML = '';
+  questions.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'card-' + tab + '-' + q.id;
+
+    const header = document.createElement('div');
+    header.className = 'q-header';
+    header.innerHTML = `
+      <div class="q-num">שאלה ${idx + 1}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+    `;
+    card.appendChild(header);
+
+    if (q.type === 'mc') {
+      const opts = document.createElement('div');
+      opts.className = 'mc-options';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'mc-option';
+        btn.textContent = opt;
+        btn.dataset.idx = i;
+        btn.onclick = () => handleMC(tab, q, i, btn, opts, card, mcArea);
+        opts.appendChild(btn);
+      });
+      card.appendChild(opts);
+      // Feedback area for MC (hint + show-solution)
+      const mcArea = document.createElement('div');
+      mcArea.className = 'q-answer';
+      const mcFb = document.createElement('div');
+      mcFb.className = 'feedback';
+      mcFb.id = 'fb-' + tab + '-' + q.id;
+      const showBtn = document.createElement('button');
+      showBtn.className = 'show-solution-btn';
+      showBtn.textContent = 'הצג פתרון';
+      showBtn.onclick = () => toggleSolution(tab, q.id);
+      mcArea.appendChild(mcFb);
+      mcArea.appendChild(showBtn);
+      card.appendChild(mcArea);
+    } else {
+      const area = document.createElement('div');
+      area.className = 'q-answer';
+      const row = document.createElement('div');
+      row.className = 'answer-row';
+      const input = document.createElement('input');
+      input.className = 'ans-input';
+      input.type = 'text';
+      input.placeholder = 'תשובתך...';
+      input.id = 'input-' + tab + '-' + q.id;
+      const fb = document.createElement('div');
+      fb.className = 'feedback';
+      const checkBtn = document.createElement('button');
+      checkBtn.className = 'check-btn';
+      checkBtn.textContent = 'בדוק';
+      checkBtn.onclick = () => checkInput(tab, q, input, fb, card);
+      input.onkeydown = (e) => { if (e.key === 'Enter') checkInput(tab, q, input, fb, card); };
+      row.appendChild(input);
+      row.appendChild(checkBtn);
+      const showBtn = document.createElement('button');
+      showBtn.className = 'show-solution-btn';
+      showBtn.textContent = 'הצג פתרון';
+      showBtn.onclick = () => toggleSolution(tab, q.id);
+      area.appendChild(row);
+      area.appendChild(fb);
+      area.appendChild(showBtn);
+      card.appendChild(area);
+    }
+
+    const sol = document.createElement('div');
+    sol.className = 'solution-box';
+    sol.id = 'sol-' + tab + '-' + q.id;
+    sol.innerHTML = `<div class="solution-label">פתרון</div>${q.solution}`;
+    card.appendChild(sol);
+
+    container.appendChild(card);
+  });
+
+  updateScore(tab, questions);
+}
+
+// MC: lock on first click; show hint if wrong (solution only on manual reveal)
+function handleMC(tab, q, chosen, btnEl, opts, card, mcArea) {
+  if (state[tab].answered[q.id]) return;
+  state[tab].answered[q.id] = true;
+
+  const correct = chosen === q.answer;
+  state[tab].correct[q.id] = correct;
+
+  opts.querySelectorAll('.mc-option').forEach((b, i) => {
+    b.style.pointerEvents = 'none';
+    if (i === q.answer) b.classList.add('reveal-correct');
+    if (i === chosen && !correct) b.classList.add('wrong');
+  });
+  card.classList.add(correct ? 'correct' : 'wrong');
+
+  const fb = document.getElementById('fb-' + tab + '-' + q.id);
+  if (correct) {
+    fb.textContent = '✓ נכון!';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
+    fb.className = 'feedback wrong';
+  }
+
+  updateScore(tab, tab === 1 ? Q1 : Q2);
+}
+
+// Input: first wrong → hint + retry; second wrong → show answer + lock
+function checkInput(tab, q, input, fb, card) {
+  if (state[tab].answered[q.id]) return;
+  const raw = input.value.trim().replace(/\s+/g, '');
+  if (!raw) return;
+
+  const answers = q.answer.map(a => a.replace(/\s+/g, '').toLowerCase());
+  const correct = answers.includes(raw.toLowerCase());
+
+  if (correct) {
+    state[tab].answered[q.id] = true;
+    state[tab].correct[q.id] = true;
+    input.classList.add('correct');
+    input.disabled = true;
+    fb.textContent = '✓ נכון!';
+    fb.className = 'feedback correct';
+    card.classList.add('correct');
+    updateScore(tab, tab === 1 ? Q1 : Q2);
+    return;
+  }
+
+  state[tab].attempts[q.id] = (state[tab].attempts[q.id] || 0) + 1;
+
+  if (state[tab].attempts[q.id] === 1) {
+    // First wrong: show hint, allow retry
+    input.classList.add('wrong');
+    setTimeout(() => input.classList.remove('wrong'), 900);
+    fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
+    fb.className = 'feedback wrong';
+  } else {
+    // Second wrong: lock and reveal answer
+    state[tab].answered[q.id] = true;
+    state[tab].correct[q.id] = false;
+    input.classList.add('wrong');
+    input.disabled = true;
+    fb.textContent = `✗ התשובה: ${q.answer[0]}`;
+    fb.className = 'feedback wrong';
+    card.classList.add('wrong');
+    document.getElementById('sol-' + tab + '-' + q.id).classList.add('visible');
+    updateScore(tab, tab === 1 ? Q1 : Q2);
+  }
+}
+
+function toggleSolution(tab, qid) {
+  const sol = document.getElementById('sol-' + tab + '-' + qid);
+  sol.classList.toggle('visible');
+}
+
+function updateScore(tab, questions) {
+  const answered = Object.keys(state[tab].answered).length;
+  const correct = Object.values(state[tab].correct).filter(Boolean).length;
+  const total = questions.length;
+
+  document.getElementById('score' + tab).textContent = correct;
+  document.getElementById('total' + tab).textContent = total;
+  document.getElementById('prog' + tab + '-text').textContent = `${answered} מתוך ${total}`;
+  document.getElementById('prog' + tab + '-bar').style.width = (answered / total * 100) + '%';
+}
+
+function resetTab(tab) {
+  state[tab] = { answered: {}, correct: {}, attempts: {} };
+  renderQuestions(tab, tab === 1 ? Q1 : Q2);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i + 1 === tab));
+  document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i + 1 === tab));
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+
+renderQuestions(1, Q1);
+renderQuestions(2, Q2);
+</script>
+</body>
+</html>

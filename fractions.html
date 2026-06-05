@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>שברים — מאיה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #1a1a1a;
+    --elevated: #242424;
+    --text: #f5f5f5;
+    --muted: #999;
+    --accent: #ff6b35;
+    --accent-alt: #f7931e;
+    --border: #333;
+    --green: #4ade80;
+    --red: #f87171;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 24px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .back-link {
+    position: absolute;
+    top: 50%; left: 20px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  header p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .score-strip {
+    background: var(--elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 7px 24px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .score-strip strong { color: var(--accent); }
+  .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .formula-box {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0 8px;
+  }
+  .formula-box h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  .formula-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .formula-item strong { color: var(--accent-alt); }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 14px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fg {
+    background: linear-gradient(90deg, var(--accent), var(--accent-alt));
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 10px;
+  }
+  .section-heading h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .section-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+  .section-badge.multi { background: var(--accent-alt); }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green); }
+  .q-card.wrong-final { border-color: var(--red); }
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    white-space: pre-line;
+  }
+  .q-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .mc-options { display: flex; flex-direction: column; gap: 7px; }
+  .mc-option {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--text);
+    text-align: right;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .mc-option:hover:not(:disabled) { border-color: var(--accent); background: rgba(255,107,53,0.05); }
+  .mc-option:disabled { cursor: default; }
+  .mc-option.chosen-correct { border-color: var(--green); background: rgba(74,222,128,0.07); color: var(--green); }
+  .mc-option.chosen-wrong { border-color: var(--red); background: rgba(248,113,113,0.07); color: var(--red); }
+  .mc-option.reveal-correct { border-color: var(--green); }
+  .answer-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .ans-input {
+    flex: 1;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.93rem;
+    text-align: center;
+    direction: ltr;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .ans-input:focus { border-color: var(--accent); }
+  .ans-input.wrong-flash { border-color: var(--red); }
+  .ans-input:disabled { opacity: 0.5; cursor: not-allowed; }
+  .check-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .check-btn:hover:not(:disabled) { background: var(--accent-alt); }
+  .check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .feedback {
+    margin-top: 7px;
+    font-size: 0.83rem;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+  .feedback.hint { color: var(--accent-alt); }
+  .solution-box {
+    display: none;
+    margin-top: 10px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent-alt);
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+  .solution-box.visible { display: block; }
+  .sol-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent-alt);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .sol-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    white-space: pre-line;
+    line-height: 1.75;
+    color: var(--text);
+  }
+  .sol-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 11px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    cursor: pointer;
+    margin-top: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .sol-toggle:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+  .reset-btn {
+    display: block;
+    margin: 28px auto 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 0.83rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.8rem; }
+    .formula-grid { grid-template-columns: 1fr; }
+    .answer-row { flex-direction: column; align-items: stretch; }
+    .check-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-link">← דף הבית</a>
+  <h1>שברים</h1>
+  <p>fractions · grade 6</p>
+</header>
+
+<div class="score-strip">
+  נכון: <strong id="sc-ok">0</strong> &nbsp;/&nbsp; ענית: <strong id="sc-done">0</strong> &nbsp;/&nbsp; סה"כ: <strong id="sc-total">14</strong>
+</div>
+
+<div class="content">
+
+  <div class="formula-box">
+    <h3>נוסחאות — שברים</h3>
+    <div class="formula-grid">
+      <div class="formula-item"><strong>חיבור/חיסור:</strong> מצא מכנה משותף</div>
+      <div class="formula-item"><strong>כפל:</strong> מונה×מונה ÷ מכנה×מכנה</div>
+      <div class="formula-item"><strong>חלוקה:</strong> כפל בהפוך של המחלק</div>
+      <div class="formula-item"><strong>מספר מעורב ← שבר:</strong> שלמים×מכנה + מונה</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <span id="prog-text">0 מתוך 14</span>
+    <div class="progress-bar-bg"><div class="progress-bar-fg" id="prog-bar"></div></div>
+  </div>
+
+  <div class="section-heading">
+    <h2>שלב אחד</h2>
+    <span class="section-badge">8 שאלות</span>
+    <div class="section-line"></div>
+  </div>
+  <div id="q-single"></div>
+
+  <div class="section-heading">
+    <h2>כמה שלבים</h2>
+    <span class="section-badge multi">6 שאלות</span>
+    <div class="section-line"></div>
+  </div>
+  <div id="q-multi"></div>
+
+  <button class="reset-btn" onclick="resetAll()">אפס תרגול</button>
+</div>
+
+<script>
+const Q_SINGLE = [
+  {
+    id: 'f1', type: 'mc',
+    text: 'מה שווה הצמצום של 6/8?',
+    options: ['3/4', '2/3', '4/6', '6/8 (ללא צמצום)'],
+    answer: 0,
+    hint: 'חלק גם מונה וגם מכנה ב-2. כמה שווה 6÷2 ו-8÷2?',
+    solution: '6/8 ÷ 2 = 3/4\nהמחלק המשותף הגדול (מ"מ) של 6 ו-8 הוא 2.'
+  },
+  {
+    id: 'f2', type: 'input',
+    text: 'חשב: 1/3 + 1/4 = ?',
+    answer: ['7/12'],
+    hint: 'כדי לחבר שברים צריך מכנה משותף. הכפול המשותף הקטן של 3 ו-4 הוא 12.',
+    solution: 'מכנה משותף = 12\n1/3 = 4/12\n1/4 = 3/12\n4/12 + 3/12 = 7/12'
+  },
+  {
+    id: 'f3', type: 'input',
+    text: 'חשב: 5/6 − 1/3 = ?',
+    answer: ['1/2', '3/6', '2/4'],
+    hint: 'המר 1/3 למכנה 6. 1/3 = ?/6',
+    solution: '1/3 = 2/6\n5/6 − 2/6 = 3/6 = 1/2'
+  },
+  {
+    id: 'f4', type: 'input',
+    text: 'חשב: 2/3 × 3/4 = ?',
+    answer: ['1/2', '6/12', '2/4', '3/6'],
+    hint: 'כפל מונה במונה ומכנה במכנה: (2×3) ÷ (3×4). צמצם את התוצאה.',
+    solution: '2×3 = 6\n3×4 = 12\n6/12 = 1/2'
+  },
+  {
+    id: 'f5', type: 'input',
+    text: 'חשב: 3/4 ÷ 1/2 = ?',
+    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 5/3)',
+    answer: ['3/2'],
+    hint: 'חלוקה בשבר = כפל בהפוך שלו. מה ההפוך של 1/2?',
+    solution: '3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2'
+  },
+  {
+    id: 'f6', type: 'input',
+    text: 'המר לשבר בלתי-אמיתי: 3 2/5 = ?',
+    answer: ['17/5'],
+    hint: '3 שלמים = כמה חמישיות? (3 × 5 = ?). הוסף את 2/5.',
+    solution: '3 × 5 = 15\n15/5 + 2/5 = 17/5'
+  },
+  {
+    id: 'f7', type: 'input',
+    text: 'המר למספר מעורב: 7/3 = ?',
+    note: 'כתוב כך: 2 1/3 (מספר שלם, רווח, שבר)',
+    answer: ['2 1/3', '21/3'],
+    hint: 'כמה פעמים 3 נכנס ב-7? מה השארית?',
+    solution: '7 ÷ 3 = 2 שלמים, שארית 1\n7/3 = 2 1/3'
+  },
+  {
+    id: 'f8', type: 'mc',
+    text: 'איזה שבר גדול יותר: 2/3 או 3/5?',
+    options: ['2/3 גדול יותר', '3/5 גדול יותר', 'השברים שווים', 'אי-אפשר להשוות'],
+    answer: 0,
+    hint: 'המר לאותו מכנה. הכפול המשותף הקטן של 3 ו-5 הוא 15.',
+    solution: '2/3 = 10/15\n3/5 = 9/15\n10/15 > 9/15\nלכן 2/3 גדול יותר'
+  }
+];
+
+const Q_MULTI = [
+  {
+    id: 'f9', type: 'input',
+    text: 'דנה אפתה עוגה.\nביום שישי היא אכלה 1/4 ממנה, ביום שבת אכלה 1/3.\nכמה מהעוגה אכלה דנה בסך הכול?',
+    answer: ['7/12'],
+    hint: 'חבר 1/4 ו-1/3. המכנה המשותף של 4 ו-3 הוא 12.',
+    solution: '1/4 = 3/12\n1/3 = 4/12\n3/12 + 4/12 = 7/12'
+  },
+  {
+    id: 'f10', type: 'input',
+    text: 'בכיתה יש 30 תלמידים. 2/5 מהם בנות.\nמתוך הבנות, 1/3 חברות בחוג דרמה.\nכמה בנות חברות בחוג דרמה?',
+    answer: ['4'],
+    hint: 'שלב א: 30 × 2/5 = ? (כמה בנות). שלב ב: כפל ב-1/3.',
+    solution: 'שלב א: 30 × 2/5 = 12 בנות\nשלב ב: 12 × 1/3 = 4 בנות'
+  },
+  {
+    id: 'f11', type: 'input',
+    text: 'למאיה יש 3/4 מלוח שוקולד.\nהיא נתנה 1/3 מהחלק שלה לאחיה.\nאיזה חלק מהלוח השלם נשאר למאיה?',
+    answer: ['1/2', '2/4'],
+    hint: 'שלב א: כמה נתנה? (1/3 × 3/4). שלב ב: הפחת מ-3/4.',
+    solution: 'שלב א: 1/3 × 3/4 = 3/12 = 1/4 — זה מה שנתנה\nשלב ב: 3/4 − 1/4 = 2/4 = 1/2\nנשאר למאיה 1/2 מהלוח'
+  },
+  {
+    id: 'f12', type: 'input',
+    text: 'מתכון דורש 2/3 כוס קמח.\nנועה רוצה להכין 3/4 מהמתכון.\nכמה כוסות קמח היא צריכה?',
+    answer: ['1/2', '2/4', '6/12'],
+    hint: 'כפל את כמות הקמח (2/3) בחלק המתכון (3/4).',
+    solution: '2/3 × 3/4 = 6/12 = 1/2 כוס קמח'
+  },
+  {
+    id: 'f13', type: 'input',
+    text: 'אבי הלך 4 ק"מ, וזה היה 2/3 מהמסלול שתכנן.\nכמה ק"מ היה המסלול המתוכנן?',
+    note: 'כתוב רק את המספר',
+    answer: ['6'],
+    hint: '4 = 2/3 × המסלול. חלק 4 ב-2/3 (= כפל ב-3/2).',
+    solution: '4 ÷ 2/3 = 4 × 3/2 = 12/2 = 6 ק"מ'
+  },
+  {
+    id: 'f14', type: 'input',
+    text: 'רון ועידו חלקו אבטיח.\nרון אכל 3/8, ועידו אכל 1/4.\nאיזה חלק מהאבטיח נשאר?',
+    answer: ['3/8'],
+    hint: 'שלב א: חבר 3/8 + 1/4 (מכנה משותף = 8). שלב ב: הפחת מ-1 (= 8/8).',
+    solution: '3/8 + 1/4 = 3/8 + 2/8 = 5/8 — מה שאכלו\n8/8 − 5/8 = 3/8 נשאר'
+  }
+];
+
+const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
+const state = { answered: {}, correct: {}, attempts: {} };
+
+function norm(s) {
+  return s.toLowerCase().replace(/[\s%₪]/g, '');
+}
+function isCorrect(raw, accepted) {
+  return accepted.some(a => norm(a) === norm(raw));
+}
+
+function updateScore() {
+  const done = Object.keys(state.answered).length;
+  const ok = Object.values(state.correct).filter(Boolean).length;
+  document.getElementById('sc-ok').textContent = ok;
+  document.getElementById('sc-done').textContent = done;
+  const pct = done / ALL_Q.length * 100;
+  document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
+  document.getElementById('prog-bar').style.width = pct + '%';
+}
+
+function renderCard(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'card-' + q.id;
+
+  let body = '';
+  if (q.type === 'mc') {
+    const opts = q.options.map((o, i) =>
+      `<button class="mc-option" id="opt-${q.id}-${i}" onclick="handleMC('${q.id}',${i})">${o}</button>`
+    ).join('');
+    body = `<div class="mc-options">${opts}</div><div class="feedback" id="fb-${q.id}"></div>`;
+  } else {
+    body = `<div class="answer-row">
+      <input class="ans-input" id="inp-${q.id}" type="text" placeholder="התשובה"
+        onkeydown="if(event.key==='Enter')checkInput('${q.id}')">
+      <button class="check-btn" id="btn-${q.id}" onclick="checkInput('${q.id}')">בדוק</button>
+    </div><div class="feedback" id="fb-${q.id}"></div>`;
+  }
+
+  card.innerHTML = `
+    <div class="q-header">
+      <span class="q-num">${q.id}</span>
+      <div>
+        <div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
+        ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+      </div>
+    </div>
+    ${body}
+    <div class="solution-box" id="sol-${q.id}">
+      <div class="sol-label">פתרון</div>
+      <div class="sol-text">${q.solution.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
+    </div>
+    <button class="sol-toggle" id="soltog-${q.id}" onclick="toggleSol('${q.id}')" style="display:none">הצג פתרון</button>
+  `;
+  return card;
+}
+
+function handleMC(qid, chosen) {
+  if (state.answered[qid]) return;
+  const q = ALL_Q.find(x => x.id === qid);
+  const correct = chosen === q.answer;
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qid}-${i}`);
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('reveal-correct');
+  });
+  const chosenBtn = document.getElementById(`opt-${qid}-${chosen}`);
+  const fb = document.getElementById('fb-' + qid);
+  const card = document.getElementById('card-' + qid);
+  if (correct) {
+    chosenBtn.classList.add('chosen-correct');
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    card.classList.add('correct');
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+  } else {
+    chosenBtn.classList.add('chosen-wrong');
+    fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
+    fb.className = 'feedback hint';
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+  }
+  state.answered[qid] = true;
+  state.correct[qid] = correct;
+  updateScore();
+}
+
+function checkInput(qid) {
+  if (state.answered[qid]) return;
+  const q = ALL_Q.find(x => x.id === qid);
+  const input = document.getElementById('inp-' + qid);
+  const fb = document.getElementById('fb-' + qid);
+  const card = document.getElementById('card-' + qid);
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  if (isCorrect(raw, q.answer)) {
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    card.classList.add('correct');
+    input.disabled = true;
+    document.getElementById('btn-' + qid).disabled = true;
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    state.answered[qid] = true; state.correct[qid] = true;
+    updateScore();
+  } else {
+    state.attempts[qid] = (state.attempts[qid] || 0) + 1;
+    if (state.attempts[qid] === 1) {
+      fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
+      fb.className = 'feedback hint';
+      input.classList.add('wrong-flash');
+      setTimeout(() => input.classList.remove('wrong-flash'), 900);
+    } else {
+      fb.textContent = '✗ התשובה: ' + q.answer[0];
+      fb.className = 'feedback wrong';
+      input.disabled = true;
+      document.getElementById('btn-' + qid).disabled = true;
+      card.classList.add('wrong-final');
+      document.getElementById('sol-' + qid).classList.add('visible');
+      state.answered[qid] = true; state.correct[qid] = false;
+      updateScore();
+    }
+  }
+}
+
+function toggleSol(qid) {
+  const box = document.getElementById('sol-' + qid);
+  const btn = document.getElementById('soltog-' + qid);
+  if (box.classList.contains('visible')) {
+    box.classList.remove('visible'); btn.textContent = 'הצג פתרון';
+  } else {
+    box.classList.add('visible'); btn.textContent = 'הסתר פתרון';
+  }
+}
+
+function resetAll() {
+  state.answered = {}; state.correct = {}; state.attempts = {};
+  document.getElementById('q-single').innerHTML = '';
+  document.getElementById('q-multi').innerHTML = '';
+  init();
+}
+
+function init() {
+  Q_SINGLE.forEach(q => document.getElementById('q-single').appendChild(renderCard(q)));
+  Q_MULTI.forEach(q => document.getElementById('q-multi').appendChild(renderCard(q)));
+  updateScore();
+}
+
+init();
+</script>
+</body>
+</html>
