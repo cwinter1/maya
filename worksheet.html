@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>דפי עבודה — מאיה</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; font-size: 13pt; direction: rtl; background: #fff; color: #000; }
+
+  .screen-only { display: block; }
+  .print-btn {
+    position: fixed; top: 16px; left: 16px;
+    background: #8B3A52; color: #fff;
+    border: none; border-radius: 8px; padding: 10px 20px;
+    font-size: 14pt; cursor: pointer; z-index: 99;
+  }
+  .print-btn:hover { background: #6d2c40; }
+
+  .cover {
+    padding: 60px 40px;
+    text-align: center;
+    border-bottom: 3px solid #000;
+    page-break-after: always;
+  }
+  .cover h1 { font-size: 28pt; margin-bottom: 12px; }
+  .cover h2 { font-size: 18pt; margin-bottom: 32px; color: #8B3A52; }
+  .cover .name-line { font-size: 14pt; margin-top: 40px; }
+  .cover .name-line span { display: inline-block; border-bottom: 1px solid #000; width: 200px; margin-right: 8px; }
+
+  .section { padding: 32px 40px; page-break-before: always; }
+  .section-title {
+    font-size: 18pt; font-weight: bold;
+    border-bottom: 2px solid #8B3A52;
+    padding-bottom: 6px; margin-bottom: 20px;
+  }
+
+  .formula-box {
+    border: 2px solid #C9A55C;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    background: #fffbf0;
+    line-height: 2;
+    font-size: 12pt;
+  }
+  .formula-box strong { font-size: 13pt; display: block; margin-bottom: 4px; color: #8B3A52; }
+
+  .q-block { margin-bottom: 28px; }
+  .q-num { font-weight: bold; margin-bottom: 6px; }
+  .q-text { margin-bottom: 10px; line-height: 1.6; }
+  .q-note { font-size: 10pt; color: #555; margin-bottom: 8px; font-style: italic; }
+
+  .answer-lines { margin-top: 10px; }
+  .answer-line {
+    border-bottom: 1px solid #aaa;
+    height: 24px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .mc-opts { list-style: none; padding: 0; }
+  .mc-opts li { margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+  .mc-opts li::before {
+    content: '☐';
+    font-size: 15pt;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+
+  .page-divider { border: none; border-top: 1px dashed #aaa; margin: 32px 0; }
+
+  @media print {
+    .screen-only, .print-btn { display: none !important; }
+    body { font-size: 12pt; }
+    .section { padding: 20px 30px; }
+    .cover { padding: 40px 30px; }
+    a { text-decoration: none; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn screen-only" onclick="window.print()">הדפס דף עבודה</button>
+
+<!-- Cover -->
+<div class="cover">
+  <h1>דפי עבודה למבחן</h1>
+  <h2>מעגלים, קנה-מידה ויחס</h2>
+  <p style="font-size:13pt; margin-top:16px;">מאיה — תרגול לפני המבחן</p>
+  <div class="name-line" style="margin-top:48px;">
+    שם: <span></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    תאריך: <span style="width:120px;"></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ SECTION 1 -->
+<div class="section">
+  <div class="section-title">חלק א: מעגלים ועיגולים</div>
+
+  <div class="formula-box">
+    <strong>נוסחאות לזכור:</strong>
+    היקף מעגל = 2 × R × 3.14 &nbsp;&nbsp;|&nbsp;&nbsp; שטח עיגול = R × R × 3.14<br>
+    קוטר = 2 × רדיוס &nbsp;&nbsp;|&nbsp;&nbsp; רדיוס = קוטר ÷ 2
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 1.</div>
+    <div class="q-text">מה ההבדל בין מעגל לעיגול? (הסבר במילים שלך)</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 2.</div>
+    <div class="q-text">מהו מיתר? האם הקוטר הוא מיתר? הסבר.</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 3.</div>
+    <div class="q-text">מעגל שרדיוסו <strong>5 ס"מ</strong>. חשב:</div>
+    <div class="q-note">הראה את כל שלבי החישוב</div>
+    <ul class="mc-opts" style="list-style:none;">
+      <li style="display:block; margin-bottom:14px;">א. היקף = <span style="display:inline-block; width:200px; border-bottom:1px solid #aaa;"></span> ס"מ</li>
+      <li style="display:block; margin-bottom:14px;">ב. שטח = <span style="display:inline-block; width:200px; border-bottom:1px solid #aaa;"></span> ס"מ²</li>
+    </ul>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 4.</div>
+    <div class="q-text">היקף מעגל הוא <strong>62.8 ס"מ</strong>. מצא:</div>
+    <div class="q-note">היקף = 2 × R × 3.14 → בודד את R</div>
+    <ul class="mc-opts" style="list-style:none;">
+      <li style="display:block; margin-bottom:14px;">א. רדיוס = <span style="display:inline-block; width:180px; border-bottom:1px solid #aaa;"></span></li>
+      <li style="display:block; margin-bottom:14px;">ב. קוטר = <span style="display:inline-block; width:180px; border-bottom:1px solid #aaa;"></span></li>
+      <li style="display:block; margin-bottom:14px;">ג. שטח = <span style="display:inline-block; width:180px; border-bottom:1px solid #aaa;"></span></li>
+    </ul>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 5.</div>
+    <div class="q-text">מעגל א — רדיוס 3 ס"מ. מעגל ב — רדיוס 6 ס"מ.</div>
+    <ul class="mc-opts" style="list-style:none;">
+      <li style="display:block; margin-bottom:10px;">א. פי כמה גדול היקף ב מהיקף א? ______</li>
+      <li style="display:block; margin-bottom:10px;">ב. פי כמה גדול שטח ב משטח א? ______</li>
+      <li style="display:block;">ג. מדוע התשובות שונות?</li>
+    </ul>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 6 (אתגר).</div>
+    <div class="q-text">
+      מסיכת פורים עם קוטר 14 ס"מ.<br>
+      גזרו: 2 עיניים (קוטר 2 ס"מ כל אחת) ופה (קוטר 4 ס"מ).<br>
+      הוסיפו 2 אוזניים (רדיוס 2 ס"מ כל אחת).<br>
+      חשב את השטח הכולל של המסיכה הסופית.
+    </div>
+    <div class="q-note">שטח = מסיכה + 2 אוזניים − 2 עיניים − פה</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ SECTION 2 -->
+<div class="section">
+  <div class="section-title">חלק ב: קנה-מידה ויחס</div>
+
+  <div class="formula-box">
+    <strong>לזכור:</strong>
+    מרחק במציאות = מרחק במפה × מונה קנה-המידה<br>
+    קנה-מידה = מרחק במציאות ÷ מרחק במפה<br>
+    לצמצם יחס: חלק את שני הצדדים במ.מ.ג שלהם
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 7.</div>
+    <div class="q-text">קנה-מידה 1:25,000. מה פירושו? (הסבר במשפט)</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 8.</div>
+    <div class="q-text">על מפה עם קנה-מידה 1:25,000 — שביל מסומן באורך 4 ס"מ.<br>כמה מטרים ארוך השביל במציאות?</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 9.</div>
+    <div class="q-text">המרחק בין נתניה לתל-אביב על מפה הוא 7 ס"מ. המרחק האמיתי הוא 35 ק"מ.<br>מהו קנה-המידה של המפה?</div>
+    <div class="q-note">קנה-מידה = מרחק אמיתי (בס"מ) ÷ מרחק במפה</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 10.</div>
+    <div class="q-text">בכיתה יש 20 בנות ו-16 בנים.</div>
+    <ul class="mc-opts" style="list-style:none;">
+      <li style="display:block; margin-bottom:10px;">א. יחס בנים לבנות (מצומצם): ______</li>
+      <li style="display:block; margin-bottom:10px;">ב. יחס בנים לכלל התלמידים (מצומצם): ______</li>
+    </ul>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 11.</div>
+    <div class="q-text">היחס בין גיל רועי לגיל אמו הוא 2:9.<br>האם ייתכן שרועי בן שנה? הסבר.</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 12.</div>
+    <div class="q-text">מלבן עם היקף 40 ס"מ. היחס בין הצלעות הוא 3:2. מצא את אורך כל צלע.</div>
+    <div class="q-note">צלע א + צלע ב = מחצית ההיקף = 20</div>
+    <div class="answer-lines">
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+      <div class="answer-line"></div>
+    </div>
+  </div>
+
+  <div class="q-block">
+    <div class="q-num">שאלה 13.</div>
+    <div class="q-text">צמצמו את היחסים הבאים:</div>
+    <ul class="mc-opts" style="list-style:none;">
+      <li style="display:block; margin-bottom:10px;">א. 24 : 36 = ______</li>
+      <li style="display:block; margin-bottom:10px;">ב. 15 : 25 = ______</li>
+      <li style="display:block;">ג. 400 : 50 = ______</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ ANSWER KEY (screen only) -->
+<div class="section screen-only" style="background:#f9f0f4; border-top: 3px solid #8B3A52;">
+  <div class="section-title">תשובות (לבדיקה עצמית)</div>
+  <ol style="line-height:2.2; font-size:11pt;">
+    <li>מעגל = הקו (השפה). עיגול = השטח הכלוא.</li>
+    <li>מיתר = קטע בין שתי נקודות על המעגל. כן, הקוטר הוא המיתר הארוך ביותר.</li>
+    <li>היקף = 31.4 ס"מ; שטח = 78.5 ס"מ²</li>
+    <li>R=10, קוטר=20, שטח=314 ס"מ²</li>
+    <li>היקף: פי 2; שטח: פי 4 (כי שטח ∝ R²)</li>
+    <li>שטח = 160.14 ס"מ²</li>
+    <li>1 ס"מ במפה = 25,000 ס"מ = 250 מ' במציאות</li>
+    <li>4 × 25,000 = 100,000 ס"מ = 1,000 מ' = 1 ק"מ</li>
+    <li>1 : 500,000</li>
+    <li>א. 4:5 &nbsp; ב. 4:9</li>
+    <li>לא — אמא תהיה בת 4.5, גיל לא יכול להיות שבר</li>
+    <li>צלע א=12, צלע ב=8</li>
+    <li>א. 2:3 &nbsp; ב. 3:5 &nbsp; ג. 8:1</li>
+  </ol>
+</div>
+
+</body>
+</html>

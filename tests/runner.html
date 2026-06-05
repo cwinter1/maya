@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>QA Runner — Maya Exam Prep</title>
+<style>
+  body { font-family: monospace; background: #1a1a2e; color: #eee; padding: 24px; direction: ltr; }
+  h1 { color: #C9A55C; margin-bottom: 4px; }
+  .summary { font-size: 14pt; margin: 16px 0; }
+  .pass { color: #4ade80; }
+  .fail { color: #f87171; }
+  .item { margin: 4px 0; font-size: 10pt; }
+  .item.ok::before { content: '✓ '; color: #4ade80; }
+  .item.err::before { content: '✗ '; color: #f87171; }
+  .err-detail { margin-right: 20px; color: #fbbf24; white-space: pre-wrap; font-size: 9pt; }
+</style>
+</head>
+<body>
+<h1>QA Test Runner</h1>
+<div id="output"></div>
+<script src="test_logic.js"></script>
+<script>
+  const results = runAll();
+  const out = document.getElementById('output');
+
+  const summary = document.createElement('div');
+  summary.className = 'summary';
+  summary.innerHTML = `
+    <span class="pass">${passed} passed</span>
+    &nbsp;/&nbsp;
+    <span class="fail">${failed} failed</span>
+    &nbsp; — total ${tests.length}
+  `;
+  out.appendChild(summary);
+
+  results.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'item ' + (r.ok ? 'ok' : 'err');
+    div.textContent = r.name;
+    out.appendChild(div);
+    if (!r.ok) {
+      const det = document.createElement('div');
+      det.className = 'err-detail';
+      det.textContent = r.err;
+      out.appendChild(det);
+    }
+  });
+</script>
+</body>
+</html>
