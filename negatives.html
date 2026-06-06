@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מספרים שליליים — מאיה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #1a1a1a;
+    --elevated: #242424;
+    --text: #f5f5f5;
+    --muted: #999;
+    --accent: #ff6b35;
+    --accent-alt: #f7931e;
+    --border: #333;
+    --green: #4ade80;
+    --red: #f87171;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 24px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .back-link {
+    position: absolute;
+    top: 50%; left: 20px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  header p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .score-strip {
+    background: var(--elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 7px 24px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .score-strip strong { color: var(--accent); }
+  .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .formula-box {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0 8px;
+  }
+  .formula-box h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  .formula-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .formula-item.wide { grid-column: 1 / -1; }
+  .formula-item strong { color: var(--accent-alt); }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 14px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fg {
+    background: linear-gradient(90deg, var(--accent), var(--accent-alt));
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 10px;
+  }
+  .section-heading h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .section-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+  .section-badge.multi { background: var(--accent-alt); }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green); }
+  .q-card.wrong-final { border-color: var(--red); }
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    white-space: pre-line;
+  }
+  .q-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .mc-options { display: flex; flex-direction: column; gap: 7px; }
+  .mc-option {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--text);
+    text-align: right;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .mc-option:hover:not(:disabled) { border-color: var(--accent); background: rgba(255,107,53,0.05); }
+  .mc-option:disabled { cursor: default; }
+  .mc-option.chosen-correct { border-color: var(--green); background: rgba(74,222,128,0.07); color: var(--green); }
+  .mc-option.chosen-wrong { border-color: var(--red); background: rgba(248,113,113,0.07); color: var(--red); }
+  .mc-option.reveal-correct { border-color: var(--green); }
+  .answer-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .ans-input {
+    flex: 1;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.93rem;
+    text-align: center;
+    direction: ltr;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .ans-input:focus { border-color: var(--accent); }
+  .ans-input.wrong-flash { border-color: var(--red); }
+  .ans-input:disabled { opacity: 0.5; cursor: not-allowed; }
+  .check-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .check-btn:hover:not(:disabled) { background: var(--accent-alt); }
+  .check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .feedback {
+    margin-top: 7px;
+    font-size: 0.83rem;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+  .feedback.hint { color: var(--accent-alt); }
+  .solution-box {
+    display: none;
+    margin-top: 10px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent-alt);
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+  .solution-box.visible { display: block; }
+  .sol-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent-alt);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .sol-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    white-space: pre-line;
+    line-height: 1.75;
+    color: var(--text);
+  }
+  .sol-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 11px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    cursor: pointer;
+    margin-top: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .sol-toggle:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+  .reset-btn {
+    display: block;
+    margin: 28px auto 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 0.83rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .more-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(247,147,30,0.12));
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .more-btn:hover { background: rgba(255,107,53,0.2); transform: scale(1.02); }
+  .more-section { display: none; }
+  .more-section.visible { display: block; }
+  .topic-intro {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .topic-intro strong { color: var(--text); }
+  .topic-intro-toggle {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    float: left;
+    padding: 0;
+  }
+  .topic-intro-body { margin-top: 8px; }
+  .topic-intro-body.hidden { display: none; }
+  .speak-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s;
+    margin-top: 1px;
+  }
+  .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .speak-btn.speaking { border-color: var(--accent-alt); color: var(--accent-alt); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .hint-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 7px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .hint-btn:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+  .section-retry-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 11px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .section-retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.8rem; }
+    .formula-grid { grid-template-columns: 1fr; }
+    .formula-item.wide { grid-column: 1; }
+    .answer-row { flex-direction: column; align-items: stretch; }
+    .check-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-link">← דף הבית</a>
+  <h1>מספרים שליליים</h1>
+  <p>integers · grade 6</p>
+</header>
+
+<div class="score-strip">
+  נכון: <strong id="sc-ok">0</strong> &nbsp;/&nbsp; ענית: <strong id="sc-done">0</strong> &nbsp;/&nbsp; סה"כ: <strong id="sc-total">14</strong>
+</div>
+
+<div class="content">
+
+  <div class="topic-intro">
+    <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
+    <strong>מספרים שלמים — חיוביים, שליליים ואפס</strong>
+    <div class="topic-intro-body">
+      על <strong>ציר המספרים</strong> — ממין: כלפי שמאל המספרים קטנים יותר (−5 &lt; −2 &lt; 0 &lt; 3).<br>
+      <strong>ערך מוחלט</strong> |a| = המרחק מ-0. תמיד חיובי: |−7| = 7.<br>
+      <strong>חיסור שלילי</strong>: a − (−b) = a + b (חסרת שלילי = הוספת חיובי).
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <h3>כללים — מספרים שליליים</h3>
+    <div class="formula-grid">
+      <div class="formula-item wide"><strong>ציר המספרים:</strong> &nbsp;... −3 &lt; −2 &lt; −1 &lt; 0 &lt; 1 &lt; 2 &lt; 3 ...</div>
+      <div class="formula-item"><strong>(−a) + (−b) = −(a+b)</strong><br>שני שליליים → חבר, שמור שלילי</div>
+      <div class="formula-item"><strong>a − (−b) = a + b</strong><br>חסר שלילי = הוסף חיובי</div>
+      <div class="formula-item"><strong>|−a| = a</strong><br>ערך מוחלט = מרחק מ-0</div>
+      <div class="formula-item"><strong>מרחק בין א ל-ב:</strong><br>|ב − א|</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <span id="prog-text">0 מתוך 14</span>
+    <div class="progress-bar-bg"><div class="progress-bar-fg" id="prog-bar"></div></div>
+  </div>
+
+  <div class="section-heading">
+    <h2>שאלה בסיסית</h2>
+    <span class="section-badge">8 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-single', Q_SINGLE)">↺ נסה שוב</button>
+  </div>
+  <div id="q-single"></div>
+
+  <div class="section-heading">
+    <h2>כמה שלבים</h2>
+    <span class="section-badge multi">6 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-multi', Q_MULTI)">↺ נסה שוב</button>
+  </div>
+  <div id="q-multi"></div>
+
+  <button class="more-btn" id="more-btn" onclick="loadMore()">+ רוצה עוד תרגילים?</button>
+
+  <div class="more-section" id="more-section">
+    <div class="section-heading">
+      <h2>תרגול נוסף</h2>
+      <span class="section-badge">5 שאלות</span>
+      <div class="section-line"></div>
+      <button class="section-retry-btn" onclick="retrySection('q-extra', Q_EXTRA)">↺ נסה שוב</button>
+    </div>
+    <div id="q-extra"></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
+</div>
+
+<script>
+const Q_SINGLE = [
+  {
+    id: 'n1', type: 'mc',
+    text: 'איזו טמפרטורה קרה יותר: −12°C או −5°C?',
+    options: ['−12°C', '−5°C', 'שניהם שווים', 'אי אפשר לדעת'],
+    answer: 0,
+    hint: 'על ציר המספרים, ככל שנזוז שמאלה — המספר קטן יותר.',
+    solution: '−12 < −5 כי −12 נמצא משמאל ל-5− על ציר המספרים.\nקרה יותר = מספר קטן יותר → −12°C'
+  },
+  {
+    id: 'n2', type: 'input',
+    text: 'חשב: (−3) + 7 = ?',
+    answer: ['4'],
+    hint: 'על ציר המספרים: התחל ב-(−3), זוז 7 ימינה.',
+    solution: '(−3) + 7 = 4'
+  },
+  {
+    id: 'n3', type: 'input',
+    text: 'חשב: 5 + (−8) = ?',
+    answer: ['-3'],
+    hint: 'הוספת מספר שלילי = חיסור: 5 + (−8) = 5 − 8',
+    solution: '5 + (−8) = 5 − 8 = −3'
+  },
+  {
+    id: 'n4', type: 'input',
+    text: 'חשב: (−4) + (−6) = ?',
+    answer: ['-10'],
+    hint: 'שני שליליים: חבר את הערכים, שמור על שלילי: −(4 + 6)',
+    solution: '(−4) + (−6) = −10'
+  },
+  {
+    id: 'n5', type: 'input',
+    text: 'חשב: (−9) − (−4) = ?',
+    answer: ['-5'],
+    hint: 'חיסור שלילי = חיבור הנגדי: (−9) − (−4) = (−9) + 4',
+    solution: '(−9) − (−4) = (−9) + 4 = −5'
+  },
+  {
+    id: 'n6', type: 'mc',
+    text: 'מה הגדול מבין: −7, −2, −15, 0?',
+    options: ['−7', '−2', '−15', '0'],
+    answer: 3,
+    hint: 'על ציר המספרים: −15 < −7 < −2 < 0. הגדול ביותר הוא?',
+    solution: '−15 < −7 < −2 < 0\nהגדול ביותר: 0'
+  },
+  {
+    id: 'n7', type: 'input',
+    text: 'חשב: |−11| = ?',
+    answer: ['11'],
+    hint: 'ערך מוחלט = המרחק מ-0. תמיד חיובי.',
+    solution: '|−11| = 11\n(המרחק של −11 מ-0 על ציר המספרים הוא 11)'
+  },
+  {
+    id: 'n8', type: 'input',
+    text: 'הטמפרטורה הייתה −3°C ועלתה ב-7 מעלות.\nמה הטמפרטורה כעת?',
+    note: 'כתוב רק את המספר',
+    answer: ['4'],
+    hint: 'עלתה ב-7 = חיבור: (−3) + 7 = ?',
+    solution: '(−3) + 7 = 4°C'
+  }
+];
+
+const Q_MULTI = [
+  {
+    id: 'n9', type: 'input',
+    text: 'שחקן צבר 15 נקודות, ואחר-כך הפסיד 22 נקודות.\nכמה נקודות יש לו עכשיו?',
+    note: 'כתוב מספר שלילי אם יש חוב בנקודות',
+    answer: ['-7'],
+    hint: '15 − 22 = ?',
+    solution: '15 + (−22) = 15 − 22 = −7 נקודות'
+  },
+  {
+    id: 'n10', type: 'input',
+    text: 'הטמפרטורה בבוקר הייתה −8°C.\nבצהריים היא עלתה ב-5 מעלות.\nלערב ירדה ב-3 מעלות.\nמה הטמפרטורה בערב?',
+    note: 'כתוב רק את המספר',
+    answer: ['-6'],
+    hint: 'שלב א: (−8) + 5. שלב ב: תוצאה − 3.',
+    solution: '(−8) + 5 = −3\n(−3) − 3 = −6°C'
+  },
+  {
+    id: 'n11', type: 'input',
+    text: 'לדניאל יש חוב של 50 ₪.\nהוא קיבל 30 ₪ מדודו ועוד 12 ₪ מחברו.\nמה המצב הפיננסי שלו כעת?',
+    note: 'כתוב מספר שלילי אם עדיין חייב',
+    answer: ['-8'],
+    hint: 'התחל מ-(−50). הוסף 30, אחר-כך הוסף 12.',
+    solution: '(−50) + 30 + 12 = (−50) + 42 = −8 ₪\nעדיין חייב 8 ₪'
+  },
+  {
+    id: 'n12', type: 'mc',
+    text: 'מה הסדר הנכון מהקטן לגדול?\n−8, 3, −1, 0, −5',
+    options: ['−8, −5, −1, 0, 3', '3, 0, −1, −5, −8', '−1, −5, −8, 0, 3', '0, −1, −5, −8, 3'],
+    answer: 0,
+    hint: 'על ציר המספרים: שמאל = קטן יותר, ימין = גדול יותר.',
+    solution: '−8 < −5 < −1 < 0 < 3'
+  },
+  {
+    id: 'n13', type: 'input',
+    text: 'חשב: (−5) + 12 + (−3) + (−4) = ?',
+    answer: ['0'],
+    hint: 'חבר את החיוביים: 12. חבר את השליליים: 5+3+4=12. עכשיו?',
+    solution: 'חיוביים: 12\nשליליים: −5 − 3 − 4 = −12\n12 + (−12) = 0'
+  },
+  {
+    id: 'n14', type: 'input',
+    text: 'צוללת הייתה בעומק של −120 מ׳.\nהיא עלתה 85 מ׳.\nבאיזה עומק היא עכשיו?',
+    note: 'כתוב מספר שלילי',
+    answer: ['-35'],
+    hint: 'עלתה = הוסף לעומק: (−120) + 85 = ?',
+    solution: '(−120) + 85 = −35 מ׳'
+  }
+];
+
+const Q_EXTRA = [
+  {
+    id: 'n15', type: 'input',
+    text: 'חשב: (−7) − 5 + (−3) + 8 = ?',
+    answer: ['-7'],
+    hint: 'חשב לפי סדר: (−7) − 5 = −12, ואז + (−3), ואז + 8',
+    solution: '(−7) − 5 = −12\n(−12) + (−3) = −15\n(−15) + 8 = −7'
+  },
+  {
+    id: 'n16', type: 'mc',
+    text: 'מה המרחק בין −7 ל-4 על ציר המספרים?',
+    options: ['3', '7', '11', '−3'],
+    answer: 2,
+    hint: 'מרחק = |ב − א|. חשב: |4 − (−7)| = |4 + 7|',
+    solution: '|4 − (−7)| = |4 + 7| = |11| = 11'
+  },
+  {
+    id: 'n17', type: 'input',
+    text: 'בחצות הייתה הטמפרטורה −2°C.\nעד הצהריים עלתה ב-11 מעלות.\nבשעה 16:00 ירדה ב-4 מעלות.\nמה הטמפרטורה בשעה 16:00?',
+    note: 'כתוב רק את המספר',
+    answer: ['5'],
+    hint: 'שלב א: (−2) + 11. שלב ב: תוצאה − 4.',
+    solution: '(−2) + 11 = 9\n9 − 4 = 5°C'
+  },
+  {
+    id: 'n18', type: 'input',
+    text: 'מה ההפרש בין |−8| ל-|5|?',
+    note: 'כתוב רק את המספר',
+    answer: ['3'],
+    hint: '|−8| = 8, |5| = 5. הפרש = 8 − 5',
+    solution: '|−8| = 8\n|5| = 5\nהפרש: 8 − 5 = 3'
+  },
+  {
+    id: 'n19', type: 'input',
+    text: 'כמה יש להוסיף ל-(−15) כדי להגיע ל-(−6)?',
+    note: 'כתוב רק את המספר',
+    answer: ['9'],
+    hint: '(−15) + ? = (−6). חשב: (−6) − (−15)',
+    solution: '(−15) + ? = (−6)\n? = (−6) − (−15) = −6 + 15 = 9'
+  }
+];
+
+const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
+function findQ(qid) {
+  return [...ALL_Q, ...Q_EXTRA].find(function(x) { return x.id === qid; });
+}
+const state = { answered: {}, correct: {}, attempts: {} };
+let streak = 0;
+const _secDone = {};
+
+function findSection(qid) {
+  if (Q_SINGLE.some(function(q){return q.id===qid;})) return ['q-single', Q_SINGLE];
+  if (Q_MULTI.some(function(q){return q.id===qid;})) return ['q-multi', Q_MULTI];
+  if (Q_EXTRA.some(function(q){return q.id===qid;})) return ['q-extra', Q_EXTRA];
+  return null;
+}
+function checkSectionDone(cid, qs) {
+  if (_secDone[cid]) return;
+  if (qs.every(function(q){return q.id in state.answered;})) {
+    _secDone[cid] = true;
+    celebrateSectionDone();
+  }
+}
+
+function norm(s) {
+  return s.toLowerCase().replace(/[\s%₪,]/g, '');
+}
+function isCorrect(raw, accepted) {
+  const n = norm(raw);
+  return accepted.some(a => norm(a) === n);
+}
+
+function speakQ(qid) {
+  if (!('speechSynthesis' in window)) return;
+  const q = findQ(qid);
+  const btn = document.getElementById('spk-' + qid);
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(q.text.replace(/\n/g, ' '));
+  utt.lang = 'he-IL';
+  utt.rate = 0.85;
+  utt.onstart = () => btn.classList.add('speaking');
+  utt.onend = () => btn.classList.remove('speaking');
+  speechSynthesis.speak(utt);
+}
+
+function showHint(qid) {
+  const box = document.getElementById('hintbox-' + qid);
+  const btn = document.getElementById('hintbtn-' + qid);
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+    btn.textContent = '💡 הסתר רמז';
+  } else {
+    box.style.display = 'none';
+    btn.textContent = '💡 רמז';
+  }
+}
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function retrySection(containerId, questions) {
+  delete _secDone[containerId];
+  streak = 0;
+  questions.forEach(q => {
+    delete state.answered[q.id];
+    delete state.correct[q.id];
+    delete state.attempts[q.id];
+  });
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  shuffleArr(questions).forEach(q => c.appendChild(renderCard(q)));
+  updateScore();
+}
+
+function updateScore() {
+  const done = Object.keys(state.answered).length;
+  const ok = Object.values(state.correct).filter(Boolean).length;
+  document.getElementById('sc-ok').textContent = ok;
+  document.getElementById('sc-done').textContent = done;
+  document.getElementById('sc-total').textContent = ALL_Q.length;
+  const pct = done / ALL_Q.length * 100;
+  document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
+  document.getElementById('prog-bar').style.width = pct + '%';
+}
+
+function renderCard(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'card-' + q.id;
+
+  let body = '';
+  if (q.type === 'mc') {
+    const opts = q.options.map((o, i) =>
+      `<button class="mc-option" id="opt-${q.id}-${i}" onclick="handleMC('${q.id}',${i})">${o}</button>`
+    ).join('');
+    body = `<div class="mc-options">${opts}</div><div class="feedback" id="fb-${q.id}"></div>`;
+  } else {
+    body = `<div class="answer-row">
+      <input class="ans-input" id="inp-${q.id}" type="text" placeholder="התשובה"
+        onkeydown="if(event.key==='Enter')checkInput('${q.id}')">
+      <button class="check-btn" id="btn-${q.id}" onclick="checkInput('${q.id}')">בדוק</button>
+    </div><div class="feedback" id="fb-${q.id}"></div>`;
+  }
+
+  const safeText = q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const safeSol  = q.solution.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  card.innerHTML = `
+    <div class="q-header">
+      <span class="q-num">${q.id}</span>
+      <div style="flex:1">
+        <div class="q-text">${safeText}</div>
+        ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+        <button class="hint-btn" id="hintbtn-${q.id}" onclick="showHint('${q.id}')">💡 רמז</button>
+        <div class="feedback hint" id="hintbox-${q.id}" style="display:none">${q.hint.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
+      </div>
+      <button class="speak-btn" id="spk-${q.id}" onclick="speakQ('${q.id}')" title="הקרא שאלה">🔊</button>
+    </div>
+    ${body}
+    <div class="solution-box" id="sol-${q.id}">
+      <div class="sol-label">פתרון</div>
+      <div class="sol-text">${safeSol}</div>
+    </div>
+    <button class="sol-toggle" id="soltog-${q.id}" onclick="toggleSol('${q.id}')" style="display:none">הצג פתרון</button>
+  `;
+  return card;
+}
+
+function handleMC(qid, chosen) {
+  if (state.answered[qid]) return;
+  const q = findQ(qid);
+  const correct = chosen === q.answer;
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qid}-${i}`);
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('reveal-correct');
+  });
+  const chosenBtn = document.getElementById(`opt-${qid}-${chosen}`);
+  const fb = document.getElementById('fb-' + qid);
+  const card = document.getElementById('card-' + qid);
+  if (correct) {
+    chosenBtn.classList.add('chosen-correct');
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    card.classList.add('correct');
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    streak++; celebrateCorrect(streak);
+  } else {
+    chosenBtn.classList.add('chosen-wrong');
+    fb.textContent = '✗ לא בדיוק — לחץ על 💡 לרמז';
+    fb.className = 'feedback hint';
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    streak = 0; celebrateWrong();
+  }
+  state.answered[qid] = true;
+  state.correct[qid] = correct;
+  updateScore();
+  const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
+}
+
+function checkInput(qid) {
+  if (state.answered[qid]) return;
+  const q = findQ(qid);
+  const input = document.getElementById('inp-' + qid);
+  const fb = document.getElementById('fb-' + qid);
+  const card = document.getElementById('card-' + qid);
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  if (isCorrect(raw, q.answer)) {
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    card.classList.add('correct');
+    input.disabled = true;
+    document.getElementById('btn-' + qid).disabled = true;
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    state.answered[qid] = true; state.correct[qid] = true;
+    streak++; celebrateCorrect(streak);
+    updateScore();
+    const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
+  } else {
+    state.attempts[qid] = (state.attempts[qid] || 0) + 1;
+    if (state.attempts[qid] === 1) {
+      fb.textContent = '✗ לא נכון — לחץ על 💡 לרמז';
+      fb.className = 'feedback hint';
+      input.classList.add('wrong-flash');
+      setTimeout(() => input.classList.remove('wrong-flash'), 900);
+      streak = 0; celebrateWrong();
+    } else {
+      fb.textContent = '✗ התשובה: ' + q.answer[0];
+      fb.className = 'feedback wrong';
+      input.disabled = true;
+      document.getElementById('btn-' + qid).disabled = true;
+      card.classList.add('wrong-final');
+      document.getElementById('sol-' + qid).classList.add('visible');
+      state.answered[qid] = true; state.correct[qid] = false;
+      updateScore();
+      const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
+    }
+  }
+}
+
+function toggleSol(qid) {
+  const box = document.getElementById('sol-' + qid);
+  const btn = document.getElementById('soltog-' + qid);
+  if (box.classList.contains('visible')) {
+    box.classList.remove('visible'); btn.textContent = 'הצג פתרון';
+  } else {
+    box.classList.add('visible'); btn.textContent = 'הסתר פתרון';
+  }
+}
+
+function loadMore() {
+  document.getElementById('more-btn').style.display = 'none';
+  document.getElementById('more-section').classList.add('visible');
+  Q_EXTRA.forEach(q => document.getElementById('q-extra').appendChild(renderCard(q)));
+  updateScore();
+}
+
+function resetAll() {
+  streak = 0;
+  Object.keys(_secDone).forEach(k => delete _secDone[k]);
+  state.answered = {}; state.correct = {}; state.attempts = {};
+  document.getElementById('q-single').innerHTML = '';
+  document.getElementById('q-multi').innerHTML = '';
+  document.getElementById('q-extra').innerHTML = '';
+  document.getElementById('more-section').classList.remove('visible');
+  document.getElementById('more-btn').style.display = 'block';
+  init();
+}
+
+function init() {
+  Q_SINGLE.forEach(q => document.getElementById('q-single').appendChild(renderCard(q)));
+  Q_MULTI.forEach(q => document.getElementById('q-multi').appendChild(renderCard(q)));
+  updateScore();
+}
+
+init();
+</script>
+<script src="celebrate.js"></script>
+</body>
+</html>
