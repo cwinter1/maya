@@ -429,5 +429,14 @@
   document.getElementById('hero-date').textContent = d;
 })();
 </script>
+<script>
+(function() {
+  var days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  var months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  var now = new Date();
+  var d = 'יום ' + days[now.getDay()] + ' · ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  document.getElementById('hero-date').textContent = d;
+})();
+</script>
 </body>
 </html>
