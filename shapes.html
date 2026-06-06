@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>שברים — מאיה</title>
+<title>שטח ואורך — מאיה</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -101,6 +101,7 @@
     font-size: 0.82rem;
     line-height: 1.5;
   }
+  .formula-item.wide { grid-column: 1 / -1; }
   .formula-item strong { color: var(--accent-alt); }
   .progress-wrap {
     display: flex;
@@ -307,8 +308,6 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ─── More exercises ─────────────────────────────── */
   .more-btn {
     display: block;
     margin: 20px auto 0;
@@ -326,8 +325,6 @@
   .more-btn:hover { background: rgba(255,107,53,0.2); transform: scale(1.02); }
   .more-section { display: none; }
   .more-section.visible { display: block; }
-
-  /* ─── Topic intro ───────────────────────────────── */
   .topic-intro {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -352,8 +349,6 @@
   }
   .topic-intro-body { margin-top: 8px; }
   .topic-intro-body.hidden { display: none; }
-
-  /* ─── Speak button ───────────────────────────────── */
   .speak-btn {
     background: none;
     border: 1px solid var(--border);
@@ -370,8 +365,6 @@
   .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
   .speak-btn.speaking { border-color: var(--accent-alt); color: var(--accent-alt); animation: pulse 0.8s infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-  /* ─── Hint button ────────────────────────────────── */
   .hint-btn {
     background: none;
     border: 1px dashed var(--border);
@@ -385,8 +378,6 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .hint-btn:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
-
-  /* ─── Section retry ──────────────────────────────── */
   .section-retry-btn {
     background: none;
     border: 1px solid var(--border);
@@ -400,10 +391,10 @@
     white-space: nowrap;
   }
   .section-retry-btn:hover { border-color: var(--accent); color: var(--accent); }
-
   @media (max-width: 500px) {
     header h1 { font-size: 1.8rem; }
     .formula-grid { grid-template-columns: 1fr; }
+    .formula-item.wide { grid-column: 1; }
     .answer-row { flex-direction: column; align-items: stretch; }
     .check-btn { width: 100%; }
   }
@@ -413,8 +404,8 @@
 
 <header>
   <a href="index.html" class="back-link">← דף הבית</a>
-  <h1>שברים</h1>
-  <p>fractions · grade 6</p>
+  <h1>שטח ואורך</h1>
+  <p>area &amp; perimeter · grade 6</p>
 </header>
 
 <div class="score-strip">
@@ -425,21 +416,24 @@
 
   <div class="topic-intro">
     <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
-    <strong>מה זה שברים?</strong>
+    <strong>שטח ואורך של צורות שטוחות</strong>
     <div class="topic-intro-body">
-      שבר מתאר חלק מתוך שלם. למשל, 3/4 אומר שחילקנו משהו ל-4 חלקים שווים ולקחנו 3 מהם.<br>
-      כשמחברים או מחסרים שברים — צריך קודם לאחד את המכנים. כשמכפילים — מכפילים מונה במונה ומכנה במכנה. כשמחלקים — כופלים בהפוך.<br>
-      <strong>שים לב:</strong> תשובות שוות ערך (כמו 1/2 ו-2/4) שתיהן נחשבות נכונות.
+      <strong>שטח</strong> מודד את השטח הפנימי של צורה (ביחידות רבועות: ס"מ², מ"ר).<br>
+      <strong>היקף</strong> הוא אורך הגבול החיצוני של הצורה (ביחידות אורך: ס"מ, מ').<br>
+      כשמחשבים שטח טרפז — חובה להכפיל בגובה (הניצב לבסיסים), לא בצלע הנטויה.
     </div>
   </div>
 
   <div class="formula-box">
-    <h3>נוסחאות — שברים</h3>
+    <h3>נוסחאות — שטח ואורך</h3>
     <div class="formula-grid">
-      <div class="formula-item"><strong>חיבור/חיסור:</strong> מצא מכנה משותף</div>
-      <div class="formula-item"><strong>כפל:</strong> מונה×מונה ÷ מכנה×מכנה</div>
-      <div class="formula-item"><strong>חלוקה:</strong> כפל בהפוך של המחלק</div>
-      <div class="formula-item"><strong>מספר מעורב ← שבר:</strong> שלמים×מכנה + מונה</div>
+      <div class="formula-item"><strong>מלבן שטח:</strong> א × ב</div>
+      <div class="formula-item"><strong>מלבן היקף:</strong> 2 × (א + ב)</div>
+      <div class="formula-item"><strong>ריבוע שטח:</strong> א × א</div>
+      <div class="formula-item"><strong>ריבוע היקף:</strong> 4 × א</div>
+      <div class="formula-item"><strong>משולש שטח:</strong> (בסיס × גובה) ÷ 2</div>
+      <div class="formula-item"><strong>מקבילית שטח:</strong> בסיס × גובה</div>
+      <div class="formula-item wide"><strong>טרפז שטח:</strong> (בסיס גדול + בסיס קטן) × גובה ÷ 2</div>
     </div>
   </div>
 
@@ -449,7 +443,7 @@
   </div>
 
   <div class="section-heading">
-    <h2>שלב אחד</h2>
+    <h2>שאלה בסיסית</h2>
     <span class="section-badge">8 שאלות</span>
     <div class="section-line"></div>
     <button class="section-retry-btn" onclick="retrySection('q-single', Q_SINGLE)">↺ נסה שוב</button>
@@ -476,389 +470,172 @@
     <div id="q-extra"></div>
   </div>
 
-  <div style="margin-top:36px;border-top:2px dashed var(--border);padding-top:28px;">
-
-    <div class="topic-intro">
-      <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
-      <strong>כפל וחילוק שברים</strong>
-      <div class="topic-intro-body">
-        כשמכפילים שברים — כופלים מונה במונה ומכנה במכנה. לדוגמה: 2/3 × 3/5 = 6/15 = 2/5.<br>
-        כשמחלקים בשבר — כופלים בהפוך שלו. לדוגמה: 3/4 ÷ 1/2 = 3/4 × 2 = 3/2.<br>
-        מספר מעורב — יש להמיר לשבר בלתי-אמיתי לפני כפל או חילוק.<br>
-        <strong>שברים עשרוניים:</strong> ×10 — נקודה זזה ימינה · ÷10 — נקודה זזה שמאלה.
-      </div>
-    </div>
-
-    <div class="formula-box">
-      <h3>נוסחאות — כפל וחילוק</h3>
-      <div class="formula-grid">
-        <div class="formula-item"><strong>כפל:</strong> א/ב × ג/ד = (א×ג) / (ב×ד)</div>
-        <div class="formula-item"><strong>חלוקה:</strong> א/ב ÷ ג/ד = א/ב × ד/ג</div>
-        <div class="formula-item"><strong>×10 / ×100:</strong> נקודה → ימינה 1 / 2 מקומות</div>
-        <div class="formula-item"><strong>÷10 / ÷100:</strong> נקודה → שמאלה 1 / 2 מקומות</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="section-heading">
-    <h2>כפל שברים</h2>
-    <span class="section-badge">8 שאלות</span>
-    <div class="section-line"></div>
-    <button class="section-retry-btn" onclick="retrySection('q-mult', Q_MULT)">↺ נסה שוב</button>
-  </div>
-  <div id="q-mult"></div>
-
-  <div class="section-heading">
-    <h2>חילוק שברים</h2>
-    <span class="section-badge multi">6 שאלות</span>
-    <div class="section-line"></div>
-    <button class="section-retry-btn" onclick="retrySection('q-divf', Q_DIVF)">↺ נסה שוב</button>
-  </div>
-  <div id="q-divf"></div>
-
-  <div class="section-heading">
-    <h2>סוגריים ורב-שלבי</h2>
-    <span class="section-badge multi">6 שאלות</span>
-    <div class="section-line"></div>
-    <button class="section-retry-btn" onclick="retrySection('q-paren', Q_PAREN)">↺ נסה שוב</button>
-  </div>
-  <div id="q-paren"></div>
-
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
 <script>
 const Q_SINGLE = [
   {
-    id: 'f1', type: 'mc',
-    text: 'מה שווה הצמצום של 6/8?',
-    options: ['3/4', '2/3', '4/6', '6/8 (ללא צמצום)'],
+    id: 'a1', type: 'input',
+    text: 'מלבן שאורכו 7 ס"מ ורוחבו 4 ס"מ. מה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['28'],
+    hint: 'שטח מלבן = אורך × רוחב.',
+    solution: '7 × 4 = 28 ס"מ²'
+  },
+  {
+    id: 'a2', type: 'input',
+    text: 'מלבן שאורכו 9 ס"מ ורוחבו 3 ס"מ. מה היקפו?',
+    note: 'כתוב רק את המספר',
+    answer: ['24'],
+    hint: 'היקף מלבן = 2 × (אורך + רוחב).',
+    solution: '2 × (9 + 3) = 2 × 12 = 24 ס"מ'
+  },
+  {
+    id: 'a3', type: 'input',
+    text: 'משולש שבסיסו 10 ס"מ וגובהו 6 ס"מ. מה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['30'],
+    hint: 'שטח משולש = (בסיס × גובה) ÷ 2.',
+    solution: '(10 × 6) ÷ 2 = 60 ÷ 2 = 30 ס"מ²'
+  },
+  {
+    id: 'a4', type: 'input',
+    text: 'ריבוע שצלעו 8 ס"מ. מה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['64'],
+    hint: 'שטח ריבוע = צלע × צלע.',
+    solution: '8 × 8 = 64 ס"מ²'
+  },
+  {
+    id: 'a5', type: 'input',
+    text: 'ריבוע שצלעו 6 ס"מ. מה היקפו?',
+    note: 'כתוב רק את המספר',
+    answer: ['24'],
+    hint: 'היקף ריבוע = 4 × צלע.',
+    solution: '4 × 6 = 24 ס"מ'
+  },
+  {
+    id: 'a6', type: 'mc',
+    text: 'מקבילית שבסיסה 12 ס"מ וגובהה 5 ס"מ. מה שטחה?',
+    options: ['60 ס"מ²', '34 ס"מ²', '30 ס"מ²', '70 ס"מ²'],
     answer: 0,
-    hint: 'חלק גם מונה וגם מכנה ב-2. כמה שווה 6÷2 ו-8÷2?',
-    solution: '6/8 ÷ 2 = 3/4\nהמחלק המשותף הגדול (מ"מ) של 6 ו-8 הוא 2.'
+    hint: 'שטח מקבילית = בסיס × גובה (לא הצלע הנטויה — הגובה הניצב!)',
+    solution: '12 × 5 = 60 ס"מ²'
   },
   {
-    id: 'f2', type: 'input',
-    text: 'חשב: 1/3 + 1/4 = ?',
-    answer: ['7/12'],
-    hint: 'כדי לחבר שברים צריך מכנה משותף. הכפול המשותף הקטן של 3 ו-4 הוא 12.',
-    solution: 'מכנה משותף = 12\n1/3 = 4/12\n1/4 = 3/12\n4/12 + 3/12 = 7/12'
+    id: 'a7', type: 'input',
+    text: 'טרפז עם בסיסים 8 ס"מ ו-12 ס"מ, וגובה 5 ס"מ. מה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['50'],
+    hint: 'שטח טרפז = (בסיס₁ + בסיס₂) ÷ 2 × גובה.',
+    solution: '(8 + 12) ÷ 2 × 5 = 10 × 5 = 50 ס"מ²'
   },
   {
-    id: 'f3', type: 'input',
-    text: 'חשב: 5/6 − 1/3 = ?',
-    answer: ['1/2', '3/6', '2/4'],
-    hint: 'המר 1/3 למכנה 6. 1/3 = ?/6',
-    solution: '1/3 = 2/6\n5/6 − 2/6 = 3/6 = 1/2'
-  },
-  {
-    id: 'f4', type: 'input',
-    text: 'חשב: 2/3 × 3/4 = ?',
-    answer: ['1/2', '6/12', '2/4', '3/6'],
-    hint: 'כפל מונה במונה ומכנה במכנה: (2×3) ÷ (3×4). צמצם את התוצאה.',
-    solution: '2×3 = 6\n3×4 = 12\n6/12 = 1/2'
-  },
-  {
-    id: 'f5', type: 'input',
-    text: 'חשב: 3/4 ÷ 1/2 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 5/3)',
-    answer: ['3/2'],
-    hint: 'חלוקה בשבר = כפל בהפוך שלו. מה ההפוך של 1/2?',
-    solution: '3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2'
-  },
-  {
-    id: 'f6', type: 'input',
-    text: 'המר לשבר בלתי-אמיתי: 3 2/5 = ?',
-    answer: ['17/5'],
-    hint: '3 שלמים = כמה חמישיות? (3 × 5 = ?). הוסף את 2/5.',
-    solution: '3 × 5 = 15\n15/5 + 2/5 = 17/5'
-  },
-  {
-    id: 'f7', type: 'input',
-    text: 'המר למספר מעורב: 7/3 = ?',
-    note: 'כתוב כך: 2 1/3 (מספר שלם, רווח, שבר)',
-    answer: ['2 1/3', '21/3'],
-    hint: 'כמה פעמים 3 נכנס ב-7? מה השארית?',
-    solution: '7 ÷ 3 = 2 שלמים, שארית 1\n7/3 = 2 1/3'
-  },
-  {
-    id: 'f8', type: 'mc',
-    text: 'איזה שבר גדול יותר: 2/3 או 3/5?',
-    options: ['2/3 גדול יותר', '3/5 גדול יותר', 'השברים שווים', 'אי-אפשר להשוות'],
-    answer: 0,
-    hint: 'המר לאותו מכנה. הכפול המשותף הקטן של 3 ו-5 הוא 15.',
-    solution: '2/3 = 10/15\n3/5 = 9/15\n10/15 > 9/15\nלכן 2/3 גדול יותר'
+    id: 'a8', type: 'input',
+    text: 'משולש שצלעותיו 5 ס"מ, 7 ס"מ ו-9 ס"מ. מה היקפו?',
+    note: 'כתוב רק את המספר',
+    answer: ['21'],
+    hint: 'היקף = סכום כל הצלעות.',
+    solution: '5 + 7 + 9 = 21 ס"מ'
   }
 ];
 
 const Q_MULTI = [
   {
-    id: 'f9', type: 'input',
-    text: 'דנה אפתה עוגה.\nביום שישי היא אכלה 1/4 ממנה, ביום שבת אכלה 1/3.\nכמה מהעוגה אכלה דנה בסך הכול?',
-    answer: ['7/12'],
-    hint: 'חבר 1/4 ו-1/3. המכנה המשותף של 4 ו-3 הוא 12.',
-    solution: '1/4 = 3/12\n1/3 = 4/12\n3/12 + 4/12 = 7/12'
-  },
-  {
-    id: 'f10', type: 'input',
-    text: 'בכיתה יש 30 תלמידים. 2/5 מהם בנות.\nמתוך הבנות, 1/3 חברות בחוג דרמה.\nכמה בנות חברות בחוג דרמה?',
-    answer: ['4'],
-    hint: 'שלב א: 30 × 2/5 = ? (כמה בנות). שלב ב: כפל ב-1/3.',
-    solution: 'שלב א: 30 × 2/5 = 12 בנות\nשלב ב: 12 × 1/3 = 4 בנות'
-  },
-  {
-    id: 'f11', type: 'input',
-    text: 'למאיה יש 3/4 מלוח שוקולד.\nהיא נתנה 1/3 מהחלק שלה לאחיה.\nאיזה חלק מהלוח השלם נשאר למאיה?',
-    answer: ['1/2', '2/4'],
-    hint: 'שלב א: כמה נתנה? (1/3 × 3/4). שלב ב: הפחת מ-3/4.',
-    solution: 'שלב א: 1/3 × 3/4 = 3/12 = 1/4 — זה מה שנתנה\nשלב ב: 3/4 − 1/4 = 2/4 = 1/2\nנשאר למאיה 1/2 מהלוח'
-  },
-  {
-    id: 'f12', type: 'input',
-    text: 'מתכון דורש 2/3 כוס קמח.\nנועה רוצה להכין 3/4 מהמתכון.\nכמה כוסות קמח היא צריכה?',
-    answer: ['1/2', '2/4', '6/12'],
-    hint: 'כפל את כמות הקמח (2/3) בחלק המתכון (3/4).',
-    solution: '2/3 × 3/4 = 6/12 = 1/2 כוס קמח'
-  },
-  {
-    id: 'f13', type: 'input',
-    text: 'אבי הלך 4 ק"מ, וזה היה 2/3 מהמסלול שתכנן.\nכמה ק"מ היה המסלול המתוכנן?',
+    id: 'a9', type: 'input',
+    text: 'גינה מלבנית 20 מ׳ × 8 מ׳.\nכמה מטרים של גדר נדרשים לתחום אותה מסביב?',
     note: 'כתוב רק את המספר',
-    answer: ['6'],
-    hint: '4 = 2/3 × המסלול. חלק 4 ב-2/3 (= כפל ב-3/2).',
-    solution: '4 ÷ 2/3 = 4 × 3/2 = 12/2 = 6 ק"מ'
+    answer: ['56'],
+    hint: 'חשב את היקף המלבן: 2 × (אורך + רוחב).',
+    solution: '2 × (20 + 8) = 2 × 28 = 56 מ׳'
   },
   {
-    id: 'f14', type: 'input',
-    text: 'רון ועידו חלקו אבטיח.\nרון אכל 3/8, ועידו אכל 1/4.\nאיזה חלק מהאבטיח נשאר?',
-    answer: ['3/8'],
-    hint: 'שלב א: חבר 3/8 + 1/4 (מכנה משותף = 8). שלב ב: הפחת מ-1 (= 8/8).',
-    solution: '3/8 + 1/4 = 3/8 + 2/8 = 5/8 — מה שאכלו\n8/8 − 5/8 = 3/8 נשאר'
+    id: 'a10', type: 'input',
+    text: 'מגרש מלבני 24 מ׳ × 15 מ׳.\nבחלקו יש בניין בגודל 10 מ׳ × 8 מ׳.\nמה שטח המגרש שאינו מכוסה בבניין?',
+    note: 'כתוב רק את המספר',
+    answer: ['280'],
+    hint: 'שלב א: שטח מגרש. שלב ב: שטח בניין. שלב ג: הפחת.',
+    solution: 'שטח מגרש: 24 × 15 = 360 מ"ר\nשטח בניין: 10 × 8 = 80 מ"ר\n360 − 80 = 280 מ"ר'
+  },
+  {
+    id: 'a11', type: 'input',
+    text: 'ריבוע ששטחו 81 מ"ר. מה היקפו?',
+    note: 'כתוב רק את המספר',
+    answer: ['36'],
+    hint: 'שלב א: מצא את אורך הצלע (שטח = צלע²). שלב ב: חשב היקף.',
+    solution: 'שלב א: צלע² = 81 → צלע = 9 מ׳\nשלב ב: היקף = 4 × 9 = 36 מ׳'
+  },
+  {
+    id: 'a12', type: 'input',
+    text: 'מלבן שהיקפו 26 ס"מ ואורכו 8 ס"מ. מה רוחבו?',
+    note: 'כתוב רק את המספר',
+    answer: ['5'],
+    hint: '2 × (8 + רוחב) = 26. חלק ב-2 קודם.',
+    solution: '2 × (8 + רוחב) = 26\n8 + רוחב = 13\nרוחב = 5 ס"מ'
+  },
+  {
+    id: 'a13', type: 'input',
+    text: 'משולש ישר-זווית.\nשתי הרגליים שלו הן 6 ס"מ ו-8 ס"מ.\nמה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['24'],
+    hint: 'ברגליים של משולש ישר-זווית: שטח = (רגל₁ × רגל₂) ÷ 2.',
+    solution: '(6 × 8) ÷ 2 = 48 ÷ 2 = 24 ס"מ²'
+  },
+  {
+    id: 'a14', type: 'input',
+    text: 'גינה בצורת טרפז.\nהבסיס הגדול 18 מ׳, הבסיס הקטן 12 מ׳, הגובה 10 מ׳.\nמה שטח הגינה?',
+    note: 'כתוב רק את המספר',
+    answer: ['150'],
+    hint: 'שטח טרפז = (בסיס גדול + בסיס קטן) ÷ 2 × גובה.',
+    solution: '(18 + 12) ÷ 2 × 10 = 15 × 10 = 150 מ"ר'
   }
 ];
 
 const Q_EXTRA = [
   {
-    id: 'f15', type: 'input',
-    text: 'חשב: 3/5 + 2/3 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי',
-    answer: ['19/15'],
-    hint: 'מכנה משותף של 5 ו-3 הוא 15. 3/5 = ?/15 ו-2/3 = ?/15',
-    solution: '3/5 = 9/15\n2/3 = 10/15\n9/15 + 10/15 = 19/15'
-  },
-  {
-    id: 'f16', type: 'input',
-    text: 'חשב: 4/5 − 1/4 = ?',
-    answer: ['11/20'],
-    hint: 'מכנה משותף של 5 ו-4 הוא 20. 4/5 = ?/20 ו-1/4 = ?/20',
-    solution: '4/5 = 16/20\n1/4 = 5/20\n16/20 − 5/20 = 11/20'
-  },
-  {
-    id: 'f17', type: 'mc',
-    text: 'איזה שבר הגדול ביותר?\n2/5 , 3/7 , 1/2',
-    options: ['2/5', '3/7', '1/2', 'כולם שווים'],
-    answer: 2,
-    hint: 'המר לאותו מכנה (70). 2/5=28/70, 3/7=30/70, 1/2=35/70',
-    solution: '2/5 = 28/70\n3/7 = 30/70\n1/2 = 35/70\nהגדול ביותר: 1/2'
-  },
-  {
-    id: 'f18', type: 'input',
-    text: 'בכיתה יש 24 תלמידים. 3/8 מהם בנים.\nכמה בנים יש בכיתה?',
+    id: 'a15', type: 'input',
+    text: 'מלבן שאורכו כפול מרוחבו. שטחו 50 מ"ר. מה אורכו?',
     note: 'כתוב רק את המספר',
-    answer: ['9'],
-    hint: 'כפל: 24 × 3/8. קודם חלק 24 ב-8, אחר-כך כפל ב-3.',
-    solution: '24 ÷ 8 = 3\n3 × 3 = 9 בנים'
+    answer: ['10'],
+    hint: 'סמן רוחב = ר. אז אורך = 2ר. שטח = אורך × רוחב = 2ר × ר = 50.',
+    solution: '2ר² = 50 → ר² = 25 → ר = 5\nאורך = 2 × 5 = 10 מ׳'
   },
   {
-    id: 'f19', type: 'input',
-    text: 'ליאור אכלה 2/5 מהפיצה, נועה אכלה 1/3.\nאיזה חלק מהפיצה נשאר?',
-    answer: ['4/15'],
-    hint: 'שלב א: חבר 2/5 + 1/3 (מכנה 15). שלב ב: הפחת מ-1 (= 15/15).',
-    solution: '2/5 = 6/15\n1/3 = 5/15\n6/15 + 5/15 = 11/15 (מה שאכלו)\n15/15 − 11/15 = 4/15 נשאר'
-  },
-  {
-    id: 'f20', type: 'input',
-    text: 'בחוג ציור יש 20 ילדים — זה 4/7 מכל תלמידי הכיתה.\nכמה תלמידים יש בכיתה?',
-    note: 'כתוב רק את המספר',
-    answer: ['35'],
-    hint: 'אם 4/7 שווה 20, אז 1/7 שווה 20÷4=5. כמה זה 7/7?',
-    solution: '4/7 מהכיתה = 20 ילדים\n÷ 4: 1/7 מהכיתה = 5\n× 7: כל הכיתה = 7 × 5 = 35 תלמידים'
-  },
-  {
-    id: 'f21', type: 'input',
-    text: 'מאיה חסכה 120 ₪. זה 3/5 מהסכום שהיא צריכה לטיול.\nכמה ₪ עולה הטיול?',
-    note: 'כתוב רק את המספר',
-    answer: ['200'],
-    hint: 'אם 3/5 שווה 120 ₪, אז 1/5 שווה 120÷3=40 ₪. כמה זה 5/5?',
-    solution: '3/5 מהסכום = 120 ₪\n÷ 3: 1/5 מהסכום = 40 ₪\n× 5: כל הסכום = 5 × 40 = 200 ₪'
-  }
-];
-
-const Q_MULT = [
-  {
-    id: 'fm1', type: 'input',
-    text: 'חשב: 5 × 2/3 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 10/3)',
-    answer: ['10/3', '3 1/3'],
-    hint: 'כפל את השלם במונה: 5 × 2 = 10. המכנה לא משתנה.',
-    solution: '5 × 2/3 = (5 × 2) / 3 = 10/3 = 3 1/3'
-  },
-  {
-    id: 'fm2', type: 'input',
-    text: 'חשב: 3/4 × 8 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['6'],
-    hint: 'כפל מונה ב-8: 3 × 8 = 24. אחרי כן חלק במכנה: 24 ÷ 4.',
-    solution: '3/4 × 8 = (3 × 8) / 4 = 24/4 = 6'
-  },
-  {
-    id: 'fm3', type: 'input',
-    text: 'חשב: 2/3 × 3/5 = ?',
-    answer: ['2/5', '6/15'],
-    hint: 'כפל מונה במונה ומכנה במכנה: (2×3) / (3×5). אחר-כך צמצם ב-3.',
-    solution: '2/3 × 3/5 = 6/15\nצמצום ב-3: 6÷3=2, 15÷3=5\n= 2/5'
-  },
-  {
-    id: 'fm4', type: 'input',
-    text: 'חשב: 4 × 1 1/2 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['6'],
-    hint: 'המר 1 1/2 לשבר בלתי-אמיתי: (1×2+1)/2 = 3/2. אחר-כך כפל: 4 × 3/2.',
-    solution: '1 1/2 = 3/2\n4 × 3/2 = 12/2 = 6'
-  },
-  {
-    id: 'fm5', type: 'input',
-    text: 'חשב: 2 1/3 × 3/7 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['1'],
-    hint: 'המר 2 1/3 לשבר: (2×3+1)/3 = 7/3. כפל: 7/3 × 3/7. שים לב — מה קורה למונה ולמכנה?',
-    solution: '2 1/3 = 7/3\n7/3 × 3/7 = 21/21 = 1\n(מונה ומכנה שווים — תוצאה = 1)'
-  },
-  {
-    id: 'fm6', type: 'input',
-    text: 'לחבילת גבינה יש 300 גרם.\nמאיה אכלה 2/3 ממנה. כמה גרם אכלה?',
-    note: 'כתוב רק את המספר',
-    answer: ['200'],
-    hint: 'כפל: 300 × 2/3. קודם חלק 300 ב-3, אחר-כך כפל ב-2.',
-    solution: '300 ÷ 3 = 100\n100 × 2 = 200 גרם'
-  },
-  {
-    id: 'fm7', type: 'input',
-    text: 'חשב: 0.4 × 10 = ?',
-    answer: ['4'],
-    hint: 'כשמכפילים ב-10, הנקודה העשרונית זזה מקום אחד ימינה.',
-    solution: '0.4 × 10 = 4\n(0.4 → 4.0 = 4)'
-  },
-  {
-    id: 'fm8', type: 'input',
-    text: 'חשב: 0.35 × 100 = ?',
-    answer: ['35'],
-    hint: 'כשמכפילים ב-100, הנקודה זזה שני מקומות ימינה.',
-    solution: '0.35 × 100 = 35\n(0.35 → 35.0 = 35)'
-  }
-];
-
-const Q_DIVF = [
-  {
-    id: 'fd1', type: 'input',
-    text: 'חשב: 3/4 ÷ 3 = ?',
-    answer: ['1/4'],
-    hint: 'חלוקה בשלם = כפל בהפוך שלו. ההפוך של 3 הוא 1/3.',
-    solution: '3/4 ÷ 3 = 3/4 × 1/3 = 3/12 = 1/4'
-  },
-  {
-    id: 'fd2', type: 'input',
-    text: 'חשב: 6 ÷ 3/4 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['8'],
-    hint: 'חלוקה בשבר = כפל בהפוך שלו. ההפוך של 3/4 הוא 4/3.',
-    solution: '6 ÷ 3/4 = 6 × 4/3 = 24/3 = 8'
-  },
-  {
-    id: 'fd3', type: 'input',
-    text: 'חשב: 4/5 ÷ 2/3 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי',
-    answer: ['6/5', '1 1/5'],
-    hint: 'כפל בהפוך של 2/3, שהוא 3/2: 4/5 × 3/2 = ?',
-    solution: '4/5 ÷ 2/3 = 4/5 × 3/2 = 12/10 = 6/5 = 1 1/5'
-  },
-  {
-    id: 'fd4', type: 'mc',
-    text: 'מה שווה: 3/4 ÷ 1/2 ?',
-    options: ['3/8', '3/2', '2/3', '1/4'],
+    id: 'a16', type: 'mc',
+    text: 'ריבוע ומשולש שווים בשטחם.\nהריבוע בצלע 6 ס"מ. גובה המשולש 9 ס"מ.\nמה אורך בסיס המשולש?',
+    options: ['6 ס"מ', '8 ס"מ', '9 ס"מ', '4 ס"מ'],
     answer: 1,
-    hint: 'כפל ב-2/1 (ההפוך של 1/2): 3/4 × 2 = ?',
-    solution: '3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2'
+    hint: 'שטח ריבוע = 6×6 = 36. שטח משולש = (בסיס × 9) ÷ 2 = 36. פתור לבסיס.',
+    solution: 'שטח ריבוע: 6 × 6 = 36 ס"מ²\n(בסיס × 9) ÷ 2 = 36\nבסיס × 9 = 72\nבסיס = 8 ס"מ'
   },
   {
-    id: 'fd5', type: 'input',
-    text: 'חוט באורך 5/6 מטר חולק ל-5 חלקים שווים.\nמה אורך כל חלק?',
-    answer: ['1/6'],
-    hint: '5/6 ÷ 5 = 5/6 × 1/5. כפל מונה במונה ומכנה במכנה.',
-    solution: '5/6 ÷ 5 = 5/6 × 1/5 = 5/30 = 1/6 מטר'
-  },
-  {
-    id: 'fd6', type: 'input',
-    text: 'חשב: 0.8 ÷ 10 = ?',
-    answer: ['0.08'],
-    hint: 'כשמחלקים ב-10, הנקודה העשרונית זזה מקום אחד שמאלה.',
-    solution: '0.8 ÷ 10 = 0.08\n(0.8 → 0.08)'
-  }
-];
-
-const Q_PAREN = [
-  {
-    id: 'fp1', type: 'input',
-    text: 'חשב: (1/2 + 1/3) × 6 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['5'],
-    hint: 'שלב א: חשב את הסוגריים — 1/2 + 1/3 (מכנה משותף = 6). שלב ב: כפל ב-6.',
-    solution: 'שלב א: 1/2 + 1/3 = 3/6 + 2/6 = 5/6\nשלב ב: 5/6 × 6 = 30/6 = 5'
-  },
-  {
-    id: 'fp2', type: 'input',
-    text: 'חשב: (3/4 − 1/4) × 2 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['1'],
-    hint: 'שלב א: 3/4 − 1/4 = ? שלב ב: כפל התוצאה ב-2.',
-    solution: 'שלב א: 3/4 − 1/4 = 2/4 = 1/2\nשלב ב: 1/2 × 2 = 1'
-  },
-  {
-    id: 'fp3', type: 'input',
-    text: 'חשב: 3 × (2/3 + 1/4) = ?',
-    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 11/4)',
-    answer: ['11/4', '2 3/4'],
-    hint: 'שלב א: מצא מכנה משותף ל-2/3 ו-1/4 (= 12). שלב ב: כפל ב-3.',
-    solution: 'שלב א: 2/3 + 1/4 = 8/12 + 3/12 = 11/12\nשלב ב: 3 × 11/12 = 33/12 = 11/4 = 2 3/4'
-  },
-  {
-    id: 'fp4', type: 'input',
-    text: 'חשב: (2/3 ÷ 1/3) × 3/4 = ?',
-    note: 'כתוב כשבר',
-    answer: ['3/2', '1 1/2'],
-    hint: 'שלב א: 2/3 ÷ 1/3 = 2/3 × 3/1 = ? שלב ב: כפל התוצאה ב-3/4.',
-    solution: 'שלב א: 2/3 ÷ 1/3 = 2/3 × 3/1 = 6/3 = 2\nשלב ב: 2 × 3/4 = 6/4 = 3/2 = 1 1/2'
-  },
-  {
-    id: 'fp5', type: 'input',
-    text: 'בכיתה יש 30 תלמידים.\n(1/3 + 1/6) מהתלמידים יצאו לטיול.\nכמה תלמידים יצאו לטיול?',
+    id: 'a17', type: 'input',
+    text: 'צורת L: מלבן 10×6 מ׳ שממנו נגרעת פינה של 4×3 מ׳.\nמה שטח הצורה?',
     note: 'כתוב רק את המספר',
-    answer: ['15'],
-    hint: 'שלב א: חשב 1/3 + 1/6 (מכנה משותף = 6). שלב ב: כפל ב-30.',
-    solution: 'שלב א: 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2\nשלב ב: 30 × 1/2 = 15 תלמידים'
+    answer: ['48'],
+    hint: 'חשב שטח מלבן שלם ואז הפחת את הפינה שנגרעת.',
+    solution: 'שטח שלם: 10 × 6 = 60 מ"ר\nשטח גרוע: 4 × 3 = 12 מ"ר\n60 − 12 = 48 מ"ר'
   },
   {
-    id: 'fp6', type: 'input',
-    text: 'חשב: 2 × (1/3 + 1/6) + 1/4 = ?',
-    note: 'כתוב כשבר (לדוגמה: 5/4)',
-    answer: ['5/4', '1 1/4'],
-    hint: 'שלב א: 1/3 + 1/6 = ? שלב ב: כפל ב-2. שלב ג: הוסף 1/4.',
-    solution: 'שלב א: 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2\nשלב ב: 2 × 1/2 = 1\nשלב ג: 1 + 1/4 = 4/4 + 1/4 = 5/4 = 1 1/4'
+    id: 'a18', type: 'input',
+    text: 'ריבוע שהיקפו 44 ס"מ. מה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['121'],
+    hint: 'שלב א: מצא צלע מתוך היקף (היקף ÷ 4). שלב ב: חשב שטח.',
+    solution: 'צלע = 44 ÷ 4 = 11 ס"מ\nשטח = 11 × 11 = 121 ס"מ²'
+  },
+  {
+    id: 'a19', type: 'input',
+    text: 'מלבן שהיקפו 30 ס"מ. אורכו גדול מרוחבו ב-3 ס"מ.\nמה שטחו?',
+    note: 'כתוב רק את המספר',
+    answer: ['54'],
+    hint: 'שלב א: א + ב = 15 (מחצית היקף). שלב ב: א = ב + 3. פתור לב ולא.',
+    solution: 'א + ב = 15, א = ב + 3\n(ב+3) + ב = 15 → 2ב = 12 → ב = 6\nא = 9\nשטח = 9 × 6 = 54 ס"מ²'
   }
 ];
 
-const ALL_Q = [...Q_SINGLE, ...Q_MULTI, ...Q_MULT, ...Q_DIVF, ...Q_PAREN];
+const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
 function findQ(qid) {
   return [...ALL_Q, ...Q_EXTRA].find(function(x) { return x.id === qid; });
 }
@@ -870,9 +647,6 @@ function findSection(qid) {
   if (Q_SINGLE.some(function(q){return q.id===qid;})) return ['q-single', Q_SINGLE];
   if (Q_MULTI.some(function(q){return q.id===qid;})) return ['q-multi', Q_MULTI];
   if (Q_EXTRA.some(function(q){return q.id===qid;})) return ['q-extra', Q_EXTRA];
-  if (Q_MULT.some(function(q){return q.id===qid;})) return ['q-mult', Q_MULT];
-  if (Q_DIVF.some(function(q){return q.id===qid;})) return ['q-divf', Q_DIVF];
-  if (Q_PAREN.some(function(q){return q.id===qid;})) return ['q-paren', Q_PAREN];
   return null;
 }
 function checkSectionDone(cid, qs) {
@@ -884,20 +658,11 @@ function checkSectionDone(cid, qs) {
 }
 
 function norm(s) {
-  return s.toLowerCase().replace(/[\s%₪]/g, '');
-}
-function parseFrac(s) {
-  const m = s.match(/^(-?\d+)\/(\d+)$/);
-  return m ? [parseInt(m[1]), parseInt(m[2])] : null;
+  return s.toLowerCase().replace(/[\s%₪,]/g, '');
 }
 function isCorrect(raw, accepted) {
   const n = norm(raw);
-  return accepted.some(a => {
-    const na = norm(a);
-    if (na === n) return true;
-    const fn = parseFrac(n), fa = parseFrac(na);
-    return fn && fa && fa[1] !== 0 && fn[0] * fa[1] === fn[1] * fa[0];
-  });
+  return accepted.some(a => norm(a) === n);
 }
 
 function speakQ(qid) {
@@ -1084,10 +849,8 @@ function toggleSol(qid) {
 }
 
 function loadMore() {
-  const btn = document.getElementById('more-btn');
-  const sec = document.getElementById('more-section');
-  btn.style.display = 'none';
-  sec.classList.add('visible');
+  document.getElementById('more-btn').style.display = 'none';
+  document.getElementById('more-section').classList.add('visible');
   Q_EXTRA.forEach(q => document.getElementById('q-extra').appendChild(renderCard(q)));
   updateScore();
 }
@@ -1099,9 +862,6 @@ function resetAll() {
   document.getElementById('q-single').innerHTML = '';
   document.getElementById('q-multi').innerHTML = '';
   document.getElementById('q-extra').innerHTML = '';
-  document.getElementById('q-mult').innerHTML = '';
-  document.getElementById('q-divf').innerHTML = '';
-  document.getElementById('q-paren').innerHTML = '';
   document.getElementById('more-section').classList.remove('visible');
   document.getElementById('more-btn').style.display = 'block';
   init();
@@ -1110,9 +870,6 @@ function resetAll() {
 function init() {
   Q_SINGLE.forEach(q => document.getElementById('q-single').appendChild(renderCard(q)));
   Q_MULTI.forEach(q => document.getElementById('q-multi').appendChild(renderCard(q)));
-  Q_MULT.forEach(q => document.getElementById('q-mult').appendChild(renderCard(q)));
-  Q_DIVF.forEach(q => document.getElementById('q-divf').appendChild(renderCard(q)));
-  Q_PAREN.forEach(q => document.getElementById('q-paren').appendChild(renderCard(q)));
   updateScore();
 }
 

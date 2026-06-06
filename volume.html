@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>שברים — מאיה</title>
+<title>נפח — מאיה</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -101,6 +101,7 @@
     font-size: 0.82rem;
     line-height: 1.5;
   }
+  .formula-item.wide { grid-column: 1 / -1; }
   .formula-item strong { color: var(--accent-alt); }
   .progress-wrap {
     display: flex;
@@ -307,8 +308,6 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ─── More exercises ─────────────────────────────── */
   .more-btn {
     display: block;
     margin: 20px auto 0;
@@ -326,8 +325,6 @@
   .more-btn:hover { background: rgba(255,107,53,0.2); transform: scale(1.02); }
   .more-section { display: none; }
   .more-section.visible { display: block; }
-
-  /* ─── Topic intro ───────────────────────────────── */
   .topic-intro {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -352,8 +349,6 @@
   }
   .topic-intro-body { margin-top: 8px; }
   .topic-intro-body.hidden { display: none; }
-
-  /* ─── Speak button ───────────────────────────────── */
   .speak-btn {
     background: none;
     border: 1px solid var(--border);
@@ -370,8 +365,6 @@
   .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
   .speak-btn.speaking { border-color: var(--accent-alt); color: var(--accent-alt); animation: pulse 0.8s infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-  /* ─── Hint button ────────────────────────────────── */
   .hint-btn {
     background: none;
     border: 1px dashed var(--border);
@@ -385,8 +378,6 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .hint-btn:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
-
-  /* ─── Section retry ──────────────────────────────── */
   .section-retry-btn {
     background: none;
     border: 1px solid var(--border);
@@ -400,10 +391,10 @@
     white-space: nowrap;
   }
   .section-retry-btn:hover { border-color: var(--accent); color: var(--accent); }
-
   @media (max-width: 500px) {
     header h1 { font-size: 1.8rem; }
     .formula-grid { grid-template-columns: 1fr; }
+    .formula-item.wide { grid-column: 1; }
     .answer-row { flex-direction: column; align-items: stretch; }
     .check-btn { width: 100%; }
   }
@@ -413,8 +404,8 @@
 
 <header>
   <a href="index.html" class="back-link">← דף הבית</a>
-  <h1>שברים</h1>
-  <p>fractions · grade 6</p>
+  <h1>נפח</h1>
+  <p>volume · grade 6</p>
 </header>
 
 <div class="score-strip">
@@ -425,21 +416,20 @@
 
   <div class="topic-intro">
     <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
-    <strong>מה זה שברים?</strong>
+    <strong>נפח של גופים תלת-ממדיים</strong>
     <div class="topic-intro-body">
-      שבר מתאר חלק מתוך שלם. למשל, 3/4 אומר שחילקנו משהו ל-4 חלקים שווים ולקחנו 3 מהם.<br>
-      כשמחברים או מחסרים שברים — צריך קודם לאחד את המכנים. כשמכפילים — מכפילים מונה במונה ומכנה במכנה. כשמחלקים — כופלים בהפוך.<br>
-      <strong>שים לב:</strong> תשובות שוות ערך (כמו 1/2 ו-2/4) שתיהן נחשבות נכונות.
+      <strong>נפח</strong> מודד את הגודל הפנימי של גוף (יחידות: ס"מ³, מ"ק).<br>
+      1 ס"מ³ = 1 מ"ל &nbsp;|&nbsp; 1000 ס"מ³ = 1 ליטר &nbsp;|&nbsp; 1 מ"ק = 1000 ליטר.<br>
+      שימי לב: נפח קובייה גדל מהר מאוד — אם מכפילים צלע פי 2, הנפח גדל פי <strong>8</strong> (2³).
     </div>
   </div>
 
   <div class="formula-box">
-    <h3>נוסחאות — שברים</h3>
+    <h3>נוסחאות — נפח</h3>
     <div class="formula-grid">
-      <div class="formula-item"><strong>חיבור/חיסור:</strong> מצא מכנה משותף</div>
-      <div class="formula-item"><strong>כפל:</strong> מונה×מונה ÷ מכנה×מכנה</div>
-      <div class="formula-item"><strong>חלוקה:</strong> כפל בהפוך של המחלק</div>
-      <div class="formula-item"><strong>מספר מעורב ← שבר:</strong> שלמים×מכנה + מונה</div>
+      <div class="formula-item"><strong>תיבה (מקבילית-שטחים):</strong><br>נפח = א × ב × ג</div>
+      <div class="formula-item"><strong>קובייה:</strong><br>נפח = צלע × צלע × צלע</div>
+      <div class="formula-item wide"><strong>המרות:</strong> &nbsp;1000 ס"מ³ = 1 ליטר &nbsp;|&nbsp; 1 מ"ק = 1,000,000 ס"מ³ = 1000 ליטר</div>
     </div>
   </div>
 
@@ -449,7 +439,7 @@
   </div>
 
   <div class="section-heading">
-    <h2>שלב אחד</h2>
+    <h2>שאלה בסיסית</h2>
     <span class="section-badge">8 שאלות</span>
     <div class="section-line"></div>
     <button class="section-retry-btn" onclick="retrySection('q-single', Q_SINGLE)">↺ נסה שוב</button>
@@ -476,389 +466,172 @@
     <div id="q-extra"></div>
   </div>
 
-  <div style="margin-top:36px;border-top:2px dashed var(--border);padding-top:28px;">
-
-    <div class="topic-intro">
-      <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
-      <strong>כפל וחילוק שברים</strong>
-      <div class="topic-intro-body">
-        כשמכפילים שברים — כופלים מונה במונה ומכנה במכנה. לדוגמה: 2/3 × 3/5 = 6/15 = 2/5.<br>
-        כשמחלקים בשבר — כופלים בהפוך שלו. לדוגמה: 3/4 ÷ 1/2 = 3/4 × 2 = 3/2.<br>
-        מספר מעורב — יש להמיר לשבר בלתי-אמיתי לפני כפל או חילוק.<br>
-        <strong>שברים עשרוניים:</strong> ×10 — נקודה זזה ימינה · ÷10 — נקודה זזה שמאלה.
-      </div>
-    </div>
-
-    <div class="formula-box">
-      <h3>נוסחאות — כפל וחילוק</h3>
-      <div class="formula-grid">
-        <div class="formula-item"><strong>כפל:</strong> א/ב × ג/ד = (א×ג) / (ב×ד)</div>
-        <div class="formula-item"><strong>חלוקה:</strong> א/ב ÷ ג/ד = א/ב × ד/ג</div>
-        <div class="formula-item"><strong>×10 / ×100:</strong> נקודה → ימינה 1 / 2 מקומות</div>
-        <div class="formula-item"><strong>÷10 / ÷100:</strong> נקודה → שמאלה 1 / 2 מקומות</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="section-heading">
-    <h2>כפל שברים</h2>
-    <span class="section-badge">8 שאלות</span>
-    <div class="section-line"></div>
-    <button class="section-retry-btn" onclick="retrySection('q-mult', Q_MULT)">↺ נסה שוב</button>
-  </div>
-  <div id="q-mult"></div>
-
-  <div class="section-heading">
-    <h2>חילוק שברים</h2>
-    <span class="section-badge multi">6 שאלות</span>
-    <div class="section-line"></div>
-    <button class="section-retry-btn" onclick="retrySection('q-divf', Q_DIVF)">↺ נסה שוב</button>
-  </div>
-  <div id="q-divf"></div>
-
-  <div class="section-heading">
-    <h2>סוגריים ורב-שלבי</h2>
-    <span class="section-badge multi">6 שאלות</span>
-    <div class="section-line"></div>
-    <button class="section-retry-btn" onclick="retrySection('q-paren', Q_PAREN)">↺ נסה שוב</button>
-  </div>
-  <div id="q-paren"></div>
-
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
 <script>
 const Q_SINGLE = [
   {
-    id: 'f1', type: 'mc',
-    text: 'מה שווה הצמצום של 6/8?',
-    options: ['3/4', '2/3', '4/6', '6/8 (ללא צמצום)'],
+    id: 'v1', type: 'input',
+    text: 'תיבה שממדיה 3 ס"מ × 4 ס"מ × 5 ס"מ. מה נפחה?',
+    note: 'כתוב רק את המספר',
+    answer: ['60'],
+    hint: 'נפח תיבה = אורך × רוחב × גובה.',
+    solution: '3 × 4 × 5 = 60 ס"מ³'
+  },
+  {
+    id: 'v2', type: 'input',
+    text: 'קובייה שצלעה 4 ס"מ. מה נפחה?',
+    note: 'כתוב רק את המספר',
+    answer: ['64'],
+    hint: 'נפח קובייה = צלע × צלע × צלע.',
+    solution: '4 × 4 × 4 = 64 ס"מ³'
+  },
+  {
+    id: 'v3', type: 'mc',
+    text: 'תיבה 6 ס"מ × 2 ס"מ × 3 ס"מ. מה נפחה?',
+    options: ['36 ס"מ³', '11 ס"מ³', '60 ס"מ³', '18 ס"מ³'],
     answer: 0,
-    hint: 'חלק גם מונה וגם מכנה ב-2. כמה שווה 6÷2 ו-8÷2?',
-    solution: '6/8 ÷ 2 = 3/4\nהמחלק המשותף הגדול (מ"מ) של 6 ו-8 הוא 2.'
+    hint: 'כפול את כל שלושת הממדים.',
+    solution: '6 × 2 × 3 = 36 ס"מ³'
   },
   {
-    id: 'f2', type: 'input',
-    text: 'חשב: 1/3 + 1/4 = ?',
-    answer: ['7/12'],
-    hint: 'כדי לחבר שברים צריך מכנה משותף. הכפול המשותף הקטן של 3 ו-4 הוא 12.',
-    solution: 'מכנה משותף = 12\n1/3 = 4/12\n1/4 = 3/12\n4/12 + 3/12 = 7/12'
+    id: 'v4', type: 'input',
+    text: 'תיבה 10 ס"מ × 5 ס"מ × 2 ס"מ. מה נפחה?',
+    note: 'כתוב רק את המספר',
+    answer: ['100'],
+    hint: 'נפח = א × ב × ג.',
+    solution: '10 × 5 × 2 = 100 ס"מ³'
   },
   {
-    id: 'f3', type: 'input',
-    text: 'חשב: 5/6 − 1/3 = ?',
-    answer: ['1/2', '3/6', '2/4'],
-    hint: 'המר 1/3 למכנה 6. 1/3 = ?/6',
-    solution: '1/3 = 2/6\n5/6 − 2/6 = 3/6 = 1/2'
+    id: 'v5', type: 'input',
+    text: 'קובייה שנפחה 27 ס"מ³. מה אורך צלעה?',
+    note: 'כתוב רק את המספר',
+    answer: ['3'],
+    hint: 'צלע × צלע × צלע = 27. נסי: מה מספר שכפול שלוש פעמים נותן 27?',
+    solution: '3 × 3 × 3 = 27\nצלע = 3 ס"מ'
   },
   {
-    id: 'f4', type: 'input',
-    text: 'חשב: 2/3 × 3/4 = ?',
-    answer: ['1/2', '6/12', '2/4', '3/6'],
-    hint: 'כפל מונה במונה ומכנה במכנה: (2×3) ÷ (3×4). צמצם את התוצאה.',
-    solution: '2×3 = 6\n3×4 = 12\n6/12 = 1/2'
-  },
-  {
-    id: 'f5', type: 'input',
-    text: 'חשב: 3/4 ÷ 1/2 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 5/3)',
-    answer: ['3/2'],
-    hint: 'חלוקה בשבר = כפל בהפוך שלו. מה ההפוך של 1/2?',
-    solution: '3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2'
-  },
-  {
-    id: 'f6', type: 'input',
-    text: 'המר לשבר בלתי-אמיתי: 3 2/5 = ?',
-    answer: ['17/5'],
-    hint: '3 שלמים = כמה חמישיות? (3 × 5 = ?). הוסף את 2/5.',
-    solution: '3 × 5 = 15\n15/5 + 2/5 = 17/5'
-  },
-  {
-    id: 'f7', type: 'input',
-    text: 'המר למספר מעורב: 7/3 = ?',
-    note: 'כתוב כך: 2 1/3 (מספר שלם, רווח, שבר)',
-    answer: ['2 1/3', '21/3'],
-    hint: 'כמה פעמים 3 נכנס ב-7? מה השארית?',
-    solution: '7 ÷ 3 = 2 שלמים, שארית 1\n7/3 = 2 1/3'
-  },
-  {
-    id: 'f8', type: 'mc',
-    text: 'איזה שבר גדול יותר: 2/3 או 3/5?',
-    options: ['2/3 גדול יותר', '3/5 גדול יותר', 'השברים שווים', 'אי-אפשר להשוות'],
+    id: 'v6', type: 'mc',
+    text: 'תיבה 10 ס"מ × 10 ס"מ × 10 ס"מ. כמה ליטרים היא מכילה?',
+    options: ['1 ליטר', '10 ליטר', '100 ליטר', '1000 ליטר'],
     answer: 0,
-    hint: 'המר לאותו מכנה. הכפול המשותף הקטן של 3 ו-5 הוא 15.',
-    solution: '2/3 = 10/15\n3/5 = 9/15\n10/15 > 9/15\nלכן 2/3 גדול יותר'
+    hint: 'חשב נפח בס"מ³, אחר-כך חלק ב-1000.',
+    solution: '10 × 10 × 10 = 1000 ס"מ³\n1000 ÷ 1000 = 1 ליטר'
+  },
+  {
+    id: 'v7', type: 'input',
+    text: 'תיבה שנפחה 120 ס"מ³. אורכה 10 ס"מ, רוחבה 4 ס"מ. מה גובהה?',
+    note: 'כתוב רק את המספר',
+    answer: ['3'],
+    hint: 'נפח = א × ב × ג → 120 = 10 × 4 × ג. פתור לג.',
+    solution: '120 = 10 × 4 × ג\n120 = 40 × ג\nג = 3 ס"מ'
+  },
+  {
+    id: 'v8', type: 'input',
+    text: 'תיבה 5 ס"מ × 4 ס"מ × 3 ס"מ. כמה קוביות 1×1×1 ס"מ נכנסות בה?',
+    note: 'כתוב רק את המספר',
+    answer: ['60'],
+    hint: 'מספר הקוביות = נפח התיבה בס"מ³.',
+    solution: '5 × 4 × 3 = 60 קוביות'
   }
 ];
 
 const Q_MULTI = [
   {
-    id: 'f9', type: 'input',
-    text: 'דנה אפתה עוגה.\nביום שישי היא אכלה 1/4 ממנה, ביום שבת אכלה 1/3.\nכמה מהעוגה אכלה דנה בסך הכול?',
-    answer: ['7/12'],
-    hint: 'חבר 1/4 ו-1/3. המכנה המשותף של 4 ו-3 הוא 12.',
-    solution: '1/4 = 3/12\n1/3 = 4/12\n3/12 + 4/12 = 7/12'
-  },
-  {
-    id: 'f10', type: 'input',
-    text: 'בכיתה יש 30 תלמידים. 2/5 מהם בנות.\nמתוך הבנות, 1/3 חברות בחוג דרמה.\nכמה בנות חברות בחוג דרמה?',
-    answer: ['4'],
-    hint: 'שלב א: 30 × 2/5 = ? (כמה בנות). שלב ב: כפל ב-1/3.',
-    solution: 'שלב א: 30 × 2/5 = 12 בנות\nשלב ב: 12 × 1/3 = 4 בנות'
-  },
-  {
-    id: 'f11', type: 'input',
-    text: 'למאיה יש 3/4 מלוח שוקולד.\nהיא נתנה 1/3 מהחלק שלה לאחיה.\nאיזה חלק מהלוח השלם נשאר למאיה?',
-    answer: ['1/2', '2/4'],
-    hint: 'שלב א: כמה נתנה? (1/3 × 3/4). שלב ב: הפחת מ-3/4.',
-    solution: 'שלב א: 1/3 × 3/4 = 3/12 = 1/4 — זה מה שנתנה\nשלב ב: 3/4 − 1/4 = 2/4 = 1/2\nנשאר למאיה 1/2 מהלוח'
-  },
-  {
-    id: 'f12', type: 'input',
-    text: 'מתכון דורש 2/3 כוס קמח.\nנועה רוצה להכין 3/4 מהמתכון.\nכמה כוסות קמח היא צריכה?',
-    answer: ['1/2', '2/4', '6/12'],
-    hint: 'כפל את כמות הקמח (2/3) בחלק המתכון (3/4).',
-    solution: '2/3 × 3/4 = 6/12 = 1/2 כוס קמח'
-  },
-  {
-    id: 'f13', type: 'input',
-    text: 'אבי הלך 4 ק"מ, וזה היה 2/3 מהמסלול שתכנן.\nכמה ק"מ היה המסלול המתוכנן?',
+    id: 'v9', type: 'input',
+    text: 'אקווריום 50 ס"מ × 30 ס"מ × 40 ס"מ.\nכמה ליטרים ניתן למלא בו?',
     note: 'כתוב רק את המספר',
-    answer: ['6'],
-    hint: '4 = 2/3 × המסלול. חלק 4 ב-2/3 (= כפל ב-3/2).',
-    solution: '4 ÷ 2/3 = 4 × 3/2 = 12/2 = 6 ק"מ'
+    answer: ['60'],
+    hint: 'שלב א: חשב נפח בס"מ³. שלב ב: חלק ב-1000.',
+    solution: '50 × 30 × 40 = 60,000 ס"מ³\n60,000 ÷ 1000 = 60 ליטר'
   },
   {
-    id: 'f14', type: 'input',
-    text: 'רון ועידו חלקו אבטיח.\nרון אכל 3/8, ועידו אכל 1/4.\nאיזה חלק מהאבטיח נשאר?',
-    answer: ['3/8'],
-    hint: 'שלב א: חבר 3/8 + 1/4 (מכנה משותף = 8). שלב ב: הפחת מ-1 (= 8/8).',
-    solution: '3/8 + 1/4 = 3/8 + 2/8 = 5/8 — מה שאכלו\n8/8 − 5/8 = 3/8 נשאר'
+    id: 'v10', type: 'input',
+    text: 'קופסה 20 ס"מ × 15 ס"מ × 10 ס"מ.\nארזנו בה קוביות בגודל 5×5×5 ס"מ.\nכמה קוביות נכנסות?',
+    note: 'כתוב רק את המספר',
+    answer: ['24'],
+    hint: 'חשב כמה קוביות לאורך, לרוחב ולגובה בנפרד, אז כפול.',
+    solution: 'לאורך: 20÷5 = 4\nלרוחב: 15÷5 = 3\nלגובה: 10÷5 = 2\n4 × 3 × 2 = 24 קוביות'
+  },
+  {
+    id: 'v11', type: 'mc',
+    text: 'קובייה קטנה בצלע 2 ס"מ וקובייה גדולה בצלע 4 ס"מ.\nביחס של כמה גדול נפח הקובייה הגדולה מהקטנה?',
+    options: ['2:1', '4:1', '6:1', '8:1'],
+    answer: 3,
+    hint: 'חשב את שני הנפחים: 2³ = ? ו-4³ = ?',
+    solution: 'קטנה: 2×2×2 = 8 ס"מ³\nגדולה: 4×4×4 = 64 ס"מ³\n64 ÷ 8 = 8\nהיחס: 8:1'
+  },
+  {
+    id: 'v12', type: 'input',
+    text: 'ארגז שנפחו 360 ס"מ³. אורכו 10 ס"מ ורוחבו 9 ס"מ. מה גובהו?',
+    note: 'כתוב רק את המספר',
+    answer: ['4'],
+    hint: '360 = 10 × 9 × ג. פתור לג.',
+    solution: '360 = 10 × 9 × ג\n360 = 90 × ג\nג = 4 ס"מ'
+  },
+  {
+    id: 'v13', type: 'input',
+    text: 'בריכה מלבנית 4 מ׳ × 3 מ׳ × 2 מ׳.\nכמה מ"ק (מטר-קוביים) של מים היא מכילה?',
+    note: 'כתוב רק את המספר',
+    answer: ['24'],
+    hint: 'נפח = א × ב × ג. כל הממדים כבר במטרים.',
+    solution: '4 × 3 × 2 = 24 מ"ק'
+  },
+  {
+    id: 'v14', type: 'input',
+    text: 'חדר שממדיו 5 מ׳ × 4 מ׳ × 3 מ׳ (גובה).\nכמה מ"ק של אוויר יש בו?',
+    note: 'כתוב רק את המספר',
+    answer: ['60'],
+    hint: 'נפח = אורך × רוחב × גובה.',
+    solution: '5 × 4 × 3 = 60 מ"ק'
   }
 ];
 
 const Q_EXTRA = [
   {
-    id: 'f15', type: 'input',
-    text: 'חשב: 3/5 + 2/3 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי',
-    answer: ['19/15'],
-    hint: 'מכנה משותף של 5 ו-3 הוא 15. 3/5 = ?/15 ו-2/3 = ?/15',
-    solution: '3/5 = 9/15\n2/3 = 10/15\n9/15 + 10/15 = 19/15'
+    id: 'v15', type: 'input',
+    text: 'נפח תיבה שווה לנפח קובייה בצלע 6 ס"מ.\nממדי התיבה הם 9 ס"מ × 4 ס"מ × ?.\nמה הממד החסר?',
+    note: 'כתוב רק את המספר',
+    answer: ['6'],
+    hint: 'שלב א: נפח קובייה = 6³. שלב ב: 9×4×ג = אותו נפח. פתור.',
+    solution: 'נפח קובייה: 6×6×6 = 216 ס"מ³\n9 × 4 × ג = 216\n36 × ג = 216\nג = 6 ס"מ'
   },
   {
-    id: 'f16', type: 'input',
-    text: 'חשב: 4/5 − 1/4 = ?',
-    answer: ['11/20'],
-    hint: 'מכנה משותף של 5 ו-4 הוא 20. 4/5 = ?/20 ו-1/4 = ?/20',
-    solution: '4/5 = 16/20\n1/4 = 5/20\n16/20 − 5/20 = 11/20'
-  },
-  {
-    id: 'f17', type: 'mc',
-    text: 'איזה שבר הגדול ביותר?\n2/5 , 3/7 , 1/2',
-    options: ['2/5', '3/7', '1/2', 'כולם שווים'],
+    id: 'v16', type: 'mc',
+    text: 'תיבה שנפחה 48 ס"מ³.\nהגדלנו כל ממד פי 2. מה הנפח החדש?',
+    options: ['96 ס"מ³', '192 ס"מ³', '384 ס"מ³', '576 ס"מ³'],
     answer: 2,
-    hint: 'המר לאותו מכנה (70). 2/5=28/70, 3/7=30/70, 1/2=35/70',
-    solution: '2/5 = 28/70\n3/7 = 30/70\n1/2 = 35/70\nהגדול ביותר: 1/2'
+    hint: 'כשמכפילים כל ממד פי 2, הנפח גדל פי 2 × 2 × 2 = ?',
+    solution: 'נפח מוגדל = 48 × (2×2×2) = 48 × 8 = 384 ס"מ³'
   },
   {
-    id: 'f18', type: 'input',
-    text: 'בכיתה יש 24 תלמידים. 3/8 מהם בנים.\nכמה בנים יש בכיתה?',
-    note: 'כתוב רק את המספר',
-    answer: ['9'],
-    hint: 'כפל: 24 × 3/8. קודם חלק 24 ב-8, אחר-כך כפל ב-3.',
-    solution: '24 ÷ 8 = 3\n3 × 3 = 9 בנים'
-  },
-  {
-    id: 'f19', type: 'input',
-    text: 'ליאור אכלה 2/5 מהפיצה, נועה אכלה 1/3.\nאיזה חלק מהפיצה נשאר?',
-    answer: ['4/15'],
-    hint: 'שלב א: חבר 2/5 + 1/3 (מכנה 15). שלב ב: הפחת מ-1 (= 15/15).',
-    solution: '2/5 = 6/15\n1/3 = 5/15\n6/15 + 5/15 = 11/15 (מה שאכלו)\n15/15 − 11/15 = 4/15 נשאר'
-  },
-  {
-    id: 'f20', type: 'input',
-    text: 'בחוג ציור יש 20 ילדים — זה 4/7 מכל תלמידי הכיתה.\nכמה תלמידים יש בכיתה?',
-    note: 'כתוב רק את המספר',
-    answer: ['35'],
-    hint: 'אם 4/7 שווה 20, אז 1/7 שווה 20÷4=5. כמה זה 7/7?',
-    solution: '4/7 מהכיתה = 20 ילדים\n÷ 4: 1/7 מהכיתה = 5\n× 7: כל הכיתה = 7 × 5 = 35 תלמידים'
-  },
-  {
-    id: 'f21', type: 'input',
-    text: 'מאיה חסכה 120 ₪. זה 3/5 מהסכום שהיא צריכה לטיול.\nכמה ₪ עולה הטיול?',
-    note: 'כתוב רק את המספר',
-    answer: ['200'],
-    hint: 'אם 3/5 שווה 120 ₪, אז 1/5 שווה 120÷3=40 ₪. כמה זה 5/5?',
-    solution: '3/5 מהסכום = 120 ₪\n÷ 3: 1/5 מהסכום = 40 ₪\n× 5: כל הסכום = 5 × 40 = 200 ₪'
-  }
-];
-
-const Q_MULT = [
-  {
-    id: 'fm1', type: 'input',
-    text: 'חשב: 5 × 2/3 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 10/3)',
-    answer: ['10/3', '3 1/3'],
-    hint: 'כפל את השלם במונה: 5 × 2 = 10. המכנה לא משתנה.',
-    solution: '5 × 2/3 = (5 × 2) / 3 = 10/3 = 3 1/3'
-  },
-  {
-    id: 'fm2', type: 'input',
-    text: 'חשב: 3/4 × 8 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['6'],
-    hint: 'כפל מונה ב-8: 3 × 8 = 24. אחרי כן חלק במכנה: 24 ÷ 4.',
-    solution: '3/4 × 8 = (3 × 8) / 4 = 24/4 = 6'
-  },
-  {
-    id: 'fm3', type: 'input',
-    text: 'חשב: 2/3 × 3/5 = ?',
-    answer: ['2/5', '6/15'],
-    hint: 'כפל מונה במונה ומכנה במכנה: (2×3) / (3×5). אחר-כך צמצם ב-3.',
-    solution: '2/3 × 3/5 = 6/15\nצמצום ב-3: 6÷3=2, 15÷3=5\n= 2/5'
-  },
-  {
-    id: 'fm4', type: 'input',
-    text: 'חשב: 4 × 1 1/2 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['6'],
-    hint: 'המר 1 1/2 לשבר בלתי-אמיתי: (1×2+1)/2 = 3/2. אחר-כך כפל: 4 × 3/2.',
-    solution: '1 1/2 = 3/2\n4 × 3/2 = 12/2 = 6'
-  },
-  {
-    id: 'fm5', type: 'input',
-    text: 'חשב: 2 1/3 × 3/7 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['1'],
-    hint: 'המר 2 1/3 לשבר: (2×3+1)/3 = 7/3. כפל: 7/3 × 3/7. שים לב — מה קורה למונה ולמכנה?',
-    solution: '2 1/3 = 7/3\n7/3 × 3/7 = 21/21 = 1\n(מונה ומכנה שווים — תוצאה = 1)'
-  },
-  {
-    id: 'fm6', type: 'input',
-    text: 'לחבילת גבינה יש 300 גרם.\nמאיה אכלה 2/3 ממנה. כמה גרם אכלה?',
-    note: 'כתוב רק את המספר',
-    answer: ['200'],
-    hint: 'כפל: 300 × 2/3. קודם חלק 300 ב-3, אחר-כך כפל ב-2.',
-    solution: '300 ÷ 3 = 100\n100 × 2 = 200 גרם'
-  },
-  {
-    id: 'fm7', type: 'input',
-    text: 'חשב: 0.4 × 10 = ?',
-    answer: ['4'],
-    hint: 'כשמכפילים ב-10, הנקודה העשרונית זזה מקום אחד ימינה.',
-    solution: '0.4 × 10 = 4\n(0.4 → 4.0 = 4)'
-  },
-  {
-    id: 'fm8', type: 'input',
-    text: 'חשב: 0.35 × 100 = ?',
-    answer: ['35'],
-    hint: 'כשמכפילים ב-100, הנקודה זזה שני מקומות ימינה.',
-    solution: '0.35 × 100 = 35\n(0.35 → 35.0 = 35)'
-  }
-];
-
-const Q_DIVF = [
-  {
-    id: 'fd1', type: 'input',
-    text: 'חשב: 3/4 ÷ 3 = ?',
-    answer: ['1/4'],
-    hint: 'חלוקה בשלם = כפל בהפוך שלו. ההפוך של 3 הוא 1/3.',
-    solution: '3/4 ÷ 3 = 3/4 × 1/3 = 3/12 = 1/4'
-  },
-  {
-    id: 'fd2', type: 'input',
-    text: 'חשב: 6 ÷ 3/4 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['8'],
-    hint: 'חלוקה בשבר = כפל בהפוך שלו. ההפוך של 3/4 הוא 4/3.',
-    solution: '6 ÷ 3/4 = 6 × 4/3 = 24/3 = 8'
-  },
-  {
-    id: 'fd3', type: 'input',
-    text: 'חשב: 4/5 ÷ 2/3 = ?',
-    note: 'כתוב כשבר בלתי-אמיתי',
-    answer: ['6/5', '1 1/5'],
-    hint: 'כפל בהפוך של 2/3, שהוא 3/2: 4/5 × 3/2 = ?',
-    solution: '4/5 ÷ 2/3 = 4/5 × 3/2 = 12/10 = 6/5 = 1 1/5'
-  },
-  {
-    id: 'fd4', type: 'mc',
-    text: 'מה שווה: 3/4 ÷ 1/2 ?',
-    options: ['3/8', '3/2', '2/3', '1/4'],
-    answer: 1,
-    hint: 'כפל ב-2/1 (ההפוך של 1/2): 3/4 × 2 = ?',
-    solution: '3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2'
-  },
-  {
-    id: 'fd5', type: 'input',
-    text: 'חוט באורך 5/6 מטר חולק ל-5 חלקים שווים.\nמה אורך כל חלק?',
-    answer: ['1/6'],
-    hint: '5/6 ÷ 5 = 5/6 × 1/5. כפל מונה במונה ומכנה במכנה.',
-    solution: '5/6 ÷ 5 = 5/6 × 1/5 = 5/30 = 1/6 מטר'
-  },
-  {
-    id: 'fd6', type: 'input',
-    text: 'חשב: 0.8 ÷ 10 = ?',
-    answer: ['0.08'],
-    hint: 'כשמחלקים ב-10, הנקודה העשרונית זזה מקום אחד שמאלה.',
-    solution: '0.8 ÷ 10 = 0.08\n(0.8 → 0.08)'
-  }
-];
-
-const Q_PAREN = [
-  {
-    id: 'fp1', type: 'input',
-    text: 'חשב: (1/2 + 1/3) × 6 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['5'],
-    hint: 'שלב א: חשב את הסוגריים — 1/2 + 1/3 (מכנה משותף = 6). שלב ב: כפל ב-6.',
-    solution: 'שלב א: 1/2 + 1/3 = 3/6 + 2/6 = 5/6\nשלב ב: 5/6 × 6 = 30/6 = 5'
-  },
-  {
-    id: 'fp2', type: 'input',
-    text: 'חשב: (3/4 − 1/4) × 2 = ?',
-    note: 'כתוב מספר שלם',
-    answer: ['1'],
-    hint: 'שלב א: 3/4 − 1/4 = ? שלב ב: כפל התוצאה ב-2.',
-    solution: 'שלב א: 3/4 − 1/4 = 2/4 = 1/2\nשלב ב: 1/2 × 2 = 1'
-  },
-  {
-    id: 'fp3', type: 'input',
-    text: 'חשב: 3 × (2/3 + 1/4) = ?',
-    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 11/4)',
-    answer: ['11/4', '2 3/4'],
-    hint: 'שלב א: מצא מכנה משותף ל-2/3 ו-1/4 (= 12). שלב ב: כפל ב-3.',
-    solution: 'שלב א: 2/3 + 1/4 = 8/12 + 3/12 = 11/12\nשלב ב: 3 × 11/12 = 33/12 = 11/4 = 2 3/4'
-  },
-  {
-    id: 'fp4', type: 'input',
-    text: 'חשב: (2/3 ÷ 1/3) × 3/4 = ?',
-    note: 'כתוב כשבר',
-    answer: ['3/2', '1 1/2'],
-    hint: 'שלב א: 2/3 ÷ 1/3 = 2/3 × 3/1 = ? שלב ב: כפל התוצאה ב-3/4.',
-    solution: 'שלב א: 2/3 ÷ 1/3 = 2/3 × 3/1 = 6/3 = 2\nשלב ב: 2 × 3/4 = 6/4 = 3/2 = 1 1/2'
-  },
-  {
-    id: 'fp5', type: 'input',
-    text: 'בכיתה יש 30 תלמידים.\n(1/3 + 1/6) מהתלמידים יצאו לטיול.\nכמה תלמידים יצאו לטיול?',
+    id: 'v17', type: 'input',
+    text: 'מיכל מים 40 ס"מ × 25 ס"מ × 20 ס"מ.\nמלאנו 3/4 ממנו. כמה ליטרים יש בו?',
     note: 'כתוב רק את המספר',
     answer: ['15'],
-    hint: 'שלב א: חשב 1/3 + 1/6 (מכנה משותף = 6). שלב ב: כפל ב-30.',
-    solution: 'שלב א: 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2\nשלב ב: 30 × 1/2 = 15 תלמידים'
+    hint: 'שלב א: נפח כולל בס"מ³. שלב ב: המר לליטר. שלב ג: כפול ב-3/4.',
+    solution: 'נפח כולל: 40×25×20 = 20,000 ס"מ³ = 20 ליטר\n3/4 × 20 = 15 ליטר'
   },
   {
-    id: 'fp6', type: 'input',
-    text: 'חשב: 2 × (1/3 + 1/6) + 1/4 = ?',
-    note: 'כתוב כשבר (לדוגמה: 5/4)',
-    answer: ['5/4', '1 1/4'],
-    hint: 'שלב א: 1/3 + 1/6 = ? שלב ב: כפל ב-2. שלב ג: הוסף 1/4.',
-    solution: 'שלב א: 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2\nשלב ב: 2 × 1/2 = 1\nשלב ג: 1 + 1/4 = 4/4 + 1/4 = 5/4 = 1 1/4'
+    id: 'v18', type: 'input',
+    text: 'קופסה מקרטון שממדיה החיצוניים 12×8×6 ס"מ.\nעובי הדפנות 1 ס"מ מכל צד.\nמה הנפח הפנימי?',
+    note: 'כתוב רק את המספר',
+    answer: ['240'],
+    hint: 'הפחת 2 (1 ס"מ מכל צד) מכל ממד חיצוני.',
+    solution: 'ממדים פנימיים:\n(12−2) × (8−2) × (6−2)\n= 10 × 6 × 4 = 240 ס"מ³'
+  },
+  {
+    id: 'v19', type: 'input',
+    text: 'ממלאים תיבה 30 ס"מ × 20 ס"מ × 10 ס"מ\nבעזרת קוביות 2×2×2 ס"מ.\nכמה קוביות נכנסות?',
+    note: 'כתוב רק את המספר',
+    answer: ['750'],
+    hint: 'חשב כמה קוביות לאורך, לרוחב ולגובה בנפרד.',
+    solution: 'לאורך: 30÷2 = 15\nלרוחב: 20÷2 = 10\nלגובה: 10÷2 = 5\n15 × 10 × 5 = 750 קוביות'
   }
 ];
 
-const ALL_Q = [...Q_SINGLE, ...Q_MULTI, ...Q_MULT, ...Q_DIVF, ...Q_PAREN];
+const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
 function findQ(qid) {
   return [...ALL_Q, ...Q_EXTRA].find(function(x) { return x.id === qid; });
 }
@@ -870,9 +643,6 @@ function findSection(qid) {
   if (Q_SINGLE.some(function(q){return q.id===qid;})) return ['q-single', Q_SINGLE];
   if (Q_MULTI.some(function(q){return q.id===qid;})) return ['q-multi', Q_MULTI];
   if (Q_EXTRA.some(function(q){return q.id===qid;})) return ['q-extra', Q_EXTRA];
-  if (Q_MULT.some(function(q){return q.id===qid;})) return ['q-mult', Q_MULT];
-  if (Q_DIVF.some(function(q){return q.id===qid;})) return ['q-divf', Q_DIVF];
-  if (Q_PAREN.some(function(q){return q.id===qid;})) return ['q-paren', Q_PAREN];
   return null;
 }
 function checkSectionDone(cid, qs) {
@@ -884,20 +654,11 @@ function checkSectionDone(cid, qs) {
 }
 
 function norm(s) {
-  return s.toLowerCase().replace(/[\s%₪]/g, '');
-}
-function parseFrac(s) {
-  const m = s.match(/^(-?\d+)\/(\d+)$/);
-  return m ? [parseInt(m[1]), parseInt(m[2])] : null;
+  return s.toLowerCase().replace(/[\s%₪,]/g, '');
 }
 function isCorrect(raw, accepted) {
   const n = norm(raw);
-  return accepted.some(a => {
-    const na = norm(a);
-    if (na === n) return true;
-    const fn = parseFrac(n), fa = parseFrac(na);
-    return fn && fa && fa[1] !== 0 && fn[0] * fa[1] === fn[1] * fa[0];
-  });
+  return accepted.some(a => norm(a) === n);
 }
 
 function speakQ(qid) {
@@ -1084,10 +845,8 @@ function toggleSol(qid) {
 }
 
 function loadMore() {
-  const btn = document.getElementById('more-btn');
-  const sec = document.getElementById('more-section');
-  btn.style.display = 'none';
-  sec.classList.add('visible');
+  document.getElementById('more-btn').style.display = 'none';
+  document.getElementById('more-section').classList.add('visible');
   Q_EXTRA.forEach(q => document.getElementById('q-extra').appendChild(renderCard(q)));
   updateScore();
 }
@@ -1099,9 +858,6 @@ function resetAll() {
   document.getElementById('q-single').innerHTML = '';
   document.getElementById('q-multi').innerHTML = '';
   document.getElementById('q-extra').innerHTML = '';
-  document.getElementById('q-mult').innerHTML = '';
-  document.getElementById('q-divf').innerHTML = '';
-  document.getElementById('q-paren').innerHTML = '';
   document.getElementById('more-section').classList.remove('visible');
   document.getElementById('more-btn').style.display = 'block';
   init();
@@ -1110,9 +866,6 @@ function resetAll() {
 function init() {
   Q_SINGLE.forEach(q => document.getElementById('q-single').appendChild(renderCard(q)));
   Q_MULTI.forEach(q => document.getElementById('q-multi').appendChild(renderCard(q)));
-  Q_MULT.forEach(q => document.getElementById('q-mult').appendChild(renderCard(q)));
-  Q_DIVF.forEach(q => document.getElementById('q-divf').appendChild(renderCard(q)));
-  Q_PAREN.forEach(q => document.getElementById('q-paren').appendChild(renderCard(q)));
   updateScore();
 }
 
