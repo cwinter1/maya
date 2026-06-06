@@ -66,6 +66,13 @@
     letter-spacing: 1px;
     margin-bottom: 32px;
   }
+  .hero-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
   .hero-stats {
     display: flex;
     justify-content: center;
@@ -194,6 +201,14 @@
     left: 18px;
   }
 
+
+  /* practice card highlight */
+  .topic-card.practice-card {
+    border-color: rgba(255,107,53,0.4);
+    background: linear-gradient(135deg, #1a1a1a, #1f1510);
+  }
+  .topic-card.practice-card .card-tag { color: var(--accent-alt); }
+
   /* worksheet card — muted style */
   .topic-card.worksheet {
     border-style: dashed;
@@ -249,7 +264,14 @@
   @media (max-width: 480px) {
     .grid-wrap { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
-    .hero-stats { gap: 20px; }
+    .hero-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .hero-stats { gap: 20px; }
     .card-arrow { display: none; }
   }
 </style>
@@ -264,6 +286,7 @@
   <div class="hero-label">תרגול לבגרות — כיתה ו</div>
   <h1>מאיה<span>.</span></h1>
   <div class="hero-sub">math practice · grade 6 · israeli curriculum</div>
+  <div class="hero-date" id="hero-date"></div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-num">8</div><div class="stat-label">נושאים</div></div>
     <div class="stat"><div class="stat-num">137</div><div class="stat-label">שאלות</div></div>
@@ -364,6 +387,20 @@
     </div>
   </a>
 
+
+  <a href="practice.html" class="topic-card practice-card">
+    <div class="card-arrow">←</div>
+    <div class="card-tag">תרגול חופשי · 150 תרגילים</div>
+    <div class="card-title-he">תרגול חופשי</div>
+    <div class="card-title-en">free practice · 6 topics</div>
+    <div class="card-desc">6 נושאים · 5 תרגילים · 5 וריאנטים — לחץ 🔀 לתרגיל חדש, 🔊 להקראה, 💡 לרמז</div>
+    <div class="card-pills">
+      <span class="pill">🔀 וריאנטים</span>
+      <span class="pill">🔊 הקרא</span>
+      <span class="pill">💡 רמז</span>
+    </div>
+  </a>
+
   <a href="worksheet.html" class="topic-card worksheet">
     <div class="card-arrow">←</div>
     <div class="card-tag">printable</div>
@@ -383,5 +420,14 @@
   <a href="https://github.com/cwinter1/maya">github</a>
 </footer>
 
+<script>
+(function() {
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  const now = new Date();
+  const d = `יום ${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('hero-date').textContent = d;
+})();
+</script>
 </body>
 </html>
