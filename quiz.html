@@ -762,6 +762,8 @@ const state = {
   1: { answered: {}, correct: {}, attempts: {} },
   2: { answered: {}, correct: {}, attempts: {} },
 };
+let streak = 0;
+const _secDone = {};
 
 // ─── RENDER ───────────────────────────────────────────────────────────────────
 
@@ -867,9 +869,11 @@ function handleMC(tab, q, chosen, btnEl, opts, card, mcArea) {
   if (correct) {
     fb.textContent = '✓ נכון!';
     fb.className = 'feedback correct';
+    streak++; celebrateCorrect(streak);
   } else {
     fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
     fb.className = 'feedback wrong';
+    streak = 0; celebrateWrong();
   }
 
   updateScore(tab, tab === 1 ? Q1 : Q2);
@@ -892,6 +896,7 @@ function checkInput(tab, q, input, fb, card) {
     fb.textContent = '✓ נכון!';
     fb.className = 'feedback correct';
     card.classList.add('correct');
+    streak++; celebrateCorrect(streak);
     updateScore(tab, tab === 1 ? Q1 : Q2);
     return;
   }
@@ -904,6 +909,7 @@ function checkInput(tab, q, input, fb, card) {
     setTimeout(() => input.classList.remove('wrong'), 900);
     fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
     fb.className = 'feedback wrong';
+    streak = 0; celebrateWrong();
   } else {
     // Second wrong: lock and reveal answer
     state[tab].answered[q.id] = true;
@@ -932,9 +938,16 @@ function updateScore(tab, questions) {
   document.getElementById('total' + tab).textContent = total;
   document.getElementById('prog' + tab + '-text').textContent = `${answered} מתוך ${total}`;
   document.getElementById('prog' + tab + '-bar').style.width = (answered / total * 100) + '%';
+
+  if (answered === total && !_secDone[tab]) {
+    _secDone[tab] = true;
+    celebrateSectionDone();
+  }
 }
 
 function resetTab(tab) {
+  delete _secDone[tab];
+  streak = 0;
   state[tab] = { answered: {}, correct: {}, attempts: {} };
   renderQuestions(tab, tab === 1 ? Q1 : Q2);
 }
@@ -949,5 +962,6 @@ function switchTab(tab) {
 renderQuestions(1, Q1);
 renderQuestions(2, Q2);
 </script>
+<script src="celebrate.js"></script>
 </body>
 </html>

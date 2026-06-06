@@ -643,6 +643,22 @@ const Q_EXTRA = [
 
 const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
 const state = { answered: {}, correct: {}, attempts: {} };
+let streak = 0;
+const _secDone = {};
+
+function findSection(qid) {
+  if (Q_SINGLE.some(function(q){return q.id===qid;})) return ['q-single', Q_SINGLE];
+  if (Q_MULTI.some(function(q){return q.id===qid;})) return ['q-multi', Q_MULTI];
+  if (Q_EXTRA.some(function(q){return q.id===qid;})) return ['q-extra', Q_EXTRA];
+  return null;
+}
+function checkSectionDone(cid, qs) {
+  if (_secDone[cid]) return;
+  if (qs.every(function(q){return q.id in state.answered;})) {
+    _secDone[cid] = true;
+    celebrateSectionDone();
+  }
+}
 
 function norm(s) {
   return s.toLowerCase().replace(/[\s%₪,]/g, '');
@@ -687,6 +703,8 @@ function shuffleArr(arr) {
 }
 
 function retrySection(containerId, questions) {
+  delete _secDone[containerId];
+  streak = 0;
   questions.forEach(q => {
     delete state.answered[q.id];
     delete state.correct[q.id];
@@ -764,14 +782,17 @@ function handleMC(qid, chosen) {
     document.getElementById(`opt-${qid}-${chosen}`).classList.add('chosen-correct');
     fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
     card.classList.add('correct');
+    streak++; celebrateCorrect(streak);
   } else {
     document.getElementById(`opt-${qid}-${chosen}`).classList.add('chosen-wrong');
     fb.textContent = '✗ לא בדיוק — לחץ על 💡 לרמז';
     fb.className = 'feedback hint';
+    streak = 0; celebrateWrong();
   }
   document.getElementById('soltog-' + qid).style.display = 'inline-block';
   state.answered[qid] = true; state.correct[qid] = correct;
   updateScore();
+  const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
 }
 
 function checkInput(qid) {
@@ -790,7 +811,9 @@ function checkInput(qid) {
     document.getElementById('btn-' + qid).disabled = true;
     document.getElementById('soltog-' + qid).style.display = 'inline-block';
     state.answered[qid] = true; state.correct[qid] = true;
+    streak++; celebrateCorrect(streak);
     updateScore();
+    const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
   } else {
     state.attempts[qid] = (state.attempts[qid] || 0) + 1;
     if (state.attempts[qid] === 1) {
@@ -798,6 +821,7 @@ function checkInput(qid) {
       fb.className = 'feedback hint';
       input.classList.add('wrong-flash');
       setTimeout(() => input.classList.remove('wrong-flash'), 900);
+      streak = 0; celebrateWrong();
     } else {
       fb.textContent = '✗ התשובה: ' + q.answer[0];
       fb.className = 'feedback wrong';
@@ -807,6 +831,7 @@ function checkInput(qid) {
       document.getElementById('sol-' + qid).classList.add('visible');
       state.answered[qid] = true; state.correct[qid] = false;
       updateScore();
+      const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
     }
   }
 }
@@ -831,6 +856,8 @@ function loadMore() {
 }
 
 function resetAll() {
+  streak = 0;
+  Object.keys(_secDone).forEach(k => delete _secDone[k]);
   state.answered = {}; state.correct = {}; state.attempts = {};
   document.getElementById('q-single').innerHTML = '';
   document.getElementById('q-multi').innerHTML = '';
@@ -848,5 +875,6 @@ function init() {
 
 init();
 </script>
+<script src="celebrate.js"></script>
 </body>
 </html>
