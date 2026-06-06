@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מאיה — תרגול חופשי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #1a1a1a;
+    --elevated: #242424;
+    --text: #f5f5f5;
+    --muted: #999;
+    --accent: #ff6b35;
+    --accent-alt: #f7931e;
+    --border: #333;
+    --green: #4ade80;
+    --red: #f87171;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ─── Header ───────────────────────────────────── */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% -10%, rgba(255,107,53,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 8vw, 3.5rem);
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 8px;
+  }
+  .back-link {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  /* ─── Topic nav ─────────────────────────────────── */
+  .topics-nav {
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    scrollbar-width: none;
+  }
+  .topics-nav::-webkit-scrollbar { display: none; }
+  .topic-btn {
+    flex: 0 0 auto;
+    padding: 13px 16px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .topic-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .topic-btn:hover:not(.active) { color: var(--text); }
+
+  /* ─── Content ───────────────────────────────────── */
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 14px 80px;
+  }
+  .topic-section { display: none; }
+  .topic-section.active { display: block; }
+
+  .topic-header { margin-bottom: 20px; }
+  .topic-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+  .topic-subtitle {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 4px;
+  }
+  .topic-score {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 3px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent-alt);
+    margin-top: 9px;
+  }
+
+  /* ─── Exercise card ─────────────────────────────── */
+  .exercises-grid { display: flex; flex-direction: column; gap: 13px; }
+
+  .q-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+  .q-card.correct { border-color: var(--green); }
+  .q-card.wrong-final { border-color: var(--red); }
+
+  /* card header: question number + text + 🔊 + 🔀 */
+  .q-header {
+    padding: 15px 16px 11px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .q-header-main { flex: 1; }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    white-space: pre-line;
+  }
+  .q-note {
+    font-size: 0.76rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 5px;
+  }
+  .q-header-btns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  /* 🔊 speak button */
+  .speak-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .speak-btn.speaking { border-color: var(--accent-alt); color: var(--accent-alt); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* 🔀 new variant button */
+  .new-var-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .new-var-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .new-var-btn:disabled { opacity: 0.25; cursor: default; }
+
+  /* 💡 hint button */
+  .hint-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 3px 9px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 7px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .hint-btn:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+
+  .hint-box {
+    display: none;
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: var(--accent-alt);
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.5;
+    background: rgba(247,147,30,0.07);
+    border-radius: 6px;
+    padding: 7px 10px;
+  }
+
+  /* ─── Answer area ───────────────────────────────── */
+  .q-answer {
+    padding: 10px 16px 13px;
+    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .answer-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .ans-input {
+    flex: 1;
+    min-width: 110px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.97rem;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--elevated);
+    text-align: right;
+    direction: rtl;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .ans-input:focus { border-color: var(--accent); }
+  .ans-input.correct { border-color: var(--green); background: rgba(74,222,128,0.07); }
+  .ans-input.wrong { border-color: var(--red); background: rgba(248,113,113,0.07); }
+  .ans-input:disabled { opacity: 0.65; }
+
+  .check-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .check-btn:hover { background: var(--accent-alt); }
+  .check-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .feedback {
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 16px;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong   { color: var(--red); }
+  .feedback.hint    { color: var(--accent-alt); }
+
+  /* ─── MC options ────────────────────────────────── */
+  .mc-options {
+    padding: 9px 16px 13px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .mc-option {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    background: var(--elevated);
+    cursor: pointer;
+    font-size: 0.91rem;
+    color: var(--text);
+    text-align: right;
+    transition: all 0.15s;
+    direction: rtl;
+  }
+  .mc-option:hover:not(:disabled) { border-color: var(--accent); }
+  .mc-option:disabled { cursor: default; }
+  .mc-option.chosen-correct { border-color: var(--green); background: rgba(74,222,128,0.1); }
+  .mc-option.chosen-wrong   { border-color: var(--red);   background: rgba(248,113,113,0.1); }
+  .mc-option.reveal-correct { border-color: var(--green); background: rgba(74,222,128,0.06); }
+
+  /* feedback row after MC */
+  .mc-fb-row {
+    padding: 8px 16px 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* ─── Solution ──────────────────────────────────── */
+  .solution-box {
+    border-top: 1px dashed var(--border);
+    padding: 11px 16px;
+    background: rgba(255,107,53,0.04);
+    font-size: 0.83rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    color: #c9b8c4;
+    display: none;
+  }
+  .solution-box.visible { display: block; }
+  .sol-label {
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .sol-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+    margin: 9px 16px 12px;
+  }
+  .sol-toggle:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+
+  /* ─── Variant badge ─────────────────────────────── */
+  .var-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    padding: 1px 6px;
+    border-radius: 99px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    display: inline-block;
+    margin-right: 4px;
+  }
+
+  @media (max-width: 500px) {
+    .answer-row { flex-direction: column; align-items: stretch; }
+    .check-btn { width: 100%; }
+    .q-header-btns { flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <a href="index.html" class="back-link">← דף הבית</a>
+  <div class="hero-label">✦ תרגול חופשי ✦</div>
+  <h1>תרגול חופשי</h1>
+  <p>🔀 וריאנט חדש · 🔊 הקרא שאלה · 💡 רמז · הצג פתרון</p>
+</div>
+
+<nav class="topics-nav">
+  <button class="topic-btn active" onclick="switchTopic('circles',this)">עיגול ומעגל</button>
+  <button class="topic-btn" onclick="switchTopic('scale',this)">קנה-מידה ויחס</button>
+  <button class="topic-btn" onclick="switchTopic('fractions',this)">שברים</button>
+  <button class="topic-btn" onclick="switchTopic('percentages',this)">אחוזים</button>
+  <button class="topic-btn" onclick="switchTopic('shapes',this)">שטח ואורך</button>
+  <button class="topic-btn" onclick="switchTopic('volume',this)">נפח</button>
+</nav>
+
+<div class="content">
+  <div class="topic-section active" id="topic-circles">
+    <div class="topic-header">
+      <div class="topic-title">עיגול ומעגל</div>
+      <div class="topic-subtitle">היקף · שטח · רדיוס · קוטר · מיתר · קשת</div>
+      <div class="topic-score" id="score-circles">⭐ 0 נכון</div>
+    </div>
+    <div class="exercises-grid" id="grid-circles"></div>
+  </div>
+  <div class="topic-section" id="topic-scale">
+    <div class="topic-header">
+      <div class="topic-title">קנה-מידה ויחס</div>
+      <div class="topic-subtitle">קנה-מידה · מרחקים במפה · יחס מצומצם · בעיות יחס</div>
+      <div class="topic-score" id="score-scale">⭐ 0 נכון</div>
+    </div>
+    <div class="exercises-grid" id="grid-scale"></div>
+  </div>
+  <div class="topic-section" id="topic-fractions">
+    <div class="topic-header">
+      <div class="topic-title">שברים</div>
+      <div class="topic-subtitle">חיבור · חיסור · כפל · חילוק · מספרים מעורבים</div>
+      <div class="topic-score" id="score-fractions">⭐ 0 נכון</div>
+    </div>
+    <div class="exercises-grid" id="grid-fractions"></div>
+  </div>
+  <div class="topic-section" id="topic-percentages">
+    <div class="topic-header">
+      <div class="topic-title">אחוזים</div>
+      <div class="topic-subtitle">אחוז ממספר · שיעור אחוז · הנחות · שינוי אחוזי</div>
+      <div class="topic-score" id="score-percentages">⭐ 0 נכון</div>
+    </div>
+    <div class="exercises-grid" id="grid-percentages"></div>
+  </div>
+  <div class="topic-section" id="topic-shapes">
+    <div class="topic-header">
+      <div class="topic-title">שטח ואורך</div>
+      <div class="topic-subtitle">מלבן · ריבוע · משולש · מקבילית · טרפז</div>
+      <div class="topic-score" id="score-shapes">⭐ 0 נכון</div>
+    </div>
+    <div class="exercises-grid" id="grid-shapes"></div>
+  </div>
+  <div class="topic-section" id="topic-volume">
+    <div class="topic-header">
+      <div class="topic-title">נפח</div>
+      <div class="topic-subtitle">תיבה · קובייה · המרות ליטר/מ"ק · שאלות מילוליות</div>
+      <div class="topic-score" id="score-volume">⭐ 0 נכון</div>
+    </div>
+    <div class="exercises-grid" id="grid-volume"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// BANK — 6 topics × 5 exercises × 5 variants = 150
+// ════════════════════════════════════════════════════════════════
+const BANK = {
+  circles: [
+    { label:'חישוב היקף', variants:[
+      {type:'input',text:'מעגל שרדיוסו 5 ס"מ.\nמה ההיקף?',note:'השתמש ב-3.14',answer:['31.4'],hint:'היקף = 2 × R × 3.14 = 2 × 5 × 3.14',solution:'היקף = 2 × 5 × 3.14\n= 10 × 3.14\n= 31.4 ס"מ'},
+      {type:'input',text:'מעגל שרדיוסו 7 ס"מ.\nמה ההיקף?',answer:['43.96','43.9'],hint:'2 × 7 × 3.14 = 14 × 3.14',solution:'היקף = 2 × 7 × 3.14\n= 14 × 3.14\n= 43.96 ס"מ'},
+      {type:'input',text:'מעגל שרדיוסו 3 ס"מ.\nמה ההיקף?',answer:['18.84','18.8'],hint:'2 × 3 × 3.14 = 6 × 3.14',solution:'היקף = 2 × 3 × 3.14\n= 6 × 3.14\n= 18.84 ס"מ'},
+      {type:'input',text:'מעגל שקוטרו 10 ס"מ.\nמה ההיקף?',hint:'קוטר=10 → רדיוס=5. היקף = 2 × 5 × 3.14',answer:['31.4'],solution:'רדיוס = 10 ÷ 2 = 5\nהיקף = 2 × 5 × 3.14 = 31.4 ס"מ'},
+      {type:'input',text:'מעגל שקוטרו 14 ס"מ.\nמה ההיקף?',hint:'קוטר=14 → רדיוס=7. היקף = 2 × 7 × 3.14',answer:['43.96','43.9'],solution:'רדיוס = 14 ÷ 2 = 7\nהיקף = 2 × 7 × 3.14 = 43.96 ס"מ'},
+    ]},
+    { label:'חישוב שטח', variants:[
+      {type:'input',text:'מעגל שרדיוסו 5 ס"מ.\nמה השטח?',hint:'שטח = R × R × 3.14 = 5 × 5 × 3.14',answer:['78.5'],solution:'שטח = 5 × 5 × 3.14\n= 25 × 3.14\n= 78.5 ס"מ²'},
+      {type:'input',text:'מעגל שרדיוסו 4 ס"מ.\nמה השטח?',hint:'4 × 4 × 3.14 = 16 × 3.14',answer:['50.24'],solution:'שטח = 4 × 4 × 3.14\n= 16 × 3.14\n= 50.24 ס"מ²'},
+      {type:'input',text:'מעגל שרדיוסו 6 ס"מ.\nמה השטח?',hint:'6 × 6 × 3.14 = 36 × 3.14',answer:['113.04'],solution:'שטח = 6 × 6 × 3.14\n= 36 × 3.14\n= 113.04 ס"מ²'},
+      {type:'input',text:'מעגל שקוטרו 8 ס"מ.\nמה השטח?',hint:'קוטר=8 → רדיוס=4. שטח = 4 × 4 × 3.14',answer:['50.24'],solution:'רדיוס = 8 ÷ 2 = 4\nשטח = 4 × 4 × 3.14 = 50.24 ס"מ²'},
+      {type:'input',text:'מעגל שקוטרו 10 ס"מ.\nמה השטח?',hint:'קוטר=10 → רדיוס=5. שטח = 5 × 5 × 3.14',answer:['78.5'],solution:'רדיוס = 10 ÷ 2 = 5\nשטח = 5 × 5 × 3.14 = 78.5 ס"מ²'},
+    ]},
+    { label:'מציאת רדיוס מהיקף', variants:[
+      {type:'input',text:'היקף מעגל: 62.8 ס"מ.\nמה הרדיוס?',hint:'R = 62.8 ÷ (2 × 3.14) = 62.8 ÷ 6.28',answer:['10'],solution:'62.8 = 2 × R × 3.14\n62.8 = 6.28 × R\nR = 10 ס"מ'},
+      {type:'input',text:'היקף מעגל: 31.4 ס"מ.\nמה הרדיוס?',hint:'R = 31.4 ÷ 6.28',answer:['5'],solution:'31.4 = 6.28 × R\nR = 5 ס"מ'},
+      {type:'input',text:'היקף מעגל: 18.84 ס"מ.\nמה הרדיוס?',hint:'R = 18.84 ÷ 6.28',answer:['3'],solution:'18.84 = 6.28 × R\nR = 3 ס"מ'},
+      {type:'input',text:'היקף מעגל: 43.96 ס"מ.\nמה הרדיוס?',hint:'R = 43.96 ÷ 6.28',answer:['7'],solution:'43.96 = 6.28 × R\nR = 7 ס"מ'},
+      {type:'input',text:'היקף מעגל: 25.12 ס"מ.\nמה הרדיוס?',hint:'R = 25.12 ÷ 6.28',answer:['4'],solution:'25.12 = 6.28 × R\nR = 4 ס"מ'},
+    ]},
+    { label:'מושגים — מיתר, קשת, קוטר', variants:[
+      {type:'mc',text:'מהו מיתר?',options:['קטע מהמרכז לנקודה על המעגל','קטע המחבר שתי נקודות על שפת המעגל','חלק מהמעגל עצמו','זווית בין שני רדיוסים'],answer:1,hint:'מיתר = קו ישר. שתי נקודות הקצה שלו נמצאות על המעגל.',solution:'מיתר = קטע המחבר שתי נקודות על שפת המעגל.\nהמיתר הארוך ביותר הוא הקוטר.'},
+      {type:'mc',text:'מהי קשת?',options:['קטע ישר בין שתי נקודות','חלק מהמעגל (הקו) בין שתי נקודות','השטח של גזרה','קוטר חצוי'],answer:1,hint:'קשת היא חלק מקו המעגל — עקומה, לא ישר.',solution:'קשת = חלק מהמעגל (הקו) הנמצא בין שתי נקודות.\nשונה ממיתר: מיתר הוא קו ישר.'},
+      {type:'mc',text:'קוטר שווה ל...',options:['רדיוס אחד','שלושה רדיוסים','שני רדיוסים','מחצית הרדיוס'],answer:2,hint:'הקוטר עובר דרך המרכז — בכמה רדיוסים הוא מחולק?',solution:'קוטר = 2 × רדיוס\nעובר דרך מרכז המעגל.'},
+      {type:'mc',text:'מה ההבדל בין מעגל לעיגול?',options:['מעגל = הקו החיצוני, עיגול = השטח','עיגול = הקו החיצוני, מעגל = השטח','אין הבדל','מעגל קטן, עיגול גדול'],answer:0,hint:'מה מצייר המחוגה — הקו עצמו, או השטח שבתוכו?',solution:'מעגל = הקו החיצוני בלבד.\nעיגול = השטח התחום בתוך המעגל.'},
+      {type:'mc',text:'האם ייתכן מיתר שארוך מהקוטר?',options:['כן, תמיד','לא — הקוטר הוא המיתר הארוך ביותר','כן, אם עובר קרוב למרכז','תלוי בגודל המעגל'],answer:1,hint:'הקוטר הוא גם מיתר — האם יש ארוך ממנו?',solution:'הקוטר הוא המיתר הארוך ביותר בכל מעגל.\nשום מיתר לא יכול להיות ארוך ממנו.'},
+    ]},
+    { label:'יחס בין מעגלים', variants:[
+      {type:'mc',text:'מעגל א: רדיוס 3. מעגל ב: רדיוס 6.\nפי כמה גדול היקף ב מהיקף א?',options:['פי 2','פי 4','פי 3','פי 6'],answer:0,hint:'הרדיוס הוכפל ב-2. ההיקף = 2πR — יחס ישר.',solution:'היקף א = 18.84\nהיקף ב = 37.68\n37.68 ÷ 18.84 = 2\nיחס ישר לרדיוס.'},
+      {type:'mc',text:'מעגל א: רדיוס 3. מעגל ב: רדיוס 6.\nפי כמה גדול שטח ב משטח א?',options:['פי 2','פי 4','פי 3','פי 6'],answer:1,hint:'שטח = R². אם R×2, השטח מוכפל ב-2²=?',solution:'שטח א = 9×3.14 = 28.26\nשטח ב = 36×3.14 = 113.04\n113.04 ÷ 28.26 = 4\nיחס ריבועי לרדיוס.'},
+      {type:'mc',text:'מעגל א: רדיוס 2. מעגל ב: רדיוס 4.\nפי כמה גדול שטח ב?',options:['פי 2','פי 4','פי 8','פי 16'],answer:1,hint:'שטח = R². הרדיוס הוכפל ב-2 → שטח × 2²',solution:'שטח א = 4×3.14\nשטח ב = 16×3.14\n16 ÷ 4 = 4'},
+      {type:'mc',text:'מעגל א: רדיוס 5. מעגל ב: רדיוס 10.\nפי כמה גדול היקף ב?',options:['פי 2','פי 4','פי 5','פי 10'],answer:0,hint:'היקף יחס ישר לרדיוס. הרדיוס הוכפל ב-2.',solution:'היקף א = 31.4\nהיקף ב = 62.8\n62.8 ÷ 31.4 = 2'},
+      {type:'mc',text:'מעגל א: רדיוס 3. מעגל ב: רדיוס 9.\nמה יחס ב:א בהיקפים?',options:['1:3','3:1','1:9','9:1'],answer:1,hint:'הרדיוס גדל פי 3. ההיקף גדל פי...?',solution:'היקף א = 18.84\nהיקף ב = 56.52\n56.52 ÷ 18.84 = 3\nיחס ב:א = 3:1'},
+    ]},
+  ],
+
+  scale: [
+    { label:'קריאת קנה-מידה', variants:[
+      {type:'mc',text:'קנה-מידה 1:25,000 — מה פירושו?',options:['1 ס"מ במפה = 25,000 ס"מ במציאות','25,000 ס"מ במפה = 1 ס"מ במציאות','המפה גדולה פי 25,000','1 ק"מ במפה = 25,000 ק"מ'],answer:0,hint:'קנה-מידה 1:N → כל יחידה במפה = N יחידות במציאות.',solution:'1:25,000 → 1 ס"מ במפה = 25,000 ס"מ = 250 מ\' במציאות.'},
+      {type:'mc',text:'קנה-מידה 1:1,000 — מה פירושו?',options:['1 ס"מ במפה = 1,000 ס"מ במציאות','1 ס"מ במציאות = 1,000 ס"מ במפה','המפה גדולה מהמציאות','1,000 ס"מ = 1 ס"מ'],answer:0,hint:'המפה קטנה. 1 יחידה במפה = 1,000 יחידות במציאות.',solution:'1:1,000 → 1 ס"מ במפה = 1,000 ס"מ = 10 מ\' במציאות.'},
+      {type:'mc',text:'קנה-מידה 1:500 — 1 ס"מ במפה שווה...',options:['500 מ\'','5 מ\'','50 מ\'','0.5 מ\''],answer:1,hint:'1 ס"מ = 500 ס"מ. 500 ÷ 100 = ? מטרים',solution:'500 ס"מ ÷ 100 = 5 מ\'\n1 ס"מ במפה = 5 מ\' במציאות.'},
+      {type:'mc',text:'קנה-מידה 1:100 — 3 ס"מ במפה שווים...',options:['300 ס"מ = 3 מ\'','3 ס"מ במציאות','30 ס"מ','30 מ\''],answer:0,hint:'3 × 100 = 300 ס"מ. 300 ÷ 100 = ? מטרים',solution:'3 × 100 = 300 ס"מ = 3 מ\'.'},
+      {type:'mc',text:'קנה-מידה 1:200,000 — 5 ס"מ במפה שווים...',options:['10 ק"מ','5 ק"מ','1,000 ק"מ','100 מ\''],answer:0,hint:'5 × 200,000 = 1,000,000 ס"מ. כמה ק"מ?',solution:'5 × 200,000 = 1,000,000 ס"מ\n= 10,000 מ\' = 10 ק"מ'},
+    ]},
+    { label:'חישוב מרחק במציאות', variants:[
+      {type:'input',text:'שביל על מפה: 4 ס"מ.\nקנה-מידה 1:25,000.\nמה אורך השביל במציאות? (בס"מ)',hint:'מרחק במציאות = 4 × 25,000',answer:['100000','100,000'],solution:'4 × 25,000 = 100,000 ס"מ\n= 1,000 מ\' = 1 ק"מ'},
+      {type:'input',text:'מרחק על מפה: 3 ס"מ.\nקנה-מידה 1:1,000.\nמה המרחק במציאות? (בס"מ)',hint:'3 × 1,000 = ?',answer:['3000','3,000'],solution:'3 × 1,000 = 3,000 ס"מ = 30 מ\''},
+      {type:'input',text:'מרחק על מפה: 5 ס"מ.\nקנה-מידה 1:500.\nמה המרחק במציאות? (בס"מ)',hint:'5 × 500 = ?',answer:['2500','2,500'],solution:'5 × 500 = 2,500 ס"מ = 25 מ\''},
+      {type:'input',text:'מרחק על מפה: 2 ס"מ.\nקנה-מידה 1:50,000.\nמה המרחק במציאות? (בס"מ)',hint:'2 × 50,000 = ?',answer:['100000','100,000'],solution:'2 × 50,000 = 100,000 ס"מ = 1 ק"מ'},
+      {type:'input',text:'מרחק על מפה: 6 ס"מ.\nקנה-מידה 1:400.\nמה המרחק במציאות? (בס"מ)',hint:'6 × 400 = ?',answer:['2400','2,400'],solution:'6 × 400 = 2,400 ס"מ = 24 מ\''},
+    ]},
+    { label:'מציאת קנה-מידה', variants:[
+      {type:'input',text:'מרחק על מפה: 7 ס"מ.\nמרחק אמיתי: 3,500,000 ס"מ.\nמהו קנה-המידה? (כתוב: 1:___)',note:'קנה-מידה = מרחק במציאות ÷ מרחק במפה',hint:'3,500,000 ÷ 7 = ?',answer:['1:500000','1 : 500000','1 : 500,000','500000'],solution:'3,500,000 ÷ 7 = 500,000\nקנה-מידה: 1:500,000'},
+      {type:'input',text:'מרחק על מפה: 5 ס"מ.\nמרחק אמיתי: 2,500,000 ס"מ.\nמהו קנה-המידה?',hint:'2,500,000 ÷ 5 = ?',answer:['1:500000','500000'],solution:'2,500,000 ÷ 5 = 500,000\nקנה-מידה: 1:500,000'},
+      {type:'input',text:'מרחק על מפה: 4 ס"מ.\nמרחק אמיתי: 20,000 ס"מ.\nמהו קנה-המידה?',hint:'20,000 ÷ 4 = ?',answer:['1:5000','5000'],solution:'20,000 ÷ 4 = 5,000\nקנה-מידה: 1:5,000'},
+      {type:'input',text:'מרחק על מפה: 3 ס"מ.\nמרחק אמיתי: 900 ס"מ.\nמהו קנה-המידה?',hint:'900 ÷ 3 = ?',answer:['1:300','300'],solution:'900 ÷ 3 = 300\nקנה-מידה: 1:300'},
+      {type:'input',text:'מרחק על מפה: 2 ס"מ.\nמרחק אמיתי: 10 ק"מ = 1,000,000 ס"מ.\nמהו קנה-המידה?',hint:'1,000,000 ÷ 2 = ?',answer:['1:500000','500000'],solution:'1,000,000 ÷ 2 = 500,000\nקנה-מידה: 1:500,000'},
+    ]},
+    { label:'צמצום יחסים', variants:[
+      {type:'input',text:'צמצמו את היחס: 24 : 36',hint:'מ.מ.ג(24,36) = 12. חלקו שניהם ב-12.',answer:['2:3','2 : 3'],solution:'24 ÷ 12 = 2\n36 ÷ 12 = 3\nיחס: 2:3'},
+      {type:'input',text:'צמצמו את היחס: 15 : 25',hint:'מ.מ.ג(15,25) = 5.',answer:['3:5','3 : 5'],solution:'15 ÷ 5 = 3\n25 ÷ 5 = 5\nיחס: 3:5'},
+      {type:'input',text:'צמצמו את היחס: 18 : 30',hint:'מ.מ.ג(18,30) = 6.',answer:['3:5','3 : 5'],solution:'18 ÷ 6 = 3\n30 ÷ 6 = 5\nיחס: 3:5'},
+      {type:'input',text:'צמצמו את היחס: 20 : 28',hint:'מ.מ.ג(20,28) = 4.',answer:['5:7','5 : 7'],solution:'20 ÷ 4 = 5\n28 ÷ 4 = 7\nיחס: 5:7'},
+      {type:'input',text:'צמצמו את היחס: 32 : 48',hint:'מ.מ.ג(32,48) = 16.',answer:['2:3','2 : 3'],solution:'32 ÷ 16 = 2\n48 ÷ 16 = 3\nיחס: 2:3'},
+    ]},
+    { label:'בעיות יחס', variants:[
+      {type:'input',text:'בכיתה: 20 בנות, 16 בנים.\nמה היחס המצומצם בנים : בנות?',hint:'16 : 20. חלקו ב-4.',answer:['4:5','4 : 5'],solution:'16 : 20 ÷ 4 = 4:5'},
+      {type:'input',text:'מלבן עם היקף 40 ס"מ.\nיחס צלע א לצלע ב: 3:2.\nמה אורך צלע א?',hint:'א+ב=20. 3k+2k=20 → k=4 → א=3×4',answer:['12'],solution:'א + ב = 20\n3k + 2k = 20 → k = 4\nצלע א = 3 × 4 = 12 ס"מ'},
+      {type:'input',text:'ספרייה: 400 בעברית, 50 באנגלית.\nיחס מצומצם עברית : אנגלית?',hint:'400 : 50. חלקו ב-50.',answer:['8:1','8 : 1'],solution:'400 ÷ 50 = 8\nיחס: 8:1'},
+      {type:'input',text:'35 תלמידים, מתוכם 15 בנים.\nיחס מצומצם בנים : כולם?',hint:'15 : 35. חלקו ב-5.',answer:['3:7','3 : 7'],solution:'15 ÷ 5 = 3\n35 ÷ 5 = 7\nיחס: 3:7'},
+      {type:'input',text:'יחס גיל ילד לאמא: 1:4.\nאם הילד בן 9 — מה גיל האמא?',hint:'9 × 4 = ?',answer:['36'],solution:'9 × 4 = 36\nהאמא בת 36.'},
+    ]},
+  ],
+
+  fractions: [
+    { label:'חיבור שברים', variants:[
+      {type:'input',text:'חשב: 1/3 + 1/4 = ?',hint:'מכנה משותף = 12. 4/12 + 3/12',answer:['7/12'],solution:'1/3 = 4/12\n1/4 = 3/12\n4/12 + 3/12 = 7/12'},
+      {type:'input',text:'חשב: 1/2 + 1/3 = ?',hint:'מכנה משותף = 6. 3/6 + 2/6',answer:['5/6'],solution:'1/2 = 3/6\n1/3 = 2/6\n3/6 + 2/6 = 5/6'},
+      {type:'input',text:'חשב: 2/5 + 1/3 = ?',hint:'מכנה משותף = 15. 6/15 + 5/15',answer:['11/15'],solution:'2/5 = 6/15\n1/3 = 5/15\n6/15 + 5/15 = 11/15'},
+      {type:'input',text:'חשב: 3/4 + 1/6 = ?',hint:'מכנה משותף = 12. 9/12 + 2/12',answer:['11/12'],solution:'3/4 = 9/12\n1/6 = 2/12\n9/12 + 2/12 = 11/12'},
+      {type:'input',text:'חשב: 1/5 + 2/3 = ?',hint:'מכנה משותף = 15. 3/15 + 10/15',answer:['13/15'],solution:'1/5 = 3/15\n2/3 = 10/15\n3/15 + 10/15 = 13/15'},
+    ]},
+    { label:'חיסור שברים', variants:[
+      {type:'input',text:'חשב: 5/6 − 1/3 = ?',hint:'1/3 = 2/6. 5/6 − 2/6',answer:['1/2','3/6'],solution:'5/6 − 1/3 = 5/6 − 2/6 = 3/6 = 1/2'},
+      {type:'input',text:'חשב: 3/4 − 1/3 = ?',hint:'מכנה משותף = 12. 9/12 − 4/12',answer:['5/12'],solution:'3/4 = 9/12\n1/3 = 4/12\n9/12 − 4/12 = 5/12'},
+      {type:'input',text:'חשב: 7/8 − 1/2 = ?',hint:'1/2 = 4/8. 7/8 − 4/8',answer:['3/8'],solution:'7/8 − 4/8 = 3/8'},
+      {type:'input',text:'חשב: 2/3 − 1/5 = ?',hint:'מכנה משותף = 15. 10/15 − 3/15',answer:['7/15'],solution:'2/3 = 10/15\n1/5 = 3/15\n10/15 − 3/15 = 7/15'},
+      {type:'input',text:'חשב: 5/6 − 3/4 = ?',hint:'מכנה משותף = 12. 10/12 − 9/12',answer:['1/12'],solution:'5/6 = 10/12\n3/4 = 9/12\n10/12 − 9/12 = 1/12'},
+    ]},
+    { label:'כפל שברים', variants:[
+      {type:'input',text:'חשב: 2/3 × 3/4 = ?',hint:'מונה × מונה, מכנה × מכנה: (2×3)/(3×4)',answer:['1/2','6/12'],solution:'2/3 × 3/4 = 6/12 = 1/2'},
+      {type:'input',text:'חשב: 3/5 × 5/6 = ?',hint:'(3×5)/(5×6) = 15/30',answer:['1/2','15/30'],solution:'15/30 = 1/2'},
+      {type:'input',text:'חשב: 4/7 × 7/8 = ?',hint:'(4×7)/(7×8) = 28/56',answer:['1/2','28/56'],solution:'28/56 = 1/2'},
+      {type:'input',text:'חשב: 2/5 × 5/8 = ?',hint:'(2×5)/(5×8) = 10/40',answer:['1/4','10/40'],solution:'10/40 = 1/4'},
+      {type:'input',text:'חשב: 3/8 × 4/9 = ?',hint:'(3×4)/(8×9) = 12/72',answer:['1/6','12/72'],solution:'12/72 = 1/6'},
+    ]},
+    { label:'חילוק שברים', variants:[
+      {type:'input',text:'חשב: 3/4 ÷ 1/2 = ?',hint:'חלקי ב-1/2 = כפלי ב-2. 3/4 × 2/1',answer:['3/2','1 1/2'],solution:'3/4 × 2/1 = 6/4 = 3/2'},
+      {type:'input',text:'חשב: 2/3 ÷ 4/5 = ?',hint:'הפכי: 2/3 × 5/4',answer:['5/6','10/12'],solution:'2/3 × 5/4 = 10/12 = 5/6'},
+      {type:'input',text:'חשב: 5/6 ÷ 5/3 = ?',hint:'הפכי: 5/6 × 3/5',answer:['1/2','15/30','3/6'],solution:'5/6 × 3/5 = 15/30 = 1/2'},
+      {type:'input',text:'חשב: 7/8 ÷ 7/4 = ?',hint:'הפכי: 7/8 × 4/7',answer:['1/2','28/56','4/8'],solution:'7/8 × 4/7 = 28/56 = 1/2'},
+      {type:'input',text:'חשב: 4/9 ÷ 2/3 = ?',hint:'הפכי: 4/9 × 3/2',answer:['2/3','12/18'],solution:'4/9 × 3/2 = 12/18 = 2/3'},
+    ]},
+    { label:'מספרים מעורבים', variants:[
+      {type:'input',text:'המר לשבר בלתי-אמיתי: 3 2/5 = ?',hint:'3 × 5 + 2 = 17. מכנה 5.',answer:['17/5'],solution:'3 × 5 + 2 = 17\nתשובה: 17/5'},
+      {type:'input',text:'המר לשבר בלתי-אמיתי: 2 3/4 = ?',hint:'2 × 4 + 3 = 11. מכנה 4.',answer:['11/4'],solution:'2 × 4 + 3 = 11\nתשובה: 11/4'},
+      {type:'input',text:'המר למספר מעורב: 7/3 = ?',hint:'7 ÷ 3 = 2 שלמים עם שארית 1',answer:['2 1/3','21/3'],solution:'7 ÷ 3 = 2 שארית 1\nתשובה: 2 1/3'},
+      {type:'input',text:'המר למספר מעורב: 11/4 = ?',hint:'11 ÷ 4 = 2 שלמים עם שארית 3',answer:['2 3/4','23/4'],solution:'11 ÷ 4 = 2 שארית 3\nתשובה: 2 3/4'},
+      {type:'input',text:'המר לשבר בלתי-אמיתי: 4 1/3 = ?',hint:'4 × 3 + 1 = 13. מכנה 3.',answer:['13/3'],solution:'4 × 3 + 1 = 13\nתשובה: 13/3'},
+    ]},
+  ],
+
+  percentages: [
+    { label:'אחוז ממספר', variants:[
+      {type:'input',text:'כמה זה 20% מ-60?',hint:'60 × 20 ÷ 100 = ?',answer:['12'],solution:'60 × 20 ÷ 100 = 12'},
+      {type:'input',text:'כמה זה 25% מ-200?',hint:'200 × 25 ÷ 100 = ?',answer:['50'],solution:'200 × 25 ÷ 100 = 50'},
+      {type:'input',text:'כמה זה 15% מ-80?',hint:'80 × 15 ÷ 100 = ?',answer:['12'],solution:'80 × 15 ÷ 100 = 12'},
+      {type:'input',text:'כמה זה 30% מ-150?',hint:'150 × 30 ÷ 100 = ?',answer:['45'],solution:'150 × 30 ÷ 100 = 45'},
+      {type:'input',text:'כמה זה 40% מ-75?',hint:'75 × 40 ÷ 100 = ?',answer:['30'],solution:'75 × 40 ÷ 100 = 30'},
+    ]},
+    { label:'מציאת שיעור אחוז', variants:[
+      {type:'input',text:'15 הוא כמה אחוז מ-75?',hint:'15 ÷ 75 × 100 = ?',answer:['20'],solution:'15 ÷ 75 × 100 = 20%'},
+      {type:'input',text:'12 הוא כמה אחוז מ-60?',hint:'12 ÷ 60 × 100 = ?',answer:['20'],solution:'12 ÷ 60 × 100 = 20%'},
+      {type:'input',text:'9 הוא כמה אחוז מ-36?',hint:'9 ÷ 36 × 100 = ?',answer:['25'],solution:'9 ÷ 36 × 100 = 25%'},
+      {type:'input',text:'18 הוא כמה אחוז מ-90?',hint:'18 ÷ 90 × 100 = ?',answer:['20'],solution:'18 ÷ 90 × 100 = 20%'},
+      {type:'input',text:'30 הוא כמה אחוז מ-120?',hint:'30 ÷ 120 × 100 = ?',answer:['25'],solution:'30 ÷ 120 × 100 = 25%'},
+    ]},
+    { label:'הנחות ומחירים', variants:[
+      {type:'input',text:'חולצה: 80 ₪. הנחה 10%.\nמה המחיר אחרי ההנחה?',hint:'הנחה = 80 × 10% = 8. מחיר = 80 − 8',answer:['72'],solution:'הנחה = 8 ₪\nמחיר = 80 − 8 = 72 ₪'},
+      {type:'input',text:'מעיל: 240 ₪. הנחה 25%.\nמה המחיר אחרי ההנחה?',hint:'הנחה = 240 × 25% = 60. מחיר = 240 − 60',answer:['180'],solution:'הנחה = 60 ₪\nמחיר = 240 − 60 = 180 ₪'},
+      {type:'input',text:'נעליים: 320 ₪. הנחה 20%.\nמה המחיר אחרי ההנחה?',hint:'הנחה = 320 × 20% = 64. מחיר = 320 − 64',answer:['256'],solution:'הנחה = 64 ₪\nמחיר = 320 − 64 = 256 ₪'},
+      {type:'input',text:'ספר: 60 ₪. הנחה 15%.\nמה המחיר אחרי ההנחה?',hint:'הנחה = 60 × 15% = 9. מחיר = 60 − 9',answer:['51'],solution:'הנחה = 9 ₪\nמחיר = 60 − 9 = 51 ₪'},
+      {type:'input',text:'אוזניות: 200 ₪. הנחה 30%.\nמה המחיר אחרי ההנחה?',hint:'הנחה = 200 × 30% = 60. מחיר = 200 − 60',answer:['140'],solution:'הנחה = 60 ₪\nמחיר = 200 − 60 = 140 ₪'},
+    ]},
+    { label:'עלייה ומס', variants:[
+      {type:'input',text:'בכיתה 40 תלמידים. 15% נעדרים.\nכמה תלמידים נעדרים?',hint:'40 × 15 ÷ 100 = ?',answer:['6'],solution:'40 × 15% = 6 תלמידים'},
+      {type:'input',text:'מחיר לפני מע"מ: 100 ₪. מע"מ 17%.\nמה המחיר הסופי?',hint:'100 + 100 × 0.17 = ?',answer:['117'],solution:'100 × 1.17 = 117 ₪'},
+      {type:'input',text:'מחיר לפני מע"מ: 200 ₪. מע"מ 17%.\nמה המחיר הסופי?',hint:'200 × 1.17 = ?',answer:['234'],solution:'200 × 1.17 = 234 ₪'},
+      {type:'input',text:'כפר: 500 תושבים. גדל ב-10%.\nכמה תושבים אחרי שנה?',hint:'500 + 500 × 0.1 = ?',answer:['550'],solution:'500 × 1.1 = 550'},
+      {type:'input',text:'משכורת: 8,000 ₪. עלייה של 5%.\nמה המשכורת החדשה?',hint:'8,000 × 1.05 = ?',answer:['8400'],solution:'8,000 × 1.05 = 8,400 ₪'},
+    ]},
+    { label:'שבר ↔ אחוז', variants:[
+      {type:'input',text:'כמה אחוז שווה 0.6?',hint:'0.6 × 100 = ?',answer:['60'],solution:'0.6 × 100 = 60%'},
+      {type:'input',text:'כמה אחוז שווה 0.35?',hint:'0.35 × 100 = ?',answer:['35'],solution:'0.35 × 100 = 35%'},
+      {type:'mc',text:'איזה שבר שווה ל-35%?',options:['35/100 = 7/20','1/3','35/10','35/1000'],answer:0,hint:'35% = 35/100. צמצמו ב-5.',solution:'35/100 = 7/20'},
+      {type:'mc',text:'איזה שבר שווה ל-75%?',options:['3/4','7/10','2/3','75/10'],answer:0,hint:'75% = 75/100. צמצמו ב-25.',solution:'75/100 = 3/4'},
+      {type:'input',text:'כמה אחוז שווה 3/4?',hint:'3 ÷ 4 × 100 = 0.75 × 100 = ?',answer:['75'],solution:'3/4 = 0.75 = 75%'},
+    ]},
+  ],
+
+  shapes: [
+    { label:'שטח מלבן', variants:[
+      {type:'input',text:'מלבן: אורך 7 ס"מ, רוחב 4 ס"מ.\nמה שטחו?',hint:'שטח = אורך × רוחב = 7 × 4',answer:['28'],solution:'שטח = 7 × 4 = 28 ס"מ²'},
+      {type:'input',text:'מלבן: אורך 9 ס"מ, רוחב 5 ס"מ.\nמה שטחו?',hint:'9 × 5 = ?',answer:['45'],solution:'שטח = 9 × 5 = 45 ס"מ²'},
+      {type:'input',text:'מלבן: אורך 12 ס"מ, רוחב 3 ס"מ.\nמה שטחו?',hint:'12 × 3 = ?',answer:['36'],solution:'שטח = 12 × 3 = 36 ס"מ²'},
+      {type:'input',text:'מלבן: אורך 6 ס"מ, רוחב 8 ס"מ.\nמה שטחו?',hint:'6 × 8 = ?',answer:['48'],solution:'שטח = 6 × 8 = 48 ס"מ²'},
+      {type:'input',text:'מלבן: שטחו 54 ס"מ², רוחב 6 ס"מ.\nמה אורכו?',hint:'אורך = שטח ÷ רוחב = 54 ÷ 6',answer:['9'],solution:'54 ÷ 6 = 9 ס"מ'},
+    ]},
+    { label:'היקף מלבן וריבוע', variants:[
+      {type:'input',text:'מלבן: אורך 9 ס"מ, רוחב 3 ס"מ.\nמה היקפו?',hint:'היקף = 2 × (אורך + רוחב) = 2 × 12',answer:['24'],solution:'היקף = 2 × (9+3) = 2 × 12 = 24 ס"מ'},
+      {type:'input',text:'מלבן: אורך 7 ס"מ, רוחב 5 ס"מ.\nמה היקפו?',hint:'2 × (7 + 5) = ?',answer:['24'],solution:'היקף = 2 × (7+5) = 24 ס"מ'},
+      {type:'input',text:'ריבוע: צלע 6 ס"מ.\nמה היקפו?',hint:'היקף = 4 × צלע',answer:['24'],solution:'היקף = 4 × 6 = 24 ס"מ'},
+      {type:'input',text:'ריבוע: צלע 8 ס"מ.\nמה שטחו?',hint:'שטח = צלע² = 8 × 8',answer:['64'],solution:'שטח = 8² = 64 ס"מ²'},
+      {type:'input',text:'ריבוע: היקפו 36 ס"מ.\nמה אורך צלעו?',hint:'4 × צלע = 36 → צלע = ?',answer:['9'],solution:'36 ÷ 4 = 9 ס"מ'},
+    ]},
+    { label:'שטח משולש', variants:[
+      {type:'input',text:'משולש: בסיס 10 ס"מ, גובה 6 ס"מ.\nמה שטחו?',hint:'שטח = (בסיס × גובה) ÷ 2',answer:['30'],solution:'(10 × 6) ÷ 2 = 30 ס"מ²'},
+      {type:'input',text:'משולש: בסיס 8 ס"מ, גובה 5 ס"מ.\nמה שטחו?',hint:'(8 × 5) ÷ 2 = ?',answer:['20'],solution:'(8 × 5) ÷ 2 = 20 ס"מ²'},
+      {type:'input',text:'משולש: בסיס 12 ס"מ, גובה 7 ס"מ.\nמה שטחו?',hint:'(12 × 7) ÷ 2 = ?',answer:['42'],solution:'(12 × 7) ÷ 2 = 42 ס"מ²'},
+      {type:'input',text:'משולש: שטח 24 ס"מ², בסיס 8 ס"מ.\nמה גובהו?',hint:'גובה = שטח × 2 ÷ בסיס = 48 ÷ 8',answer:['6'],solution:'(24 × 2) ÷ 8 = 6 ס"מ'},
+      {type:'input',text:'משולש שווה-שוקיים: בסיס 6 ס"מ, שוק 5 ס"מ.\nמה היקפו?',hint:'היקף = בסיס + 2 × שוק',answer:['16'],solution:'6 + 2 × 5 = 16 ס"מ'},
+    ]},
+    { label:'שטח מקבילית', variants:[
+      {type:'mc',text:'מקבילית: בסיס 12 ס"מ, גובה 5 ס"מ.\nמה שטחה?',options:['60 ס"מ²','34 ס"מ²','30 ס"מ²','120 ס"מ²'],answer:0,hint:'שטח מקבילית = בסיס × גובה',solution:'12 × 5 = 60 ס"מ²'},
+      {type:'input',text:'מקבילית: בסיס 9 ס"מ, גובה 4 ס"מ.\nמה שטחה?',hint:'בסיס × גובה = 9 × 4',answer:['36'],solution:'9 × 4 = 36 ס"מ²'},
+      {type:'input',text:'מקבילית: בסיס 7 ס"מ, גובה 6 ס"מ.\nמה שטחה?',hint:'7 × 6 = ?',answer:['42'],solution:'7 × 6 = 42 ס"מ²'},
+      {type:'input',text:'מקבילית: שטח 56 ס"מ², בסיס 8 ס"מ.\nמה גובהה?',hint:'גובה = שטח ÷ בסיס = 56 ÷ 8',answer:['7'],solution:'56 ÷ 8 = 7 ס"מ'},
+      {type:'input',text:'מקבילית: בסיס 11 ס"מ, גובה 3 ס"מ.\nמה שטחה?',hint:'11 × 3 = ?',answer:['33'],solution:'11 × 3 = 33 ס"מ²'},
+    ]},
+    { label:'שטח טרפז', variants:[
+      {type:'input',text:'טרפז: בסיסים 8 ו-12 ס"מ, גובה 5 ס"מ.\nמה שטחו?',hint:'שטח = (ב₁+ב₂) × ג ÷ 2 = (8+12) × 5 ÷ 2',answer:['50'],solution:'(8+12) × 5 ÷ 2 = 100 ÷ 2 = 50 ס"מ²'},
+      {type:'input',text:'טרפז: בסיסים 6 ו-10 ס"מ, גובה 4 ס"מ.\nמה שטחו?',hint:'(6+10) × 4 ÷ 2 = ?',answer:['32'],solution:'(6+10) × 4 ÷ 2 = 32 ס"מ²'},
+      {type:'input',text:'טרפז: בסיסים 5 ו-9 ס"מ, גובה 6 ס"מ.\nמה שטחו?',hint:'(5+9) × 6 ÷ 2 = ?',answer:['42'],solution:'(5+9) × 6 ÷ 2 = 42 ס"מ²'},
+      {type:'input',text:'טרפז: בסיסים 7 ו-13 ס"מ, גובה 5 ס"מ.\nמה שטחו?',hint:'(7+13) × 5 ÷ 2 = ?',answer:['50'],solution:'(7+13) × 5 ÷ 2 = 50 ס"מ²'},
+      {type:'input',text:'טרפז: בסיסים 4 ו-8 ס"מ, גובה 3 ס"מ.\nמה שטחו?',hint:'(4+8) × 3 ÷ 2 = ?',answer:['18'],solution:'(4+8) × 3 ÷ 2 = 18 ס"מ²'},
+    ]},
+  ],
+
+  volume: [
+    { label:'נפח תיבה', variants:[
+      {type:'input',text:'תיבה: 3 × 4 × 5 ס"מ.\nמה נפחה?',hint:'נפח = א × ב × ג = 3 × 4 × 5',answer:['60'],solution:'נפח = 3 × 4 × 5 = 60 ס"מ³'},
+      {type:'input',text:'תיבה: 6 × 2 × 3 ס"מ.\nמה נפחה?',hint:'6 × 2 × 3 = ?',answer:['36'],solution:'נפח = 6 × 2 × 3 = 36 ס"מ³'},
+      {type:'input',text:'תיבה: 10 × 5 × 2 ס"מ.\nמה נפחה?',hint:'10 × 5 × 2 = ?',answer:['100'],solution:'נפח = 10 × 5 × 2 = 100 ס"מ³'},
+      {type:'input',text:'תיבה: 8 × 3 × 4 ס"מ.\nמה נפחה?',hint:'8 × 3 × 4 = ?',answer:['96'],solution:'נפח = 8 × 3 × 4 = 96 ס"מ³'},
+      {type:'input',text:'תיבה: 7 × 5 × 2 ס"מ.\nמה נפחה?',hint:'7 × 5 × 2 = ?',answer:['70'],solution:'נפח = 7 × 5 × 2 = 70 ס"מ³'},
+    ]},
+    { label:'נפח קובייה', variants:[
+      {type:'input',text:'קובייה: צלע 4 ס"מ.\nמה נפחה?',hint:'נפח = צלע³ = 4 × 4 × 4',answer:['64'],solution:'4 × 4 × 4 = 64 ס"מ³'},
+      {type:'input',text:'קובייה: צלע 3 ס"מ.\nמה נפחה?',hint:'3 × 3 × 3 = ?',answer:['27'],solution:'3³ = 27 ס"מ³'},
+      {type:'input',text:'קובייה: צלע 5 ס"מ.\nמה נפחה?',hint:'5 × 5 × 5 = ?',answer:['125'],solution:'5³ = 125 ס"מ³'},
+      {type:'input',text:'קובייה: נפח 27 ס"מ³.\nמה אורך צלעה?',hint:'איזה מספר בחזקה 3 = 27? (3×3×3)',answer:['3'],solution:'3 × 3 × 3 = 27\nצלע = 3 ס"מ'},
+      {type:'input',text:'קובייה: נפח 64 ס"מ³.\nמה אורך צלעה?',hint:'4 × 4 × 4 = 64',answer:['4'],solution:'4 × 4 × 4 = 64\nצלע = 4 ס"מ'},
+    ]},
+    { label:'המרה לליטרים', variants:[
+      {type:'mc',text:'תיבה 10×10×10 ס"מ.\nכמה ליטרים היא מכילה?',options:['1 ליטר','10 ליטר','100 ליטר','1,000 ליטר'],answer:0,hint:'1,000 ס"מ³ = 1 ליטר',solution:'10³ = 1,000 ס"מ³ = 1 ליטר'},
+      {type:'input',text:'תיבה: נפח 5,000 ס"מ³.\nכמה ליטרים?',hint:'1,000 ס"מ³ = 1 ליטר. 5,000 ÷ 1,000 = ?',answer:['5'],solution:'5,000 ÷ 1,000 = 5 ליטרים'},
+      {type:'input',text:'אקווריום: 50 × 30 × 40 ס"מ.\nכמה ליטרים?',hint:'נפח = 50×30×40 = 60,000 ס"מ³ → ÷1,000',answer:['60'],solution:'50×30×40 = 60,000 ס"מ³\n60,000 ÷ 1,000 = 60 ליטרים'},
+      {type:'input',text:'כוס: 10 × 5 × 20 ס"מ.\nכמה ליטרים?',hint:'10×5×20 = 1,000 ס"מ³ → ÷1,000',answer:['1'],solution:'10×5×20 = 1,000 ס"מ³ = 1 ליטר'},
+      {type:'input',text:"ג'ריקן: 30 × 20 × 50 ס\"מ.\nכמה ליטרים?",hint:'30×20×50 = 30,000 ס"מ³ → ÷1,000',answer:['30'],solution:"30×20×50 = 30,000 ס\"מ³\n30,000 ÷ 1,000 = 30 ליטרים"},
+    ]},
+    { label:'מציאת מידה חסרה', variants:[
+      {type:'input',text:'תיבה: נפח 120 ס"מ³, אורך 10, רוחב 4.\nמה גובהה?',hint:'גובה = נפח ÷ (אורך × רוחב) = 120 ÷ 40',answer:['3'],solution:'120 ÷ (10 × 4) = 120 ÷ 40 = 3 ס"מ'},
+      {type:'input',text:'תיבה: נפח 90 ס"מ³, אורך 9, רוחב 5.\nמה גובהה?',hint:'גובה = 90 ÷ (9×5) = 90 ÷ 45',answer:['2'],solution:'90 ÷ 45 = 2 ס"מ'},
+      {type:'input',text:'תיבה: נפח 210 ס"מ³, אורך 7, גובה 5.\nמה רוחבה?',hint:'רוחב = 210 ÷ (7×5) = 210 ÷ 35',answer:['6'],solution:'210 ÷ 35 = 6 ס"מ'},
+      {type:'input',text:'תיבה: נפח 144 ס"מ³, אורך 8, גובה 3.\nמה רוחבה?',hint:'רוחב = 144 ÷ (8×3) = 144 ÷ 24',answer:['6'],solution:'144 ÷ 24 = 6 ס"מ'},
+      {type:'input',text:'תיבה: נפח 180 ס"מ³, רוחב 6, גובה 5.\nמה אורכה?',hint:'אורך = 180 ÷ (6×5) = 180 ÷ 30',answer:['6'],solution:'180 ÷ 30 = 6 ס"מ'},
+    ]},
+    { label:'ספירת קוביות', variants:[
+      {type:'input',text:'תיבה: 5 × 4 × 3 ס"מ.\nכמה קוביות 1×1×1 נכנסות?',hint:'מספר קוביות = נפח = 5×4×3',answer:['60'],solution:'5 × 4 × 3 = 60 קוביות'},
+      {type:'input',text:'תיבה: 3 × 3 × 3 ס"מ.\nכמה קוביות 1×1×1 נכנסות?',hint:'3 × 3 × 3 = ?',answer:['27'],solution:'3³ = 27 קוביות'},
+      {type:'input',text:'שכבה אחת: בסיס 4 × 6 ס"מ.\nכמה קוביות 1×1×1 בשכבה?',hint:'4 × 6 = ?',answer:['24'],solution:'4 × 6 = 24 קוביות'},
+      {type:'input',text:'תיבה: 4 × 3 × 2 ס"מ.\nכמה קוביות 1×1×1 נכנסות?',hint:'4 × 3 × 2 = ?',answer:['24'],solution:'4 × 3 × 2 = 24 קוביות'},
+      {type:'input',text:'תיבה: 6 × 2 × 5 ס"מ.\nכמה קוביות 1×1×1 נכנסות?',hint:'6 × 2 × 5 = ?',answer:['60'],solution:'6 × 2 × 5 = 60 קוביות'},
+    ]},
+  ],
+};
+
+// ════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════
+const variantIdx  = {};  // "topicId-exIdx" → variantIndex
+const answered    = {};  // "topicId-exIdx" → 'correct'|'wrong'
+const attempts    = {};  // "topicId-exIdx" → count
+const scores      = {};
+Object.keys(BANK).forEach(t => { scores[t] = 0; });
+
+function key(topicId, exIdx) { return topicId + '-' + exIdx; }
+function getVI(topicId, exIdx) {
+  const k = key(topicId, exIdx);
+  if (variantIdx[k] === undefined) variantIdx[k] = 0;
+  return variantIdx[k];
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════════════════════════
+function renderTopic(topicId) {
+  const grid = document.getElementById('grid-' + topicId);
+  grid.innerHTML = '';
+  BANK[topicId].forEach((ex, exIdx) => {
+    grid.appendChild(buildCard(topicId, exIdx));
+  });
+}
+
+function buildCard(topicId, exIdx) {
+  const vi = getVI(topicId, exIdx);
+  const v  = BANK[topicId][exIdx].variants[vi];
+  const k  = key(topicId, exIdx);
+  const done = answered[k];
+
+  const card = document.createElement('div');
+  card.className = 'q-card' + (done === 'correct' ? ' correct' : done === 'wrong' ? ' wrong-final' : '');
+  card.id = 'card-' + k;
+
+  // ── Header ──
+  const hdr = document.createElement('div');
+  hdr.className = 'q-header';
+
+  const main = document.createElement('div');
+  main.className = 'q-header-main';
+  main.innerHTML = `
+    <div class="q-num">
+      תרגיל ${exIdx + 1}
+      <span class="var-badge">וריאנט ${vi+1}/5</span>
+    </div>
+    <div class="q-text">${esc(v.text)}</div>
+    ${v.note ? `<div class="q-note">${esc(v.note)}</div>` : ''}
+    <button class="hint-btn" id="hintbtn-${k}" onclick="toggleHint('${k}')">💡 רמז</button>
+    <div class="hint-box" id="hintbox-${k}">${esc(v.hint)}</div>
+  `;
+
+  const btns = document.createElement('div');
+  btns.className = 'q-header-btns';
+  btns.innerHTML = `
+    <button class="speak-btn" id="spk-${k}" onclick="speakQ('${topicId}',${exIdx})" title="הקרא שאלה">🔊</button>
+    <button class="new-var-btn" id="newvar-${k}" onclick="newVariant('${topicId}',${exIdx})" ${done ? 'disabled' : ''}>🔀 חדש</button>
+  `;
+
+  hdr.appendChild(main);
+  hdr.appendChild(btns);
+  card.appendChild(hdr);
+
+  // ── Body (MC or input) ──
+  if (v.type === 'mc') {
+    const opts = document.createElement('div');
+    opts.className = 'mc-options';
+    opts.id = 'opts-' + k;
+    v.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'mc-option';
+      btn.id = `opt-${k}-${i}`;
+      btn.textContent = opt;
+      if (!done) btn.onclick = () => handleMC(topicId, exIdx, i);
+      else btn.disabled = true;
+      opts.appendChild(btn);
+    });
+    card.appendChild(opts);
+
+    const fbRow = document.createElement('div');
+    fbRow.className = 'mc-fb-row';
+    fbRow.innerHTML = `<div class="feedback" id="fb-${k}"></div>`;
+    card.appendChild(fbRow);
+  } else {
+    const area = document.createElement('div');
+    area.className = 'q-answer';
+    const row = document.createElement('div');
+    row.className = 'answer-row';
+    const inp = document.createElement('input');
+    inp.className = 'ans-input';
+    inp.type = 'text';
+    inp.placeholder = 'תשובתך...';
+    inp.id = 'inp-' + k;
+    if (done) inp.disabled = true;
+    inp.onkeydown = e => { if (e.key === 'Enter') checkInput(topicId, exIdx); };
+    const chk = document.createElement('button');
+    chk.className = 'check-btn';
+    chk.textContent = 'בדוק';
+    chk.id = 'chk-' + k;
+    if (done) chk.disabled = true;
+    chk.onclick = () => checkInput(topicId, exIdx);
+    row.appendChild(inp);
+    row.appendChild(chk);
+    area.appendChild(row);
+    area.appendChild(Object.assign(document.createElement('div'), { className:'feedback', id:'fb-'+k }));
+    card.appendChild(area);
+  }
+
+  // ── Solution ──
+  const sol = document.createElement('div');
+  sol.className = 'solution-box';
+  sol.id = 'sol-' + k;
+  sol.innerHTML = `<div class="sol-label">פתרון</div>${esc(v.solution)}`;
+  card.appendChild(sol);
+
+  const tog = document.createElement('button');
+  tog.className = 'sol-toggle';
+  tog.id = 'soltog-' + k;
+  tog.textContent = 'הצג פתרון';
+  tog.onclick = () => toggleSol(k);
+  card.appendChild(tog);
+
+  return card;
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+// ════════════════════════════════════════════════════════════════
+// INTERACTIONS
+// ════════════════════════════════════════════════════════════════
+function toggleHint(k) {
+  const box = document.getElementById('hintbox-' + k);
+  const btn = document.getElementById('hintbtn-' + k);
+  if (box.style.display === 'block') {
+    box.style.display = 'none';
+    btn.textContent = '💡 רמז';
+  } else {
+    box.style.display = 'block';
+    btn.textContent = '💡 הסתר רמז';
+  }
+}
+
+function speakQ(topicId, exIdx) {
+  if (!('speechSynthesis' in window)) return;
+  const k = key(topicId, exIdx);
+  const v = BANK[topicId][exIdx].variants[getVI(topicId, exIdx)];
+  const btn = document.getElementById('spk-' + k);
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(v.text.replace(/\n/g, ' '));
+  utt.lang = 'he-IL';
+  utt.rate = 0.85;
+  utt.onstart = () => btn.classList.add('speaking');
+  utt.onend   = () => btn.classList.remove('speaking');
+  speechSynthesis.speak(utt);
+}
+
+function handleMC(topicId, exIdx, chosen) {
+  const k = key(topicId, exIdx);
+  if (answered[k]) return;
+  const v = BANK[topicId][exIdx].variants[getVI(topicId, exIdx)];
+  const correct = chosen === v.answer;
+
+  v.options.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${k}-${i}`);
+    btn.disabled = true;
+    if (i === v.answer) btn.classList.add('reveal-correct');
+  });
+  document.getElementById(`opt-${k}-${chosen}`).classList.add(correct ? 'chosen-correct' : 'chosen-wrong');
+
+  const fb = document.getElementById('fb-' + k);
+  fb.textContent = correct ? '✓ נכון!' : '✗ לא בדיוק — לחץ על 💡 לרמז';
+  fb.className = 'feedback ' + (correct ? 'correct' : 'hint');
+  document.getElementById('card-' + k).classList.add(correct ? 'correct' : 'wrong-final');
+  document.getElementById('soltog-' + k).style.display = 'inline-block';
+  document.getElementById('newvar-' + k).disabled = true;
+
+  answered[k] = correct ? 'correct' : 'wrong';
+  if (correct) { scores[topicId]++; updateScore(topicId); }
+}
+
+function checkInput(topicId, exIdx) {
+  const k = key(topicId, exIdx);
+  if (answered[k]) return;
+  const v   = BANK[topicId][exIdx].variants[getVI(topicId, exIdx)];
+  const inp = document.getElementById('inp-' + k);
+  const fb  = document.getElementById('fb-'  + k);
+  const raw = inp.value.trim();
+  if (!raw) return;
+
+  const ok = v.answer.map(a => a.replace(/\s+/g,'').toLowerCase()).includes(raw.replace(/\s+/g,'').toLowerCase());
+
+  if (ok) {
+    inp.classList.add('correct'); inp.disabled = true;
+    document.getElementById('chk-' + k).disabled = true;
+    document.getElementById('newvar-' + k).disabled = true;
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    document.getElementById('card-' + k).classList.add('correct');
+    document.getElementById('soltog-' + k).style.display = 'inline-block';
+    answered[k] = 'correct';
+    scores[topicId]++; updateScore(topicId);
+    return;
+  }
+
+  attempts[k] = (attempts[k] || 0) + 1;
+  if (attempts[k] === 1) {
+    inp.classList.add('wrong');
+    setTimeout(() => inp.classList.remove('wrong'), 800);
+    fb.textContent = '✗ לא בדיוק — לחץ על 💡 לרמז';
+    fb.className = 'feedback hint';
+  } else {
+    inp.classList.add('wrong'); inp.disabled = true;
+    document.getElementById('chk-' + k).disabled = true;
+    document.getElementById('newvar-' + k).disabled = true;
+    fb.textContent = '✗ התשובה: ' + v.answer[0];
+    fb.className = 'feedback wrong';
+    document.getElementById('card-' + k).classList.add('wrong-final');
+    document.getElementById('sol-' + k).classList.add('visible');
+    document.getElementById('soltog-' + k).style.display = 'inline-block';
+    answered[k] = 'wrong';
+  }
+}
+
+function newVariant(topicId, exIdx) {
+  const k = key(topicId, exIdx);
+  if (answered[k]) return;
+  const ex  = BANK[topicId][exIdx];
+  const cur = getVI(topicId, exIdx);
+  let next  = cur;
+  for (let i = 0; i < 20 && next === cur; i++) next = Math.floor(Math.random() * ex.variants.length);
+  variantIdx[k] = next;
+  delete attempts[k];
+
+  // Replace just this card in the DOM
+  const oldCard = document.getElementById('card-' + k);
+  const newCard = buildCard(topicId, exIdx);
+  oldCard.parentNode.replaceChild(newCard, oldCard);
+}
+
+function toggleSol(k) {
+  document.getElementById('sol-' + k).classList.toggle('visible');
+}
+
+function updateScore(topicId) {
+  document.getElementById('score-' + topicId).textContent = '⭐ ' + scores[topicId] + ' נכון';
+}
+
+function switchTopic(topicId, btnEl) {
+  document.querySelectorAll('.topic-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('topic-' + topicId).classList.add('active');
+  btnEl.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+Object.keys(BANK).forEach(t => renderTopic(t));
+</script>
+</body>
+</html>
