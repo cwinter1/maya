@@ -8,8 +8,10 @@ Interactive math exam-prep website for Maya (מאיה), grade 6 Israeli curricul
 maya_exam_prep/
 ├── index.html          # Dark hub landing page — links to all topics
 ├── quiz.html           # Circles & scale/ratio quiz (33 questions)
-├── fractions.html      # Fractions quiz (34 main: 8+6 basic + 8+6+6 mult/div/paren; + 5 bonus Q_EXTRA)
+├── fractions.html      # Fractions quiz (34 main: 8+6 basic + 8+6+6 mult/div/paren; + 7 bonus Q_EXTRA)
 ├── percentages.html    # Percentages quiz (14 questions + 5 bonus via Q_EXTRA)
+├── shapes.html         # Area & perimeter quiz (14 main: 8+6; + 5 bonus Q_EXTRA) — id prefix 'a'
+├── volume.html         # Volume quiz (14 main: 8+6; + 5 bonus Q_EXTRA) — id prefix 'v'
 ├── worksheet.html      # Printable worksheets (circles + ratio topics)
 ├── CLAUDE.md           # This file
 ├── README.md           # Project overview and usage
@@ -18,7 +20,7 @@ maya_exam_prep/
     └── runner.html     # Browser test runner
 ```
 
-## Dark theme (index.html, fractions.html, percentages.html)
+## Dark theme (index.html, fractions.html, percentages.html, shapes.html, volume.html)
 - Fonts: `Space Grotesk` (body), `IBM Plex Mono` (mono), `Bebas Neue` (display) — Google Fonts
 - Colors: `--bg: #0a0a0a`, `--surface: #1a1a1a`, `--elevated: #242424`, `--accent: #ff6b35`, `--accent-alt: #f7931e`, `--border: #333`
 - quiz.html retains its original mauve theme
@@ -81,6 +83,8 @@ Open `tests/runner.html` in a browser. All tests must pass (green) before any lo
 - **Circles/ratio**: add to `Q1` or `Q2` in `quiz.html`; add worksheet entry in `worksheet.html`
 - **Fractions**: add to `Q_SINGLE` or `Q_MULTI` in `fractions.html`
 - **Percentages**: add to `Q_SINGLE` or `Q_MULTI` in `percentages.html`
+- **Area/perimeter**: add to `Q_SINGLE` or `Q_MULTI` in `shapes.html` (id prefix `a`)
+- **Volume**: add to `Q_SINGLE` or `Q_MULTI` in `volume.html` (id prefix `v`)
 - Add test cases in `tests/test_logic.js` if new answer normalisation patterns are introduced
 - Run `tests/runner.html` after any logic change
 
