@@ -28,10 +28,24 @@ maya_exam_prep/
 - Hebrew RTL: `lang="he" dir="rtl"` on `<html>`, `direction: rtl` in CSS
 
 ## Answer-checking system (2-attempt + hint)
-- **Input questions**: first wrong → show `q.hint`, allow retry. Second wrong → lock, show answer, reveal solution.
-- **MC questions**: single click locks all options; wrong → show `q.hint` in feedback div (solution not auto-revealed).
-- State lives in `state[tab] = { answered: {}, correct: {}, attempts: {} }`.
-- `resetTab(tab)` resets all three sub-objects.
+- **Input questions**: first wrong → "לא נכון — לחץ על 💡 לרמז", allow retry. Second wrong → lock, show answer, auto-reveal solution.
+- **MC questions**: single click locks all options; wrong → same hint nudge; solution toggle shown.
+- State: `state = { answered: {}, correct: {}, attempts: {} }` (flat, keyed by question id).
+- `resetAll()` clears all state and re-renders.
+
+## Per-card UI components (fractions.html / percentages.html)
+- **🔊 speak button** (top-left of each card): calls `speakQ(qid)` → Web Speech API, `lang: he-IL`, rate 0.85. Pulses while speaking.
+- **💡 רמז button**: always visible below question text; toggles `hintbox-{qid}` visibility. Independent of attempt count — clicking it does NOT penalise the student.
+- **↺ נסה שוב** (per section): calls `retrySection(containerId, questions)` → clears state for that section, shuffles question order, re-renders. Questions are the same set shuffled.
+- **הצג פתרון / הסתר פתרון**: toggle shown after correct answer (review) or after 2nd wrong answer (auto-open).
+- **Topic intro box**: collapsible explanation at top of each page. Toggle button is `▾ הסבר` / `▸ הסתר`.
+
+## Equivalent fraction checking (fractions.html only)
+`parseFrac(s)` extracts `[numerator, denominator]` from `"a/b"` strings.
+`isCorrect()` cross-multiplies: `fn[0]*fa[1] === fn[1]*fa[0]` — so 2/4, 3/6, 4/8 all match when the accepted answer is 1/2. No need to list all equivalents in the answer array.
+
+## Dog mascot
+`dog.jpg` in project root is shown as a circular image in the `index.html` hero. The file must be present for the image to appear — it is not committed to git (add to `.gitignore` if needed).
 
 ## Question data shape
 ```js

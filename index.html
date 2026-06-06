@@ -222,6 +222,16 @@
   }
   footer a:hover { color: var(--accent); }
 
+  .dog-mascot {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    object-fit: cover;
+    margin: 0 auto 18px;
+    display: block;
+    filter: brightness(0.92);
+  }
+
   @media (max-width: 480px) {
     .grid-wrap { grid-template-columns: 1fr; }
     .hero h1 { font-size: 3rem; }
@@ -233,6 +243,7 @@
 <body>
 
 <div class="hero">
+  <img src="dog.jpg" alt="" class="dog-mascot">
   <div class="hero-label">תרגול לבגרות — כיתה ו</div>
   <h1>מאיה<span>.</span></h1>
   <div class="hero-sub">math practice · grade 6 · israeli curriculum</div>

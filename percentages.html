@@ -307,6 +307,80 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  /* ─── Topic intro ───────────────────────────────── */
+  .topic-intro {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .topic-intro strong { color: var(--text); }
+  .topic-intro-toggle {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    float: left;
+    padding: 0;
+  }
+  .topic-intro-body { margin-top: 8px; }
+  .topic-intro-body.hidden { display: none; }
+
+  /* ─── Speak button ───────────────────────────────── */
+  .speak-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s;
+    margin-top: 1px;
+  }
+  .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .speak-btn.speaking { border-color: var(--accent-alt); color: var(--accent-alt); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  /* ─── Hint button ────────────────────────────────── */
+  .hint-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 7px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .hint-btn:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+
+  /* ─── Section retry ──────────────────────────────── */
+  .section-retry-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 11px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .section-retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+
   @media (max-width: 500px) {
     header h1 { font-size: 1.8rem; }
     .formula-grid { grid-template-columns: 1fr; }
@@ -329,6 +403,16 @@
 
 <div class="content">
 
+  <div class="topic-intro">
+    <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
+    <strong>מה זה אחוזים?</strong>
+    <div class="topic-intro-body">
+      אחוז הוא חלק מתוך 100. 50% אומר "חמישים מתוך מאה", כלומר חצי.<br>
+      כדי למצוא X% ממספר N — כותבים X ÷ 100 × N. כדי למצוא איזה אחוז X מ-N — מחשבים X ÷ N × 100.<br>
+      <strong>הנחה:</strong> כופלים במה שנשאר (הנחה של 20% = כפל ב-0.8). <strong>מע"מ:</strong> אחרי ÷ (1 + אחוז).
+    </div>
+  </div>
+
   <div class="formula-box">
     <h3>נוסחאות — אחוזים</h3>
     <div class="formula-grid">
@@ -348,6 +432,7 @@
     <h2>שלב אחד</h2>
     <span class="section-badge">8 שאלות</span>
     <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-single', Q_SINGLE)">↺ נסה שוב</button>
   </div>
   <div id="q-single"></div>
 
@@ -355,10 +440,11 @@
     <h2>כמה שלבים</h2>
     <span class="section-badge multi">6 שאלות</span>
     <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-multi', Q_MULTI)">↺ נסה שוב</button>
   </div>
   <div id="q-multi"></div>
 
-  <button class="reset-btn" onclick="resetAll()">אפס תרגול</button>
+  <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
 <script>
@@ -487,7 +573,54 @@ function norm(s) {
   return s.toLowerCase().replace(/[\s%₪,]/g, '');
 }
 function isCorrect(raw, accepted) {
-  return accepted.some(a => norm(a) === norm(raw));
+  const n = norm(raw);
+  return accepted.some(a => norm(a) === n);
+}
+
+function speakQ(qid) {
+  if (!('speechSynthesis' in window)) return;
+  const q = ALL_Q.find(x => x.id === qid);
+  const btn = document.getElementById('spk-' + qid);
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(q.text.replace(/\n/g, ' '));
+  utt.lang = 'he-IL';
+  utt.rate = 0.85;
+  utt.onstart = () => btn.classList.add('speaking');
+  utt.onend = () => btn.classList.remove('speaking');
+  speechSynthesis.speak(utt);
+}
+
+function showHint(qid) {
+  const box = document.getElementById('hintbox-' + qid);
+  const btn = document.getElementById('hintbtn-' + qid);
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+    btn.textContent = '💡 הסתר רמז';
+  } else {
+    box.style.display = 'none';
+    btn.textContent = '💡 רמז';
+  }
+}
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function retrySection(containerId, questions) {
+  questions.forEach(q => {
+    delete state.answered[q.id];
+    delete state.correct[q.id];
+    delete state.attempts[q.id];
+  });
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  shuffleArr(questions).forEach(q => c.appendChild(renderCard(q)));
+  updateScore();
 }
 
 function updateScore() {
@@ -518,18 +651,23 @@ function renderCard(q) {
     </div><div class="feedback" id="fb-${q.id}"></div>`;
   }
 
+  const safeText = q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const safeSol  = q.solution.replace(/&/g,'&amp;').replace(/</g,'&lt;');
   card.innerHTML = `
     <div class="q-header">
       <span class="q-num">${q.id}</span>
-      <div>
-        <div class="q-text">${q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
+      <div style="flex:1">
+        <div class="q-text">${safeText}</div>
         ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+        <button class="hint-btn" id="hintbtn-${q.id}" onclick="showHint('${q.id}')">💡 רמז</button>
+        <div class="feedback hint" id="hintbox-${q.id}" style="display:none">${q.hint.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
       </div>
+      <button class="speak-btn" id="spk-${q.id}" onclick="speakQ('${q.id}')" title="הקרא שאלה">🔊</button>
     </div>
     ${body}
     <div class="solution-box" id="sol-${q.id}">
       <div class="sol-label">פתרון</div>
-      <div class="sol-text">${q.solution.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
+      <div class="sol-text">${safeSol}</div>
     </div>
     <button class="sol-toggle" id="soltog-${q.id}" onclick="toggleSol('${q.id}')" style="display:none">הצג פתרון</button>
   `;
@@ -553,7 +691,7 @@ function handleMC(qid, chosen) {
     card.classList.add('correct');
   } else {
     document.getElementById(`opt-${qid}-${chosen}`).classList.add('chosen-wrong');
-    fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
+    fb.textContent = '✗ לא בדיוק — לחץ על 💡 לרמז';
     fb.className = 'feedback hint';
   }
   document.getElementById('soltog-' + qid).style.display = 'inline-block';
@@ -581,7 +719,7 @@ function checkInput(qid) {
   } else {
     state.attempts[qid] = (state.attempts[qid] || 0) + 1;
     if (state.attempts[qid] === 1) {
-      fb.textContent = '✗ לא בדיוק — רמז: ' + q.hint;
+      fb.textContent = '✗ לא נכון — לחץ על 💡 לרמז';
       fb.className = 'feedback hint';
       input.classList.add('wrong-flash');
       setTimeout(() => input.classList.remove('wrong-flash'), 900);
