@@ -307,6 +307,26 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ─── More exercises ─────────────────────────────── */
+  .more-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(247,147,30,0.12));
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .more-btn:hover { background: rgba(255,107,53,0.2); transform: scale(1.02); }
+  .more-section { display: none; }
+  .more-section.visible { display: block; }
+
   /* ─── Topic intro ───────────────────────────────── */
   .topic-intro {
     background: var(--elevated);
@@ -444,6 +464,18 @@
   </div>
   <div id="q-multi"></div>
 
+  <button class="more-btn" id="more-btn" onclick="loadMore()">+ רוצה עוד תרגילים?</button>
+
+  <div class="more-section" id="more-section">
+    <div class="section-heading">
+      <h2>תרגול נוסף</h2>
+      <span class="section-badge">5 שאלות</span>
+      <div class="section-line"></div>
+      <button class="section-retry-btn" onclick="retrySection('q-extra', Q_EXTRA)">↺ נסה שוב</button>
+    </div>
+    <div id="q-extra"></div>
+  </div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
@@ -563,6 +595,49 @@ const Q_MULTI = [
     answer: ['400'],
     hint: '480 ₪ = 120% מהמחיר המקורי. חלק 480 ב-1.2.',
     solution: '480 ÷ 1.2 = 400 ₪\n(כלומר: 480 × 100 ÷ 120 = 400)'
+  }
+];
+
+const Q_EXTRA = [
+  {
+    id: 'p15', type: 'input',
+    text: 'כמה זה 35% מ-80?',
+    note: 'כתוב רק את המספר',
+    answer: ['28'],
+    hint: '35 ÷ 100 × 80. קודם חשב 10% מ-80, אחר-כך כפל ב-3.5.',
+    solution: '10% מ-80 = 8\n35% = 8 × 3.5 = 28'
+  },
+  {
+    id: 'p16', type: 'input',
+    text: '18 הוא כמה אחוז מ-120?',
+    note: 'כתוב רק את המספר (בלי סימן %)',
+    answer: ['15'],
+    hint: 'חלק 18 ב-120 וכפל ב-100.',
+    solution: '18 ÷ 120 = 0.15\n0.15 × 100 = 15%'
+  },
+  {
+    id: 'p17', type: 'input',
+    text: 'מחיר חולצה 60 ₪. יש הנחה של 15%.\nמה המחיר לאחר ההנחה?',
+    note: 'כתוב רק את המספר',
+    answer: ['51'],
+    hint: 'מחיר אחרי הנחה = 60 × (1 − 0.15). 1 − 0.15 = ?',
+    solution: '15% מ-60 = 9 ₪ הנחה\n60 − 9 = 51 ₪'
+  },
+  {
+    id: 'p18', type: 'mc',
+    text: 'מה גדול יותר:\n30% מ-60 או 20% מ-90?',
+    options: ['30% מ-60 גדול יותר', '20% מ-90 גדול יותר', 'שניהם שווים', 'אי-אפשר להשוות'],
+    answer: 2,
+    hint: 'חשב כל אחד בנפרד. 30% מ-60 = ? ו-20% מ-90 = ?',
+    solution: '30% מ-60 = 18\n20% מ-90 = 18\nשניהם שווים!'
+  },
+  {
+    id: 'p19', type: 'input',
+    text: 'קנו פריט ב-200 ₪ ומכרו אותו ב-240 ₪.\nכמה אחוז רווח?',
+    note: 'כתוב רק את המספר (בלי סימן %)',
+    answer: ['20'],
+    hint: 'רווח = 240 − 200 = 40. שיעור % = 40 ÷ 200 × 100.',
+    solution: 'רווח: 240 − 200 = 40 ₪\n40 ÷ 200 × 100 = 20%'
   }
 ];
 
@@ -746,10 +821,22 @@ function toggleSol(qid) {
   }
 }
 
+function loadMore() {
+  const btn = document.getElementById('more-btn');
+  const sec = document.getElementById('more-section');
+  btn.style.display = 'none';
+  sec.classList.add('visible');
+  Q_EXTRA.forEach(q => document.getElementById('q-extra').appendChild(renderCard(q)));
+  updateScore();
+}
+
 function resetAll() {
   state.answered = {}; state.correct = {}; state.attempts = {};
   document.getElementById('q-single').innerHTML = '';
   document.getElementById('q-multi').innerHTML = '';
+  document.getElementById('q-extra').innerHTML = '';
+  document.getElementById('more-section').classList.remove('visible');
+  document.getElementById('more-btn').style.display = 'block';
   init();
 }
 
