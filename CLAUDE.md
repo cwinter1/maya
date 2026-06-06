@@ -12,6 +12,8 @@ maya_exam_prep/
 ├── percentages.html    # Percentages quiz (14 questions + 5 bonus via Q_EXTRA)
 ├── shapes.html         # Area & perimeter quiz (14 main: 8+6; + 5 bonus Q_EXTRA) — id prefix 'a'
 ├── volume.html         # Volume quiz (14 main: 8+6; + 5 bonus Q_EXTRA) — id prefix 'v'
+├── negatives.html      # Negative numbers quiz (14 main: 8+6; + 5 bonus Q_EXTRA) — id prefix 'n'
+├── equations.html      # Simple equations quiz (14 main: 8+6; + 5 bonus Q_EXTRA) — id prefix 'e'
 ├── worksheet.html      # Printable worksheets (circles + ratio topics)
 ├── CLAUDE.md           # This file
 ├── README.md           # Project overview and usage
