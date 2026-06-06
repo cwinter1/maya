@@ -8,7 +8,7 @@ Interactive math exam-prep website for Maya (מאיה), grade 6 Israeli curricul
 maya_exam_prep/
 ├── index.html          # Dark hub landing page — links to all topics
 ├── quiz.html           # Circles & scale/ratio quiz (33 questions)
-├── fractions.html      # Fractions quiz (14 questions + 5 bonus via Q_EXTRA)
+├── fractions.html      # Fractions quiz (34 main: 8+6 basic + 8+6+6 mult/div/paren; + 5 bonus Q_EXTRA)
 ├── percentages.html    # Percentages quiz (14 questions + 5 bonus via Q_EXTRA)
 ├── worksheet.html      # Printable worksheets (circles + ratio topics)
 ├── CLAUDE.md           # This file

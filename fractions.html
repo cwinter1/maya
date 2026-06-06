@@ -476,6 +476,55 @@
     <div id="q-extra"></div>
   </div>
 
+  <div style="margin-top:36px;border-top:2px dashed var(--border);padding-top:28px;">
+
+    <div class="topic-intro">
+      <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
+      <strong>כפל וחילוק שברים</strong>
+      <div class="topic-intro-body">
+        כשמכפילים שברים — כופלים מונה במונה ומכנה במכנה. לדוגמה: 2/3 × 3/5 = 6/15 = 2/5.<br>
+        כשמחלקים בשבר — כופלים בהפוך שלו. לדוגמה: 3/4 ÷ 1/2 = 3/4 × 2 = 3/2.<br>
+        מספר מעורב — יש להמיר לשבר בלתי-אמיתי לפני כפל או חילוק.<br>
+        <strong>שברים עשרוניים:</strong> ×10 — נקודה זזה ימינה · ÷10 — נקודה זזה שמאלה.
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <h3>נוסחאות — כפל וחילוק</h3>
+      <div class="formula-grid">
+        <div class="formula-item"><strong>כפל:</strong> א/ב × ג/ד = (א×ג) / (ב×ד)</div>
+        <div class="formula-item"><strong>חלוקה:</strong> א/ב ÷ ג/ד = א/ב × ד/ג</div>
+        <div class="formula-item"><strong>×10 / ×100:</strong> נקודה → ימינה 1 / 2 מקומות</div>
+        <div class="formula-item"><strong>÷10 / ÷100:</strong> נקודה → שמאלה 1 / 2 מקומות</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-heading">
+    <h2>כפל שברים</h2>
+    <span class="section-badge">8 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-mult', Q_MULT)">↺ נסה שוב</button>
+  </div>
+  <div id="q-mult"></div>
+
+  <div class="section-heading">
+    <h2>חילוק שברים</h2>
+    <span class="section-badge multi">6 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-divf', Q_DIVF)">↺ נסה שוב</button>
+  </div>
+  <div id="q-divf"></div>
+
+  <div class="section-heading">
+    <h2>סוגריים ורב-שלבי</h2>
+    <span class="section-badge multi">6 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-paren', Q_PAREN)">↺ נסה שוב</button>
+  </div>
+  <div id="q-paren"></div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
@@ -630,7 +679,173 @@ const Q_EXTRA = [
   }
 ];
 
-const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
+const Q_MULT = [
+  {
+    id: 'fm1', type: 'input',
+    text: 'חשב: 5 × 2/3 = ?',
+    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 10/3)',
+    answer: ['10/3', '3 1/3'],
+    hint: 'כפל את השלם במונה: 5 × 2 = 10. המכנה לא משתנה.',
+    solution: '5 × 2/3 = (5 × 2) / 3 = 10/3 = 3 1/3'
+  },
+  {
+    id: 'fm2', type: 'input',
+    text: 'חשב: 3/4 × 8 = ?',
+    note: 'כתוב מספר שלם',
+    answer: ['6'],
+    hint: 'כפל מונה ב-8: 3 × 8 = 24. אחרי כן חלק במכנה: 24 ÷ 4.',
+    solution: '3/4 × 8 = (3 × 8) / 4 = 24/4 = 6'
+  },
+  {
+    id: 'fm3', type: 'input',
+    text: 'חשב: 2/3 × 3/5 = ?',
+    answer: ['2/5', '6/15'],
+    hint: 'כפל מונה במונה ומכנה במכנה: (2×3) / (3×5). אחר-כך צמצם ב-3.',
+    solution: '2/3 × 3/5 = 6/15\nצמצום ב-3: 6÷3=2, 15÷3=5\n= 2/5'
+  },
+  {
+    id: 'fm4', type: 'input',
+    text: 'חשב: 4 × 1 1/2 = ?',
+    note: 'כתוב מספר שלם',
+    answer: ['6'],
+    hint: 'המר 1 1/2 לשבר בלתי-אמיתי: (1×2+1)/2 = 3/2. אחר-כך כפל: 4 × 3/2.',
+    solution: '1 1/2 = 3/2\n4 × 3/2 = 12/2 = 6'
+  },
+  {
+    id: 'fm5', type: 'input',
+    text: 'חשב: 2 1/3 × 3/7 = ?',
+    note: 'כתוב מספר שלם',
+    answer: ['1'],
+    hint: 'המר 2 1/3 לשבר: (2×3+1)/3 = 7/3. כפל: 7/3 × 3/7. שים לב — מה קורה למונה ולמכנה?',
+    solution: '2 1/3 = 7/3\n7/3 × 3/7 = 21/21 = 1\n(מונה ומכנה שווים — תוצאה = 1)'
+  },
+  {
+    id: 'fm6', type: 'input',
+    text: 'לחבילת גבינה יש 300 גרם.\nמאיה אכלה 2/3 ממנה. כמה גרם אכלה?',
+    note: 'כתוב רק את המספר',
+    answer: ['200'],
+    hint: 'כפל: 300 × 2/3. קודם חלק 300 ב-3, אחר-כך כפל ב-2.',
+    solution: '300 ÷ 3 = 100\n100 × 2 = 200 גרם'
+  },
+  {
+    id: 'fm7', type: 'input',
+    text: 'חשב: 0.4 × 10 = ?',
+    answer: ['4'],
+    hint: 'כשמכפילים ב-10, הנקודה העשרונית זזה מקום אחד ימינה.',
+    solution: '0.4 × 10 = 4\n(0.4 → 4.0 = 4)'
+  },
+  {
+    id: 'fm8', type: 'input',
+    text: 'חשב: 0.35 × 100 = ?',
+    answer: ['35'],
+    hint: 'כשמכפילים ב-100, הנקודה זזה שני מקומות ימינה.',
+    solution: '0.35 × 100 = 35\n(0.35 → 35.0 = 35)'
+  }
+];
+
+const Q_DIVF = [
+  {
+    id: 'fd1', type: 'input',
+    text: 'חשב: 3/4 ÷ 3 = ?',
+    answer: ['1/4'],
+    hint: 'חלוקה בשלם = כפל בהפוך שלו. ההפוך של 3 הוא 1/3.',
+    solution: '3/4 ÷ 3 = 3/4 × 1/3 = 3/12 = 1/4'
+  },
+  {
+    id: 'fd2', type: 'input',
+    text: 'חשב: 6 ÷ 3/4 = ?',
+    note: 'כתוב מספר שלם',
+    answer: ['8'],
+    hint: 'חלוקה בשבר = כפל בהפוך שלו. ההפוך של 3/4 הוא 4/3.',
+    solution: '6 ÷ 3/4 = 6 × 4/3 = 24/3 = 8'
+  },
+  {
+    id: 'fd3', type: 'input',
+    text: 'חשב: 4/5 ÷ 2/3 = ?',
+    note: 'כתוב כשבר בלתי-אמיתי',
+    answer: ['6/5', '1 1/5'],
+    hint: 'כפל בהפוך של 2/3, שהוא 3/2: 4/5 × 3/2 = ?',
+    solution: '4/5 ÷ 2/3 = 4/5 × 3/2 = 12/10 = 6/5 = 1 1/5'
+  },
+  {
+    id: 'fd4', type: 'mc',
+    text: 'מה שווה: 3/4 ÷ 1/2 ?',
+    options: ['3/8', '3/2', '2/3', '1/4'],
+    answer: 1,
+    hint: 'כפל ב-2/1 (ההפוך של 1/2): 3/4 × 2 = ?',
+    solution: '3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2'
+  },
+  {
+    id: 'fd5', type: 'input',
+    text: 'חוט באורך 5/6 מטר חולק ל-5 חלקים שווים.\nמה אורך כל חלק?',
+    answer: ['1/6'],
+    hint: '5/6 ÷ 5 = 5/6 × 1/5. כפל מונה במונה ומכנה במכנה.',
+    solution: '5/6 ÷ 5 = 5/6 × 1/5 = 5/30 = 1/6 מטר'
+  },
+  {
+    id: 'fd6', type: 'input',
+    text: 'חשב: 0.8 ÷ 10 = ?',
+    answer: ['0.08'],
+    hint: 'כשמחלקים ב-10, הנקודה העשרונית זזה מקום אחד שמאלה.',
+    solution: '0.8 ÷ 10 = 0.08\n(0.8 → 0.08)'
+  }
+];
+
+const Q_PAREN = [
+  {
+    id: 'fp1', type: 'input',
+    text: 'חשב: (1/2 + 1/3) × 6 = ?',
+    note: 'כתוב מספר שלם',
+    answer: ['5'],
+    hint: 'שלב א: חשב את הסוגריים — 1/2 + 1/3 (מכנה משותף = 6). שלב ב: כפל ב-6.',
+    solution: 'שלב א: 1/2 + 1/3 = 3/6 + 2/6 = 5/6\nשלב ב: 5/6 × 6 = 30/6 = 5'
+  },
+  {
+    id: 'fp2', type: 'input',
+    text: 'חשב: (3/4 − 1/4) × 2 = ?',
+    note: 'כתוב מספר שלם',
+    answer: ['1'],
+    hint: 'שלב א: 3/4 − 1/4 = ? שלב ב: כפל התוצאה ב-2.',
+    solution: 'שלב א: 3/4 − 1/4 = 2/4 = 1/2\nשלב ב: 1/2 × 2 = 1'
+  },
+  {
+    id: 'fp3', type: 'input',
+    text: 'חשב: 3 × (2/3 + 1/4) = ?',
+    note: 'כתוב כשבר בלתי-אמיתי (לדוגמה: 11/4)',
+    answer: ['11/4', '2 3/4'],
+    hint: 'שלב א: מצא מכנה משותף ל-2/3 ו-1/4 (= 12). שלב ב: כפל ב-3.',
+    solution: 'שלב א: 2/3 + 1/4 = 8/12 + 3/12 = 11/12\nשלב ב: 3 × 11/12 = 33/12 = 11/4 = 2 3/4'
+  },
+  {
+    id: 'fp4', type: 'input',
+    text: 'חשב: (2/3 ÷ 1/3) × 3/4 = ?',
+    note: 'כתוב כשבר',
+    answer: ['3/2', '1 1/2'],
+    hint: 'שלב א: 2/3 ÷ 1/3 = 2/3 × 3/1 = ? שלב ב: כפל התוצאה ב-3/4.',
+    solution: 'שלב א: 2/3 ÷ 1/3 = 2/3 × 3/1 = 6/3 = 2\nשלב ב: 2 × 3/4 = 6/4 = 3/2 = 1 1/2'
+  },
+  {
+    id: 'fp5', type: 'input',
+    text: 'בכיתה יש 30 תלמידים.\n(1/3 + 1/6) מהתלמידים יצאו לטיול.\nכמה תלמידים יצאו לטיול?',
+    note: 'כתוב רק את המספר',
+    answer: ['15'],
+    hint: 'שלב א: חשב 1/3 + 1/6 (מכנה משותף = 6). שלב ב: כפל ב-30.',
+    solution: 'שלב א: 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2\nשלב ב: 30 × 1/2 = 15 תלמידים'
+  },
+  {
+    id: 'fp6', type: 'input',
+    text: 'חשב: 2 × (1/3 + 1/6) + 1/4 = ?',
+    note: 'כתוב כשבר (לדוגמה: 5/4)',
+    answer: ['5/4', '1 1/4'],
+    hint: 'שלב א: 1/3 + 1/6 = ? שלב ב: כפל ב-2. שלב ג: הוסף 1/4.',
+    solution: 'שלב א: 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2\nשלב ב: 2 × 1/2 = 1\nשלב ג: 1 + 1/4 = 4/4 + 1/4 = 5/4 = 1 1/4'
+  }
+];
+
+const ALL_Q = [...Q_SINGLE, ...Q_MULTI, ...Q_MULT, ...Q_DIVF, ...Q_PAREN];
+function findQ(qid) {
+  return [...ALL_Q, ...Q_EXTRA].find(function(x) { return x.id === qid; });
+}
 const state = { answered: {}, correct: {}, attempts: {} };
 let streak = 0;
 const _secDone = {};
@@ -639,6 +854,9 @@ function findSection(qid) {
   if (Q_SINGLE.some(function(q){return q.id===qid;})) return ['q-single', Q_SINGLE];
   if (Q_MULTI.some(function(q){return q.id===qid;})) return ['q-multi', Q_MULTI];
   if (Q_EXTRA.some(function(q){return q.id===qid;})) return ['q-extra', Q_EXTRA];
+  if (Q_MULT.some(function(q){return q.id===qid;})) return ['q-mult', Q_MULT];
+  if (Q_DIVF.some(function(q){return q.id===qid;})) return ['q-divf', Q_DIVF];
+  if (Q_PAREN.some(function(q){return q.id===qid;})) return ['q-paren', Q_PAREN];
   return null;
 }
 function checkSectionDone(cid, qs) {
@@ -668,7 +886,7 @@ function isCorrect(raw, accepted) {
 
 function speakQ(qid) {
   if (!('speechSynthesis' in window)) return;
-  const q = ALL_Q.find(x => x.id === qid);
+  const q = findQ(qid);
   const btn = document.getElementById('spk-' + qid);
   speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(q.text.replace(/\n/g, ' '));
@@ -719,6 +937,7 @@ function updateScore() {
   const ok = Object.values(state.correct).filter(Boolean).length;
   document.getElementById('sc-ok').textContent = ok;
   document.getElementById('sc-done').textContent = done;
+  document.getElementById('sc-total').textContent = ALL_Q.length;
   const pct = done / ALL_Q.length * 100;
   document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
   document.getElementById('prog-bar').style.width = pct + '%';
@@ -768,7 +987,7 @@ function renderCard(q) {
 
 function handleMC(qid, chosen) {
   if (state.answered[qid]) return;
-  const q = ALL_Q.find(x => x.id === qid);
+  const q = findQ(qid);
   const correct = chosen === q.answer;
   q.options.forEach((_, i) => {
     const btn = document.getElementById(`opt-${qid}-${i}`);
@@ -799,7 +1018,7 @@ function handleMC(qid, chosen) {
 
 function checkInput(qid) {
   if (state.answered[qid]) return;
-  const q = ALL_Q.find(x => x.id === qid);
+  const q = findQ(qid);
   const input = document.getElementById('inp-' + qid);
   const fb = document.getElementById('fb-' + qid);
   const card = document.getElementById('card-' + qid);
@@ -864,6 +1083,9 @@ function resetAll() {
   document.getElementById('q-single').innerHTML = '';
   document.getElementById('q-multi').innerHTML = '';
   document.getElementById('q-extra').innerHTML = '';
+  document.getElementById('q-mult').innerHTML = '';
+  document.getElementById('q-divf').innerHTML = '';
+  document.getElementById('q-paren').innerHTML = '';
   document.getElementById('more-section').classList.remove('visible');
   document.getElementById('more-btn').style.display = 'block';
   init();
@@ -872,6 +1094,9 @@ function resetAll() {
 function init() {
   Q_SINGLE.forEach(q => document.getElementById('q-single').appendChild(renderCard(q)));
   Q_MULTI.forEach(q => document.getElementById('q-multi').appendChild(renderCard(q)));
+  Q_MULT.forEach(q => document.getElementById('q-mult').appendChild(renderCard(q)));
+  Q_DIVF.forEach(q => document.getElementById('q-divf').appendChild(renderCard(q)));
+  Q_PAREN.forEach(q => document.getElementById('q-paren').appendChild(renderCard(q)));
   updateScore();
 }
 
