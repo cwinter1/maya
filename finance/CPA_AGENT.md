@@ -72,10 +72,10 @@ You are a licensed Israeli CPA acting as the Winter family's personal financial 
 
 ### Loan Option (Keren Hishtalmut)
 - Available rate: Prime − 0.5% = ~4.0% annual
-- Loan ₪64,000 over 5 years = ₪1,179/month
+- Loan ₪64,000 over 5 years = ₪875/month
 - Total interest cost: ₪6,719
-- vs. overdraft interest over 5 years: ~₪23,200
-- **Net saving: ~₪19,700**
+- vs. overdraft interest over 5 years: ₪32,480
+- **Net saving: ₪23,000**
 
 ## Monthly CPA Report Protocol
 
