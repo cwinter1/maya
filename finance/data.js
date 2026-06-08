@@ -1,7 +1,5 @@
-// ── נתוני משפחת וינטר ─────────────────────────────────────
 const DATA = {
 
-  // הכנסות
   income: {
     katya: { base: 12000, name: "קטיה" },
     chris: { base: 18374, name: "כריס" },
@@ -11,7 +9,6 @@ const DATA = {
                          "2026-03":3588, "2026-08":6795, "2026-12":5745 }
   },
 
-  // הוצאות קבועות
   fixed: [
     { name:"משכנתא", amount:3880, cat:"דיור" },
     { name:"הלוואה 1", amount:2015, cat:"הלוואות" },
@@ -28,7 +25,6 @@ const DATA = {
     { name:"ני\"ע הוראת קבע", amount:201, cat:"השקעות" },
   ],
 
-  // ילדים ופעילויות
   kids: [
     { name:"אמה — בלט (Donna)", amount:540, child:"אמה", protected:true },
     { name:"אמה — צהרון (אלתרמן)", amount:348, child:"אמה", protected:true },
@@ -38,7 +34,6 @@ const DATA = {
     { name:"תוספות בית ספר", amount:200, child:"כולן", protected:false },
   ],
 
-  // חיסכון חודשי
   savings: [
     { name:"פירעון מינוס", amount:2000, goal:64000, color:"#f87171" },
     { name:"טיול אירופה", amount:1416, goal:17000, color:"#4ade80" },
@@ -47,7 +42,6 @@ const DATA = {
     { name:"חירום",       amount:500,  goal:10000, color:"#a78bfa" },
   ],
 
-  // שינויים עתידיים ידועים
   upcoming: [
     { name:"ביטוח רכב", currentAmount:1400, newAmount:800, effectiveMonth:"2026-07",
       note:"חידוש פוליסה — חיסכון ₪600/חודש", cat:"רכב" },
@@ -55,7 +49,6 @@ const DATA = {
       note:"ביטול מיידי — כפילות עם נטפליקס", cat:"בילוי" },
   ],
 
-  // כרטיסי אשראי — ממוצע חודשי בפועל לפי קטגוריה (14 חודשים)
   ccActual: {
     "טיולים":      { actual:3140, target:0,    note:"אל-על, בוקינג, מלונות בחו\"ל" },
     "מכולות":      { actual:2432, target:2200, note:"אושר עד, רמי לוי, סטופ מרקט" },
@@ -69,23 +62,38 @@ const DATA = {
     "CAL התקנות":  { actual:2000, target:0,    note:"רכישות בתשלומים — לא להוסיף חדשות" },
   },
 
-  // נתונים חודשיים אמיתיים (נוב 25 — מאי 26)
+  // נתונים חודשיים — הכנסה מול כלל ההוצאות (אשראי + הלוואות + משכנתא + קבוע)
   monthly: [
-    { month:"2025-11", income:30455, cc:20500, label:"נוב 25", abroad:false },
-    { month:"2025-12", income:36000, cc:19940, label:"דצמ 25", abroad:false, bonus:6000 },
-    { month:"2026-01", income:30079, cc:22000, label:"ינו 26",  abroad:true,  trip:"קפריסין" },
-    { month:"2026-02", income:24898, cc:18600, label:"פבר 26", abroad:false },
-    { month:"2026-03", income:30788, cc:19100, label:"מרץ 26", abroad:false, bonus:3588 },
-    { month:"2026-04", income:30374, cc:21200, label:"אפר 26", abroad:true,  trip:"אילת" },
-    { month:"2026-05", income:30811, cc:20500, label:"מאי 26", abroad:true,  trip:"קפריסין" },
-    { month:"2026-06", income:30374, cc:17800, label:"יונ 26", abroad:false },
+    { month:"2025-11", income:30455,
+      cc:20500, loans:7911, fixed_costs:2302, kids_costs:2303,
+      label:"נוב 25", abroad:false },
+    { month:"2025-12", income:36000, bonus:6000,
+      cc:19940, loans:7911, fixed_costs:2302, kids_costs:2303,
+      label:"דצמ 25", abroad:false },
+    { month:"2026-01", income:30079,
+      cc:22000, loans:7911, fixed_costs:2302, kids_costs:2303,
+      label:"ינו 26",  abroad:true, trip:"קפריסין" },
+    { month:"2026-02", income:24898,
+      cc:18600, loans:7911, fixed_costs:2302, kids_costs:2303,
+      label:"פבר 26", abroad:false },
+    { month:"2026-03", income:30788, bonus:3588,
+      cc:19100, loans:4032, fixed_costs:2302, kids_costs:2303,
+      label:"מרץ 26", abroad:false },
+    { month:"2026-04", income:30374,
+      cc:21200, loans:4032, fixed_costs:2302, kids_costs:2303,
+      label:"אפר 26", abroad:true, trip:"אילת" },
+    { month:"2026-05", income:30811,
+      cc:20500, loans:4032, fixed_costs:2302, kids_costs:2303,
+      label:"מאי 26", abroad:true, trip:"קפריסין" },
+    { month:"2026-06", income:30374,
+      cc:17800, loans:4032, fixed_costs:2302, kids_costs:2303,
+      label:"יונ 26", abroad:false },
   ],
 
   overdraft: {
     start: 64000,
     startMonth: "2026-06",
     interestRate: 0.20,
-    // לוח תשלומים — ₪2,000/חודש + קצבת ילדים + בונוסים
     schedule: [
       { month:"יונ 26", regular:2000, bonus:0,    allowance:437 },
       { month:"יול 26", regular:2000, bonus:0,    allowance:437 },
