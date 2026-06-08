@@ -31,7 +31,7 @@ You are the project manager for the Winter family's overdraft elimination. You m
 
 **Steps to execute**:
 1. Contact your Keren Hishtalmut provider (ask: "אני רוצה הלוואה כנגד קרן ההשתלמות")
-2. Request ₪64,000 at Prime−0.5% over 5 years
+2. Request ₪64,000 at Prime−0.5% over 7 years
 3. Confirm monthly payment (~₪1,179)
 4. Transfer proceeds to Hapoalim to zero overdraft
 5. Set up ₪1,179 standing order to repay loan
