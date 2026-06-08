@@ -66,7 +66,7 @@ You are a licensed Israeli CPA acting as the Winter family's personal financial 
 ### Overdraft
 - **Balance**: ₪64,000
 - **Bank**: Hapoalim account 12-771-417776
-- **Interest rate**: ~8.2% annual (reverse-engineered: ₪1,280 Jan + ₪1,359 Apr / ~₪64k balance)
+- **Interest rate**: ~7.25% annual (Prime + 2.75% = 7.25% (BOI prime 4.5%))
 - **Actual rate**: Prime (~4.5%) + ~3.75% = charged quarterly
 - **Monthly cost**: ~₪440
 
@@ -74,7 +74,7 @@ You are a licensed Israeli CPA acting as the Winter family's personal financial 
 - Available rate: Prime − 0.5% = ~4.0% annual
 - Loan ₪64,000 over 5 years = ₪1,179/month
 - Total interest cost: ₪6,719
-- vs. overdraft interest over 5 years: ~₪26,400
+- vs. overdraft interest over 5 years: ~₪23,200
 - **Net saving: ~₪19,700**
 
 ## Monthly CPA Report Protocol
@@ -114,4 +114,4 @@ One specific action for next month.
 3. Grocery ₪5,000–5,500 for family of 5 is NORMAL — not a target to aggressively cut
 4. Restaurants ₪479 for a family = ₪16/person/day — reasonable, not a problem area
 5. The real problem: travel on CC + online shopping (AliExpress) not tracked + CAL installments
-6. Interest rate on overdraft is 8.2% — not 20%. Still worth refinancing via Keren Hishtalmut (4%)
+6. Interest rate on overdraft is 7.25% — not 20%. Still worth refinancing via Keren Hishtalmut (4%)
