@@ -176,7 +176,7 @@ nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24
         <div class="dp-box-val g" id="dpIncome">—</div>
       </div>
       <div class="dp-box">
-        <div class="dp-box-label">כרטיסי אשראי</div>
+        <div class="dp-box-label">אשראי + הלוואות + קבוע</div>
         <div class="dp-box-val r" id="dpCC">—</div>
       </div>
       <div class="dp-box">
@@ -244,22 +244,36 @@ nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24
 <script>
 const fmt = n => '₪' + Math.abs(Math.round(n)).toLocaleString('he-IL');
 
-// Trend chart
+// Total expenses = cc + loans + fixed + kids
 const months = DATA.monthly;
+const totalExp = m => m.cc + m.loans + m.fixed_costs + m.kids_costs;
+
+// Trend chart — stacked bars for expense breakdown
 new Chart(document.getElementById('trendChart'), {
   type:'bar',
   data:{
     labels: months.map(m=>m.label),
     datasets:[
-      { label:'הכנסה', data:months.map(m=>m.income), backgroundColor:'rgba(74,222,128,0.5)', borderColor:'#4ade80', borderWidth:1, borderRadius:3 },
-      { label:'כרטיסי אשראי', data:months.map(m=>m.cc), backgroundColor:months.map(m=>m.cc>m.income?'rgba(248,113,113,0.7)':'rgba(248,113,113,0.35)'), borderColor:'#f87171', borderWidth:1, borderRadius:3 }
+      { label:'הכנסה', data:months.map(m=>m.income), backgroundColor:'rgba(74,222,128,0.55)', borderColor:'#4ade80', borderWidth:1, borderRadius:3, order:1 },
+      { label:'אשראי', data:months.map(m=>m.cc), backgroundColor:'rgba(248,113,113,0.75)', borderColor:'#f87171', borderWidth:0, stack:'exp' },
+      { label:'הלוואות ומשכנתא', data:months.map(m=>m.loans), backgroundColor:'rgba(239,68,68,0.45)', borderColor:'#dc2626', borderWidth:0, stack:'exp' },
+      { label:'בית + קבוע', data:months.map(m=>m.fixed_costs), backgroundColor:'rgba(251,146,60,0.5)', borderColor:'#f97316', borderWidth:0, stack:'exp' },
+      { label:'ילדים', data:months.map(m=>m.kids_costs), backgroundColor:'rgba(167,139,250,0.5)', borderColor:'#a78bfa', borderWidth:0, stack:'exp' },
     ]
   },
   options:{
     responsive:true, maintainAspectRatio:false,
     plugins:{
-      legend:{display:true,position:'bottom',labels:{color:'#999',font:{size:10},boxWidth:10,padding:12}},
-      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.raw)}`}}
+      legend:{display:true,position:'bottom',labels:{color:'#999',font:{size:10},boxWidth:10,padding:10}},
+      tooltip:{mode:'index',intersect:false,callbacks:{
+        afterBody: items => {
+          const total = items.filter(i=>i.datasetIndex>0).reduce((s,i)=>s+i.raw,0);
+          const inc = items[0]?.raw||0;
+          const diff = inc - total;
+          return [`────────────`, `סה"כ הוצאות: ₪${Math.round(total).toLocaleString('he-IL')}`, `מאזן: ${diff>=0?'+':''}₪${Math.round(diff).toLocaleString('he-IL')}`];
+        },
+        label: c => ` ${c.dataset.label}: ₪${Math.round(c.raw).toLocaleString('he-IL')}`
+      }}
     },
     scales:{
       x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}},
@@ -268,11 +282,11 @@ new Chart(document.getElementById('trendChart'), {
   }
 });
 
-// Month cards
+// Month cards — show full expense breakdown
 const grid = document.getElementById('monthGrid');
-let selectedMonth = null;
 months.forEach((m,i) => {
-  const balance = m.income - m.cc;
+  const total = totalExp(m);
+  const balance = m.income - total;
   const isOk = balance >= 0;
   const card = document.createElement('div');
   card.className = `month-card ${isOk?'balanced':'deficit'}`;
@@ -283,7 +297,7 @@ months.forEach((m,i) => {
   if (m.bonus)  badges += `<span class="badge bonus">🎁 בונוס</span>`;
   badges += isOk ? `<span class="badge ok">מאוזן</span>` : `<span class="badge bad">גרעון</span>`;
 
-  const pct = Math.min(100, Math.round(m.cc/m.income*100));
+  const pct = Math.min(100, Math.round(total/m.income*100));
   const barColor = isOk ? '#4ade80' : '#f87171';
 
   card.innerHTML = `
@@ -292,7 +306,9 @@ months.forEach((m,i) => {
       <div class="mc-badges">${badges}</div>
     </div>
     <div class="mc-income">הכנסה: <span>${fmt(m.income)}</span></div>
-    <div class="mc-cc">אשראי: <span>${fmt(m.cc)}</span></div>
+    <div class="mc-cc" style="color:var(--muted)">אשראי: <span style="color:#f87171">${fmt(m.cc)}</span></div>
+    <div class="mc-cc" style="color:var(--muted)">הלוואות+משכנתא: <span style="color:#f97316">${fmt(m.loans)}</span></div>
+    <div class="mc-cc" style="color:var(--muted)">סה"כ הוצאות: <span style="color:#f87171">${fmt(total)}</span></div>
     <div class="mc-result ${isOk?'pos':'neg'}">${balance>=0?'+':''}${fmt(balance)}</div>
     <div class="mc-bar"><div class="mc-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
   `;
@@ -301,21 +317,25 @@ months.forEach((m,i) => {
 
 function openDetail(i) {
   const m = months[i];
-  const balance = m.income - m.cc;
+  const total = totalExp(m);
+  const balance = m.income - total;
   const isOk = balance >= 0;
   document.getElementById('dpTitle').textContent = m.label;
   document.getElementById('dpIncome').textContent = fmt(m.income);
-  document.getElementById('dpCC').textContent = fmt(m.cc);
+  document.getElementById('dpCC').textContent = `${fmt(m.cc)} אשראי + ${fmt(m.loans)} הלוואות`;
   const balEl = document.getElementById('dpBalance');
   balEl.textContent = (balance>=0?'+':'')+fmt(balance);
   balEl.className = 'dp-box-val ' + (isOk?'g':'r');
   document.getElementById('dpStatus').textContent = isOk ? 'מאוזן ✓' : 'גרעון ✗';
   document.getElementById('dpStatus').className = 'dp-box-val ' + (isOk?'g':'r');
 
-  let tip = '';
-  if (m.abroad) tip += `<div class="tip-label">✈ נסיעה לחו"ל — ${m.trip||''}</div><div class="tip-text">חודש זה כלל טיסות/מלון. <strong>לזכור:</strong> טיולים יוצאים רק מחשבון הטיולים, לא מהאשראי.</div>`;
-  else if (!isOk) tip += `<div class="tip-label">⚠ גרעון של ${fmt(Math.abs(balance))}</div><div class="tip-text">האשראי עלה על ההכנסה. בדוק איפה — לרוב ביגוד או מסעדות.</div>`;
-  else tip += `<div class="tip-label">✓ חודש מאוזן</div><div class="tip-text">הכנסה כיסתה את האשראי. ${m.bonus?`בונוס של ${fmt(m.bonus)} עזר — הועבר למינוס.`:'שמור על הקצב הזה.'}</div>`;
+  let tip = `<div class="tip-label">פירוט הוצאות</div><div class="tip-text">`;
+  tip += `אשראי: <strong>${fmt(m.cc)}</strong> · הלוואות ומשכנתא: <strong>${fmt(m.loans)}</strong> · בית: <strong>${fmt(m.fixed_costs)}</strong> · ילדים: <strong>${fmt(m.kids_costs)}</strong><br>`;
+  tip += `סה"כ הוצאות: <strong>${fmt(total)}</strong> מתוך הכנסה <strong>${fmt(m.income)}</strong><br>`;
+  if (m.abroad) tip += `<br>✈ נסיעה לחו"ל — ${m.trip||''}. טיולים יוצאים רק מחשבון הטיולים.`;
+  else if (!isOk) tip += `<br>⚠ גרעון של ${fmt(Math.abs(balance))} — הוצאות עלו על ההכנסה.`;
+  else tip += `<br>✓ חודש מאוזן.${m.bonus?` בונוס ${fmt(m.bonus)} הועבר למינוס.`:''}`;
+  tip += `</div>`;
   document.getElementById('dpTip').innerHTML = tip;
 
   document.getElementById('detailPanel').classList.add('open');
@@ -384,3 +404,4 @@ DATA.upcoming.forEach(u=>{
 </script>
 </body>
 </html>
+
