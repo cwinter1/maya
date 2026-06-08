@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>תקציב חודשי — וינטר</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{--bg:#0a0a0a;--s:#1a1a1a;--e:#242424;--t:#f0efe8;--m:#888;--ac:#ff6b35;--aa:#f7931e;--bo:#2e2e2e;--g:#4ade80;--r:#f87171;--b:#60a5fa;--p:#a78bfa;--rad:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);font-family:'Space Grotesk',-apple-system,sans-serif;color:var(--t);padding-bottom:60px}
+nav{background:var(--s);border-bottom:1px solid var(--bo);padding:0 20px;display:flex;align-items:center;position:sticky;top:0;z-index:10}
+.nb{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:var(--ac);padding:12px 18px 12px 0;border-left:1px solid var(--bo);margin-left:16px}
+.nl{padding:15px 12px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--m);text-decoration:none;letter-spacing:1px;border-bottom:2px solid transparent}
+.nl:hover{color:var(--t)}.nl.act{color:var(--ac);border-bottom-color:var(--ac)}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+
+/* HERO */
+.hero{background:var(--s);border-bottom:1px solid var(--bo);padding:32px 20px 24px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 35% at 50% 0%,rgba(74,222,128,0.07),transparent 70%);pointer-events:none}
+.hero-eye{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:7px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,7vw,3.5rem);letter-spacing:5px;line-height:1;margin-bottom:4px}
+.hero h1 span{color:var(--ac)}
+.hero-sub{font-family:'IBM Plex Mono',monospace;font-size:.73rem;color:var(--m);letter-spacing:1px}
+.kpis{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:20px}
+.kpi{text-align:center}
+.kv{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;line-height:1}
+.kv.g{color:var(--g)}.kv.r{color:var(--r)}.kv.a{color:var(--aa)}.kv.b{color:var(--b)}
+.kl{font-family:'IBM Plex Mono',monospace;font-size:.61rem;color:var(--m);letter-spacing:1px;margin-top:2px}
+
+.sh{display:flex;align-items:center;gap:10px;margin:24px 0 12px}
+.sh h2{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;white-space:nowrap}
+.sl{flex:1;height:1px;background:var(--bo)}
+.sbadge{font-size:.62rem;font-family:'IBM Plex Mono',monospace;padding:2px 8px;border-radius:3px;font-weight:700;white-space:nowrap}
+.sbadge.g{background:rgba(74,222,128,.12);color:var(--g);border:1px solid rgba(74,222,128,.25)}
+.sbadge.r{background:rgba(248,113,113,.12);color:var(--r);border:1px solid rgba(248,113,113,.25)}
+.sbadge.a{background:rgba(247,147,30,.12);color:var(--aa);border:1px solid rgba(247,147,30,.25)}
+.sbadge.b{background:rgba(96,165,250,.12);color:var(--b);border:1px solid rgba(96,165,250,.25)}
+
+/* WATERFALL */
+.wf{background:var(--s);border:1px solid var(--bo);border-radius:var(--rad);overflow:hidden;margin-bottom:12px}
+.wf-row{display:flex;align-items:stretch;border-bottom:1px solid var(--bo)}
+.wf-row:last-child{border:none}
+.wf-row.total{background:rgba(74,222,128,.05);border-top:1px solid rgba(74,222,128,.2)}
+.wf-row.deficit{background:rgba(248,113,113,.05);border-top:1px solid rgba(248,113,113,.2)}
+.wf-left{padding:11px 14px;flex:1}
+.wf-name{font-size:.88rem;font-weight:500}
+.wf-sub{font-size:.7rem;color:var(--m);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.wf-right{padding:11px 14px;text-align:left;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-width:110px}
+.wf-amount{font-family:'IBM Plex Mono',monospace;font-size:.88rem;font-weight:500}
+.wf-amount.r{color:var(--r)}.wf-amount.g{color:var(--g)}.wf-amount.a{color:var(--aa)}.wf-amount.b{color:var(--b)}.wf-amount.p{color:var(--p)}
+.wf-remain{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--m);margin-top:2px}
+.wf-bar{width:3px;flex-shrink:0;align-self:stretch}
+
+/* LAYER CARDS */
+.layers{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.layer{background:var(--s);border:1px solid var(--bo);border-radius:var(--rad);overflow:hidden}
+.layer-header{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background .12s}
+.layer-header:hover{background:var(--e)}
+.layer-header.open{background:var(--e)}
+.lh-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--m);min-width:22px;line-height:1}
+.lh-name{flex:1;font-size:.9rem;font-weight:500}
+.lh-total{font-family:'IBM Plex Mono',monospace;font-size:.88rem;font-weight:500}
+.lh-remain{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--m);margin-right:8px}
+.lh-chev{font-size:.65rem;color:var(--m);transition:transform .2s;min-width:12px;text-align:center}
+.lh-chev.open{transform:rotate(180deg)}
+.layer-body{display:none;padding:0 16px 14px;border-top:1px solid var(--bo)}
+.layer-body.open{display:block}
+.li{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--bo);font-size:.83rem}
+.li:last-child{border:none}
+.li-name{color:var(--m)}
+.li-name.prot{color:var(--p)}
+.li-amount{font-family:'IBM Plex Mono',monospace;font-size:.8rem}
+.li-amount.r{color:var(--r)}.li-amount.g{color:var(--g)}.li-amount.a{color:var(--aa)}.li-amount.p{color:var(--p)}.li-amount.b{color:var(--b)}
+
+/* RESULT BOX */
+.result-box{border-radius:var(--rad);padding:20px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.result-box.surplus{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2)}
+.result-box.deficit{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2)}
+.rb-item{text-align:center}
+.rb-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;line-height:1}
+.rb-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--m);letter-spacing:1px;margin-top:3px}
+
+/* TIMELINE CHIPS */
+.milestones{display:flex;flex-direction:column;gap:8px}
+.ms{background:var(--s);border:1px solid var(--bo);border-radius:8px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center}
+.ms-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--m);min-width:80px}
+.ms-name{font-size:.88rem;font-weight:500;flex:1;padding:0 12px}
+.ms-amount{font-family:'IBM Plex Mono',monospace;font-size:.82rem}
+
+/* CC COMPARISON */
+.cc-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.ccc{border-radius:var(--rad);padding:14px 16px;border:1px solid var(--bo)}
+.ccc.now{border-top:2px solid var(--r);background:rgba(248,113,113,.04)}
+.ccc.target{border-top:2px solid var(--g);background:rgba(74,222,128,.04)}
+.ccc-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.ccc-label.r{color:var(--r)}.ccc-label.g{color:var(--g)}
+.ccc-total{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;margin-bottom:6px}
+.ccc-total.r{color:var(--r)}.ccc-total.g{color:var(--g)}
+.ccc-row{display:flex;justify-content:space-between;font-size:.78rem;padding:3px 0;border-bottom:.5px solid var(--bo)}
+.ccc-row:last-child{border:none}
+.ccc-cat{color:var(--m)}
+.ccc-amt{font-family:'IBM Plex Mono',monospace}
+.cut-tag{font-size:.6rem;font-family:'IBM Plex Mono',monospace;padding:1px 5px;border-radius:3px;margin-right:4px}
+.cut-tag.r{background:rgba(248,113,113,.15);color:var(--r)}
+.cut-tag.g{background:rgba(74,222,128,.1);color:var(--g)}
+
+.chart-wrap{height:200px;position:relative}
+@media(max-width:500px){.result-box{grid-template-columns:1fr 1fr}.cc-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nb">כספים</span>
+  <a href="index.html" class="nl">דאשבורד</a>
+  <a href="overdraft.html" class="nl">יציאה ממינוס</a>
+  <a href="budget.html" class="nl act">תקציב</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eye">תקציב מלא — עם הלוואה + חיסכון טיולים</div>
+  <h1>כך נראה <span>החודש</span></h1>
+  <div class="hero-sub">הלוואת קרן השתלמות · חיסכון לאירופה ולאסיה · תקציב אמיתי</div>
+  <div class="kpis">
+    <div class="kpi"><div class="kv g">₪30,811</div><div class="kl">הכנסה</div></div>
+    <div class="kpi"><div class="kv r">₪875</div><div class="kl">הלוואה/חודש</div></div>
+    <div class="kpi"><div class="kv b">₪2,360</div><div class="kl">חיסכון טיולים</div></div>
+    <div class="kpi"><div class="kv a">₪14,086</div><div class="kl">יעד CC</div></div>
+    <div class="kpi"><div class="kv g">₪5,578</div><div class="kl">יתרה חודשית</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sh"><h2>כסף שנשאר — שכבה אחר שכבה</h2><div class="sl"></div></div>
+
+  <div class="wf">
+    <div class="wf-row"><div class="wf-bar" style="background:var(--g)"></div>
+      <div class="wf-left"><div class="wf-name">הכנסה חודשית</div><div class="wf-sub">כריס ₪18,374 + קטיה ₪12,000 + קצבה ₪437</div></div>
+      <div class="wf-right"><div class="wf-amount g">+₪30,811</div></div></div>
+    <div class="wf-row"><div class="wf-bar" style="background:var(--r)"></div>
+      <div class="wf-left"><div class="wf-name">משכנתא + הלוואות</div><div class="wf-sub">הוראת קבע ישירה — לא ניתן לשינוי</div></div>
+      <div class="wf-right"><div class="wf-amount r">−₪7,912</div><div class="wf-remain">נשאר ₪22,899</div></div></div>
+    <div class="wf-row"><div class="wf-bar" style="background:var(--aa)"></div>
+      <div class="wf-left"><div class="wf-name">הלוואת קרן השתלמות</div><div class="wf-sub">פריים−0.5%=4% · 7 שנים · מחליפה ריבית 7.25%</div></div>
+      <div class="wf-right"><div class="wf-amount a">−₪875</div><div class="wf-remain">נשאר ₪22,024</div></div></div>
+    <div class="wf-row"><div class="wf-bar" style="background:var(--b)"></div>
+      <div class="wf-left"><div class="wf-name">חיסכון טיולים — חשבון נפרד</div><div class="wf-sub">אירופה ₪1,416 + אסיה ₪944 · יוצא ביום המשכורת</div></div>
+      <div class="wf-right"><div class="wf-amount b">−₪2,360</div><div class="wf-remain">נשאר לCC: ₪19,664</div></div></div>
+    <div class="wf-row"><div class="wf-bar" style="background:var(--p)"></div>
+      <div class="wf-left"><div class="wf-name">כרטיסי אשראי — יעד</div><div class="wf-sub">קבועים + ילדים + מכולת + דלק + שוטף</div></div>
+      <div class="wf-right"><div class="wf-amount p">−₪14,086</div><div class="wf-remain">נשאר ₪5,578</div></div></div>
+    <div class="wf-row total"><div class="wf-bar" style="background:var(--g)"></div>
+      <div class="wf-left"><div class="wf-name" style="font-weight:700;color:var(--g)">יתרה חודשית</div><div class="wf-sub">לפני בונוסים. עם בונוסים (÷12): +₪6,961</div></div>
+      <div class="wf-right"><div class="wf-amount g" style="font-size:1.1rem">+₪5,578</div></div></div>
+  </div>
+
+  <!-- RESULT BOX -->
+  <div class="result-box surplus">
+    <div class="rb-item"><div class="rb-val" style="color:var(--g)">₪5,578</div><div class="rb-label">יתרה בסיס</div></div>
+    <div class="rb-item"><div class="rb-val" style="color:var(--aa)">₪6,961</div><div class="rb-label">עם בונוסים</div></div>
+    <div class="rb-item"><div class="rb-val" style="color:var(--b)">₪23,000</div><div class="rb-label">חיסכון ריבית</div></div>
+  </div>
+
+  <!-- LAYER BREAKDOWN -->
+  <div class="sh" style="margin-top:20px"><h2>פירוט לפי שכבה</h2><div class="sl"></div><span class="sbadge a">לחץ לפתוח</span></div>
+  <div class="layers" id="layers"></div>
+
+  <!-- CC COMPARISON -->
+  <div class="sh" style="margin-top:20px"><h2>כרטיסי אשראי — עכשיו מול יעד</h2><div class="sl"></div><span class="sbadge r">₪3,993 לקצץ</span></div>
+  <div class="cc-compare">
+    <div class="ccc now">
+      <div class="ccc-label r">עכשיו — בפועל</div>
+      <div class="ccc-total r">₪18,079</div>
+      <div class="ccc-row"><span class="ccc-cat">מכולת (Amex+CAL)</span><span class="ccc-amt" style="color:var(--r)">₪5,500</span></div>
+      <div class="ccc-row"><span class="ccc-cat">דלק</span><span class="ccc-amt">₪1,500</span></div>
+      <div class="ccc-row"><span class="ccc-cat"><span class="cut-tag r">✂</span>טיולים על CC</span><span class="ccc-amt" style="color:var(--r)">₪1,331</span></div>
+      <div class="ccc-row"><span class="ccc-cat"><span class="cut-tag r">✂</span>ביגוד</span><span class="ccc-amt" style="color:var(--aa)">₪839</span></div>
+      <div class="ccc-row"><span class="ccc-cat">מסעדות/קפה</span><span class="ccc-amt">₪479</span></div>
+      <div class="ccc-row"><span class="ccc-cat">קבועים + ילדים</span><span class="ccc-amt">₪5,956</span></div>
+      <div class="ccc-row"><span class="ccc-cat"><span class="cut-tag r">✂</span>שונות+CAL</span><span class="ccc-amt" style="color:var(--r)">₪2,474</span></div>
+    </div>
+    <div class="ccc target">
+      <div class="ccc-label g">יעד — לאחר שינויים</div>
+      <div class="ccc-total g">₪14,086</div>
+      <div class="ccc-row"><span class="ccc-cat">מכולת (יעד)</span><span class="ccc-amt" style="color:var(--aa)">₪5,000</span></div>
+      <div class="ccc-row"><span class="ccc-cat">דלק</span><span class="ccc-amt">₪1,500</span></div>
+      <div class="ccc-row"><span class="ccc-cat"><span class="cut-tag g">→</span>טיולים → חשבון נפרד</span><span class="ccc-amt" style="color:var(--g)">₪0</span></div>
+      <div class="ccc-row"><span class="ccc-cat">ביגוד (יעד)</span><span class="ccc-amt" style="color:var(--aa)">₪550</span></div>
+      <div class="ccc-row"><span class="ccc-cat">מסעדות/קפה</span><span class="ccc-amt">₪400</span></div>
+      <div class="ccc-row"><span class="ccc-cat">קבועים + ילדים</span><span class="ccc-amt">₪5,956</span></div>
+      <div class="ccc-row"><span class="ccc-cat">שונות + גים כריס</span><span class="ccc-amt">₪680</span></div>
+    </div>
+  </div>
+
+  <!-- DONUT CHART -->
+  <div class="sh" style="margin-top:20px"><h2>איפה הולך הכסף</h2><div class="sl"></div></div>
+  <div style="background:var(--s);border:1px solid var(--bo);border-radius:var(--rad);padding:16px">
+    <div class="chart-wrap"><canvas id="donut" role="img" aria-label="פילוח הכנסה חודשית לפי קטגוריה"></canvas></div>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="sh" style="margin-top:20px"><h2>אבני דרך</h2><div class="sl"></div></div>
+  <div class="milestones">
+    <div class="ms"><span class="ms-date">יוני 2026</span><span class="ms-name">הלוואת קרן השתלמות — מינוס = 0</span><span class="ms-amount" style="color:var(--g)">₪875/חודש</span></div>
+    <div class="ms"><span class="ms-date">יולי 2026</span><span class="ms-name">ביטוח רכב חדש — ₪600 חיסכון מדי חודש</span><span class="ms-amount" style="color:var(--g)">−₪600</span></div>
+    <div class="ms"><span class="ms-date">יולי 2026</span><span class="ms-name">חשבון חיסכון טיולים נפתח — ₪2,360/חודש</span><span class="ms-amount" style="color:var(--b)">₪2,360</span></div>
+    <div class="ms"><span class="ms-date">יולי 2027</span><span class="ms-name">אירופה — ₪17,000 בחשבון · מזמינים!</span><span class="ms-amount" style="color:var(--b)">₪17,000</span></div>
+    <div class="ms"><span class="ms-date">יוני 2029</span><span class="ms-name">תאילנד/וייטנאם — ₪34,000 מוכן</span><span class="ms-amount" style="color:var(--b)">₪34,000</span></div>
+    <div class="ms"><span class="ms-date">יולי 2033</span><span class="ms-name">הלוואה נסגרת — ₪875/חודש חוזר לכיס</span><span class="ms-amount" style="color:var(--g)">₪23,000 נחסך</span></div>
+  </div>
+
+</div>
+
+<script>
+const fmt = n => '₪' + Math.round(n).toLocaleString('he-IL');
+
+const layerData = [
+  { num:'1', name:'הוראות קבע בנק', total:7912, color:'var(--r)', remain: 22899,
+    items:[
+      {name:'משכנתא x2 (פועלים)', amount:3880, cls:'r'},
+      {name:'הלוואה 1', amount:2015, cls:'r'},
+      {name:'הלוואה 2', amount:1231, cls:'r'},
+      {name:'הלוואה 3', amount:392, cls:'r'},
+      {name:'הלוואה 4', amount:394, cls:'r'},
+    ]},
+  { num:'2', name:'הלוואת קרן השתלמות', total:875, color:'var(--aa)', remain:22024,
+    items:[
+      {name:'תשלום הלוואה (קרן+ריבית 4%)', amount:875, cls:'a'},
+      {name:'ריבית מינוס שנחסכת', amount:-387, cls:'g', note:'כבר לא משלמים 7.25%'},
+      {name:'עלות נטו', amount:488, cls:'a'},
+    ]},
+  { num:'3', name:'חיסכון טיולים — חשבון נפרד', total:2360, color:'var(--b)', remain:19664,
+    items:[
+      {name:'אירופה — יולי 2027 (₪17,000÷12)', amount:1416, cls:'b'},
+      {name:'אסיה — יוני 2029 (₪34,000÷36)', amount:944, cls:'b'},
+    ]},
+  { num:'4', name:'כרטיסי אשראי — יעד', total:14086, color:'var(--p)', remain:5578,
+    items:[
+      {name:'ארנונה', amount:725, cls:'r'},
+      {name:'מכבי + ביטוח מגדל', amount:600, cls:'r'},
+      {name:'ועד בית', amount:370, cls:'r'},
+      {name:'פזגז', amount:264, cls:'r'},
+      {name:'סטרימינג (נטפליקס+ספוטיפיי+אינטרנט)', amount:213, cls:'r'},
+      {name:'פנגו', amount:80, cls:'r'},
+      {name:'פקדון + ני"ע', amount:551, cls:'r'},
+      {name:'גים קטיה (Diamond)', amount:300, cls:'r'},
+      {name:'ביטוח רכב (מיולי)', amount:800, cls:'r'},
+      {name:'אמה — בלט + צהרון', amount:888, cls:'p', prot:true},
+      {name:'בת אמצעית — 5 Fingers', amount:415, cls:'p', prot:true},
+      {name:'הצעירה', amount:300, cls:'p', prot:true},
+      {name:'צופות (₪3,000÷12)', amount:250, cls:'p', prot:true},
+      {name:'בית ספר', amount:200, cls:'p', prot:true},
+      {name:'מכולת (יעד)', amount:5000, cls:'a'},
+      {name:'דלק', amount:1500, cls:'r'},
+      {name:'ביגוד (ממוצע עונתי)', amount:550, cls:'a'},
+      {name:'מסעדות/קפה', amount:400, cls:'a'},
+      {name:'תרופות', amount:263, cls:'r'},
+      {name:'גים כריס (UPAPP)', amount:117, cls:'r'},
+      {name:'פייבוקס + אונליין', amount:300, cls:'a'},
+    ]},
+];
+
+const container = document.getElementById('layers');
+layerData.forEach((layer, i) => {
+  const div = document.createElement('div');
+  div.className = 'layer';
+  const isOpen = false;
+  div.innerHTML = `
+    <div class="layer-header" id="lh${i}" onclick="toggleLayer(${i})">
+      <span class="lh-num" style="color:${layer.color}">${layer.num}</span>
+      <span class="lh-name">${layer.name}</span>
+      <span class="lh-remain">נשאר ${fmt(layer.remain)}</span>
+      <span class="lh-total" style="color:${layer.color}">−${fmt(layer.total)}</span>
+      <span class="lh-chev" id="chev${i}">▾</span>
+    </div>
+    <div class="layer-body" id="lb${i}">
+      ${layer.items.map(it => `
+        <div class="li">
+          <span class="li-name${it.prot?' prot':''}">${it.prot?'🔒 ':''}${it.name}${it.note?` <span style="font-size:.65rem;color:var(--m)">(${it.note})</span>`:''}</span>
+          <span class="li-amount ${it.cls}">${it.amount < 0 ? '+' : '−'}${fmt(Math.abs(it.amount))}</span>
+        </div>`).join('')}
+    </div>`;
+  container.appendChild(div);
+});
+
+function toggleLayer(i) {
+  const lb = document.getElementById('lb'+i);
+  const lh = document.getElementById('lh'+i);
+  const ch = document.getElementById('chev'+i);
+  const open = lb.classList.contains('open');
+  document.querySelectorAll('.layer-body').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.layer-header').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.lh-chev').forEach(x=>x.classList.remove('open'));
+  if (!open) { lb.classList.add('open'); lh.classList.add('open'); ch.classList.add('open'); }
+}
+
+// Donut
+new Chart(document.getElementById('donut'), {
+  type:'doughnut',
+  data:{
+    labels:['משכנתא+הלוואות','הלוואה קרן','חיסכון טיולים','CC קבועים','ילדים (מוגן)','מכולת','דלק','ביגוד','מסעדות','שאר','יתרה'],
+    datasets:[{
+      data:[7912,875,2360,3903,2053,5000,1500,550,400,680,5578],
+      backgroundColor:['#f87171','#f97316','#60a5fa','#888','#a78bfa','#4ade80','#fbbf24','#fb923c','#f472b6','#6b7280','#22c55e'],
+      borderWidth:0,
+      hoverOffset:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{
+      legend:{display:true,position:'bottom',labels:{color:'#888',font:{size:10},boxWidth:10,padding:8}},
+      tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.raw)}`}}
+    }
+  }
+});
+</script>
+</body>
+</html>
