@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>יציאה ממינוס — וינטר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{--bg:#0a0a0a;--surface:#1a1a1a;--elevated:#242424;--text:#f5f5f5;--muted:#999;--accent:#ff6b35;--accent-alt:#f7931e;--border:#333;--green:#4ade80;--red:#f87171;--blue:#60a5fa;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);font-family:'Space Grotesk',-apple-system,sans-serif;color:var(--text);min-height:100vh;padding-bottom:60px}
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:10}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;color:var(--accent);padding:14px 20px 14px 0;border-left:1px solid var(--border);margin-left:20px}
+.nav-link{padding:18px 14px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);text-decoration:none;letter-spacing:1px;border-bottom:2px solid transparent;transition:all .15s}
+.nav-link:hover{color:var(--text)}.nav-link.active{color:var(--accent);border-bottom-color:var(--accent)}
+.hero{background:var(--surface);border-bottom:1px solid var(--border);padding:40px 24px 32px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% -10%,rgba(248,113,113,0.1) 0%,transparent 70%);pointer-events:none}
+.hero-label{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:10px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,8vw,4rem);letter-spacing:5px;line-height:1;margin-bottom:6px}
+.hero h1 span{color:var(--green)}
+.hero-sub{font-size:0.78rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:1px}
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px}
+.stat-item{text-align:center}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;line-height:1}
+.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.a{color:var(--accent-alt)}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.content{max-width:840px;margin:0 auto;padding:0 16px}
+.section-heading{display:flex;align-items:center;gap:12px;margin:28px 0 14px}
+.section-heading h2{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;white-space:nowrap}
+.section-line{flex:1;height:1px;background:var(--border)}
+.section-badge{background:var(--accent);color:#000;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+/* BIG COUNTER */
+.od-counter{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--red);border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:12px}
+.od-amount{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:4px;color:var(--red);line-height:1}
+.od-label{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);letter-spacing:2px;margin-top:4px}
+.od-interest{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--accent-alt);margin-top:8px}
+/* SLIDER */
+.slider-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px}
+.slider-label{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:10px}
+.slider-label span{color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent);margin-bottom:10px}
+.slider-result{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.sr-box{background:var(--elevated);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.sr-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px}
+.sr-val.g{color:var(--green)}.sr-val.r{color:var(--red)}.sr-val.a{color:var(--accent-alt)}
+.sr-label{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:1px}
+/* CHART */
+.chart-wrap{position:relative;height:220px;margin:12px 0}
+/* TABLE */
+.od-table{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:0.78rem}
+.od-table th{text-align:right;padding:8px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:400;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase}
+.od-table td{text-align:right;padding:8px 12px;border-bottom:1px solid var(--border)}
+.od-table tr:last-child td{border:none}
+.od-table tr:hover td{background:var(--elevated)}
+.od-table .bonus-row td{background:rgba(247,147,30,0.05)}
+.od-table .zero-row td{background:rgba(74,222,128,0.06);font-weight:600}
+.cell-g{color:var(--green)}.cell-r{color:var(--red)}.cell-a{color:var(--accent-alt)}
+/* STEPS */
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:10px;display:flex;gap:16px}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:2px;color:var(--accent);opacity:0.4;line-height:1;min-width:40px}
+.step-body{}
+.step-title{font-size:0.95rem;font-weight:600;margin-bottom:5px}
+.step-desc{font-size:0.83rem;color:var(--muted);line-height:1.7}
+.step-desc strong{color:var(--text)}
+.step-amount{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;margin-top:6px;padding:4px 10px;background:var(--elevated);border:1px solid var(--border);border-radius:6px;display:inline-block}
+.step-amount.g{color:var(--green)}.step-amount.a{color:var(--accent-alt)}
+/* WARNING */
+.warn-box{background:rgba(248,113,113,0.07);border:1px solid rgba(248,113,113,0.2);border-right:3px solid var(--red);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.warn-title{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.warn-text{font-size:0.85rem;color:var(--muted);line-height:1.7}
+.warn-text strong{color:var(--text)}
+/* RULES */
+.rule-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.rule-row:last-child{border:none}
+.rule-icon{font-size:1rem;min-width:24px;text-align:center;padding-top:1px}
+.rule-text{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.rule-text strong{color:var(--text)}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">כספים</span>
+  <a href="index.html" class="nav-link">דאשבורד</a>
+  <a href="overdraft.html" class="nav-link active">יציאה ממינוס</a>
+  <a href="budget.html" class="nav-link">תקציב</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">מינוס — תוכנית יציאה</div>
+  <h1>יציאה <span>ממינוס</span></h1>
+  <div class="hero-sub">ללא שימוש בפנסיה · ₪2,000/חודש + בונוסים</div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-val r">₪64,000</div>
+      <div class="stat-label">מינוס נוכחי</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val a">ספט׳ 27</div>
+      <div class="stat-label">תאריך יעד</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val g">16</div>
+      <div class="stat-label">חודשים</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val a">~₪22,000</div>
+      <div class="stat-label">ריבית שחוסכים</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- LIVE COUNTER -->
+  <div class="section-heading">
+    <h2>מצב נוכחי</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="od-counter">
+    <div class="od-amount" id="odAmount">₪64,000</div>
+    <div class="od-label">יתרת מינוס</div>
+    <div class="od-interest">ריבית חודשית: ~₪1,067 · ריבית שנתית: 20%</div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div class="section-heading">
+    <h2>סימולטור התקדמות</h2>
+    <div class="section-line"></div>
+    <span class="section-badge">גרור לסימולציה</span>
+  </div>
+  <div class="slider-section">
+    <div class="slider-label">
+      <span>חודשים עברו: <span id="sliderVal">0</span></span>
+      <span id="sliderDate">יוני 2026</span>
+    </div>
+    <input type="range" id="monthSlider" min="0" max="16" value="0" step="1">
+    <div class="slider-result">
+      <div class="sr-box"><div class="sr-val r" id="srBalance">₪64,000</div><div class="sr-label">יתרת מינוס</div></div>
+      <div class="sr-box"><div class="sr-val g" id="srPaid">₪0</div><div class="sr-label">שולם עד כה</div></div>
+      <div class="sr-box"><div class="sr-val a" id="srMonths">16</div><div class="sr-label">חודשים לסיום</div></div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+    <div class="chart-wrap">
+      <canvas id="odChart" role="img" aria-label="גרף ירידת המינוס חודש אחר חודש"></canvas>
+    </div>
+  </div>
+
+  <!-- WARNING: reducing CC is not enough -->
+  <div class="section-heading" style="margin-top:28px">
+    <h2>למה קיצוץ אשראי לא מספיק</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="warn-box">
+    <div class="warn-title">⚠ קיצוץ כרטיסי אשראי — נחוץ אבל לא מספיק לבד</div>
+    <div class="warn-text">
+      גם אם מגיעים ל-₪12,523/חודש (יעד האשראי) — <strong>המינוס לא קטן מעצמו.</strong>
+      המאזן הופך לאפס: הכנסה = הוצאות. אבל המינוס נשאר ₪64,000 עם ריבית שממשיכה לרוץ.
+      <br><br>
+      <strong>דרוש פעולה אקטיבית:</strong> ₪2,000/חודש הוראת קבע + כל בונוס + קצבת ילדים → ישירות למינוס.
+      בלי זה, גם עם חיסכון בהוצאות — המינוס יישאר שנים.
+    </div>
+  </div>
+
+  <!-- MONTH BY MONTH TABLE -->
+  <div class="section-heading">
+    <h2>לוח תשלומים חודשי</h2>
+    <div class="section-line"></div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto">
+    <table class="od-table">
+      <thead><tr>
+        <th>חודש</th><th>קבוע</th><th>בונוס</th><th>קצבה</th><th>סה"כ נכנס</th><th>יתרת מינוס</th><th>הערה</th>
+      </tr></thead>
+      <tbody id="odTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- 5 STEPS -->
+  <div class="section-heading" style="margin-top:28px">
+    <h2>5 צעדים — תוכנית ביצוע</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">01</div>
+    <div class="step-body">
+      <div class="step-title">הוראת קבע — ביום קבלת השכר</div>
+      <div class="step-desc">מחר בבוקר: פתח הוראת קבע של <strong>₪2,000</strong> שיוצאת ביום 1 של כל חודש ישר לחשבון המינוס. לא לחשוב, לא לבדוק — זה אוטומטי.</div>
+      <div class="step-amount g">₪2,000 × 16 חודש = ₪32,000</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">02</div>
+    <div class="step-body">
+      <div class="step-title">כל בונוס — מועבר ביום קבלתו</div>
+      <div class="step-desc">כשמשכורת קטיה עולה מעל <strong>₪14,000</strong> — כל שקל מעל ₪12,000 מועבר מיד למינוס. אין "אני אחשוב על זה", אין "הפעם נשתמש בו". אוטומטי.</div>
+      <div class="step-amount a">~₪5,500 × 3 בשנה = ₪16,500/שנה</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">03</div>
+    <div class="step-body">
+      <div class="step-title">קצבת ילדים — ה-20 לחודש</div>
+      <div class="step-desc">ביטוח לאומי מזכה ₪437 בכ-20 לחודש. תזכורת ביומן: "העבר ₪437 למינוס". 30 שניות בחודש.</div>
+      <div class="step-amount a">₪437 × 16 חודש = ₪6,992</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">04</div>
+    <div class="step-body">
+      <div class="step-title">אפס טיולים על האשראי</div>
+      <div class="step-desc">אל-על, בוקינג, מלונות בחו"ל — <strong>לא על האשראי</strong> עד שחשבון הטיולים מגיע ל-₪8,000. כל עוד המינוס קיים, כל חיוב טיול = הגדלת חוב ב-20% ריבית שנתית.</div>
+      <div class="step-amount g">חיסכון: ~₪3,140/חודש ממוצע</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">05</div>
+    <div class="step-body">
+      <div class="step-title">כל הכנסה לא צפויה → מינוס</div>
+      <div class="step-desc">החזר מס, מתנה, פרילנס, ביטוח — כל כסף שלא היה בתוכנית, <strong>100% למינוס</strong> עד שמגיעים לאפס. אחרי שמגיעים לאפס — מתחילים לחסוך.</div>
+      <div class="step-amount g">כל ₪1,000 = קיצור של ~3 שבועות</div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div class="section-heading" style="margin-top:28px">
+    <h2>כללי ברזל</h2>
+    <div class="section-line"></div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+    <div class="rule-row"><div class="rule-icon">🚫</div><div class="rule-text"><strong>לא לדלג על ה-₪2,000</strong> — אפילו בחודש קשה. זה הבסיס.</div></div>
+    <div class="rule-row"><div class="rule-icon">🚫</div><div class="rule-text"><strong>לא לקחת הלוואה חדשה</strong> כל עוד המינוס קיים (פרט לרה-מימון בריבית נמוכה יותר).</div></div>
+    <div class="rule-row"><div class="rule-icon">🚫</div><div class="rule-text"><strong>לא לפדות פנסיה</strong> — מלכודת מס. ריבית המינוס של 20% זולה יותר מתשלום המס על פדיון.</div></div>
+    <div class="rule-row"><div class="rule-icon">✅</div><div class="rule-text"><strong>כל ₪1,000 שמשלמים חוסך ~₪200 ריבית</strong> בשנה. כדאי מאוד להאיץ.</div></div>
+    <div class="rule-row"><div class="rule-icon">✅</div><div class="rule-text"><strong>בדוק יתרת מינוס ב-1 לחודש</strong> — 30 שניות. כתוב בטבלה. הצגה של ירידה = מוטיבציה.</div></div>
+    <div class="rule-row"><div class="rule-icon">✅</div><div class="rule-text"><strong>אחרי שמגיעים לאפס</strong> — ה-₪2,000 האלה הופכים לחיסכון. לא לחזור לדפוסים ישנים.</div></div>
+  </div>
+
+</div>
+
+<script src="data.js"></script>
+<script>
+const fmt = n => '₪' + Math.abs(Math.round(n)).toLocaleString('he-IL');
+
+// Build overdraft schedule
+let balance = 64000;
+const balances = [64000];
+const labels = ['היום'];
+const rows = [];
+DATA.overdraft.schedule.forEach(m => {
+  const interest = balance * 0.20 / 12;
+  const totalIn = m.regular + m.bonus + m.allowance;
+  balance = Math.max(0, balance + interest - totalIn);
+  balances.push(Math.round(balance));
+  labels.push(m.month);
+  rows.push({ ...m, interest: Math.round(interest), totalIn, balance: Math.round(balance) });
+});
+
+// Chart
+const odChart = new Chart(document.getElementById('odChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      data: balances,
+      borderColor: '#f87171',
+      backgroundColor: 'rgba(248,113,113,0.06)',
+      fill: true,
+      tension: 0.3,
+      pointBackgroundColor: balances.map(v => v === 0 ? '#4ade80' : v < 20000 ? '#f7931e' : '#f87171'),
+      pointRadius: balances.map(v => v === 0 ? 8 : 3),
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` יתרה: ${fmt(c.raw)}` } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#999', font: { size: 10 } } },
+      y: { min: 0, max: 70000, ticks: { color: '#999', callback: v => '₪' + (v / 1000).toFixed(0) + 'k', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } }
+    }
+  }
+});
+
+// Table
+const tbody = document.getElementById('odTableBody');
+rows.forEach((r, i) => {
+  const isBonus = r.bonus > 0;
+  const isZero = r.balance === 0;
+  const tr = document.createElement('tr');
+  tr.className = isZero ? 'zero-row' : isBonus ? 'bonus-row' : '';
+  tr.innerHTML = `
+    <td>${r.month}</td>
+    <td class="cell-g">${fmt(r.regular)}</td>
+    <td class="${isBonus ? 'cell-a' : ''}">${isBonus ? fmt(r.bonus) : '—'}</td>
+    <td>${fmt(r.allowance)}</td>
+    <td class="cell-g">${fmt(r.totalIn)}</td>
+    <td class="${isZero ? 'cell-g' : r.balance < 20000 ? 'cell-a' : 'cell-r'}">${isZero ? 'אפס ✓' : fmt(r.balance)}</td>
+    <td style="color:var(--muted);font-size:0.7rem">${r.bonusNote || ''}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// Slider
+const slider = document.getElementById('monthSlider');
+const dateLabels = ['יוני 2026', 'יולי 2026', 'אוגוסט 2026', 'ספטמבר 2026', 'אוקטובר 2026', 'נובמבר 2026', 'דצמבר 2026', 'ינואר 2027', 'פברואר 2027', 'מרץ 2027', 'אפריל 2027', 'מאי 2027', 'יוני 2027', 'יולי 2027', 'אוגוסט 2027', 'ספטמבר 2027', '✓ אפס!'];
+slider.addEventListener('input', function () {
+  const idx = parseInt(this.value);
+  const bal = balances[idx];
+  const paid = 64000 - bal;
+  const remaining = rows.length - idx;
+  document.getElementById('sliderVal').textContent = idx;
+  document.getElementById('sliderDate').textContent = dateLabels[idx] || '';
+  document.getElementById('srBalance').textContent = bal === 0 ? '₪0 ✓' : fmt(bal);
+  document.getElementById('srBalance').className = 'sr-val ' + (bal === 0 ? 'g' : bal < 20000 ? 'a' : 'r');
+  document.getElementById('srPaid').textContent = fmt(paid);
+  document.getElementById('srMonths').textContent = bal === 0 ? '0 ✓' : remaining;
+  // highlight point on chart
+  odChart.data.datasets[0].pointRadius = balances.map((v, i) => i === idx ? 10 : i === 0 ? 4 : 3);
+  odChart.update('none');
+});
+</script>
+</body>
+</html>
