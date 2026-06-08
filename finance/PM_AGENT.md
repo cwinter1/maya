@@ -17,17 +17,17 @@ You are the project manager for the Winter family's overdraft elimination. You m
 ---
 
 ### PLAN A — Keren Hishtalmut Loan (Recommended)
-**What**: Borrow ₪64,000 from Keren Hishtalmut at Prime−0.5% (4.0%), pay off overdraft immediately.
+**What**: Borrow ₪64,000 from Keren Hishtalmut at Prime−0.5% = 4.0%, pay off overdraft immediately.
 
 **Monthly impact**:
 - Remove: ₪440 overdraft interest
 - Add: ₪1,179 loan payment
-- Net change: −₪739/month extra (but structured, declining, and interest is 4% not 8.2%)
+- Net change: −₪739/month extra (but structured, declining, and interest is 4% not 20%)
 
 **5-year cost comparison**:
-- Overdraft at 8.2%: ~₪26,400 in interest
+- Overdraft at 8.2%: ₪23,200 in interest
 - Loan at 4.0%: ₪6,719 in interest
-- **Saving: ₪19,700**
+- **Saving: ₪16,500**
 
 **Steps to execute**:
 1. Contact your Keren Hishtalmut provider (ask: "אני רוצה הלוואה כנגד קרן ההשתלמות")
