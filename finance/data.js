@@ -19,7 +19,7 @@ const DATA = {
   income: {
     katya: {
       name: "קטיה",
-      base_monthly_net: 12000,
+      base_monthly_net: 13500, // Updated +₪1,500
       source: "Bank Hapoalim ref 500",
       bonuses: {
         annual_total: 16600,
@@ -54,8 +54,8 @@ const DATA = {
       rule: "מועבר למינוס ה-20 בחודש"
     },
     totals: {
-      base_monthly: 30374,
-      with_allowance: 30811,
+      base_monthly: 31874,
+      with_allowance: 32311,
       annual_base: 364488,
       annual_with_bonuses: 381088,
       annual_total: 386332
@@ -128,8 +128,9 @@ const DATA = {
     {name:"Apple.com/Bill", amount:40, cat:"בילוי", note:"נמצא ב-CAL קטיה"},
     {name:"Disney+ — לבטל!", amount:50, cat:"בילוי", action:"CANCEL"},
     {name:"פנגו", amount:80, cat:"רכב", protected:true},
-    {name:"פקדון בית", amount:350, cat:"חיסכון", protected:true},
-    {name:"ני\"ע הוראת קבע", amount:201, cat:"השקעות", protected:true},
+    {name:"מים", amount:150, cat:"דיור", note:"חדש — חסר בתקציב הקודם", protected:true},
+    {name:"ביטוח רכב (₪4,400÷10)", amount:440, cat:"רכב", note:"שנתי ב-10 תשלומים"},
+    {name:"תחזוקת רכב (₪2,000÷10)", amount:200, cat:"רכב", note:"שנתי ב-10 תשלומים"},
     {name:"פיס מנויים (Max קטיה)", amount:60, cat:"רכב", note:"מועדון דלק"}
   ],
 
@@ -139,8 +140,9 @@ const DATA = {
     {name:"אמה — צהרון אלתרמן", amount:348, child:"אמה", protected:true},
     {name:"אמצעית — 5 Fingers x2", amount:415, child:"אמצעית", protected:true},
     {name:"הצעירה — פעילות", amount:300, child:"הצעירה", protected:true},
-    {name:"צופות (₪3,000÷12)", amount:250, child:"כולן", protected:true},
-    {name:"תוספות בית ספר", amount:200, child:"כולן", protected:false}
+    {name:"צופות (₪3,000÷10 תשלומים)", amount:300, child:"כולן", protected:true},
+    {name:"בית ספר (₪3,600÷10 תשלומים)", amount:360, child:"כולן", protected:true},
+    {name:"תוספות שוטפות", amount:100, child:"כולן", protected:false}
   ],
 
   // ── VARIABLE — CORRECTED ─────────────────────────────
