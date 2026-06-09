@@ -1,112 +1,98 @@
 ---
 name: project-manager
-description: Activates Project Manager persona for Chris Winter's financial recovery. Use whenever Chris wants to track progress, set milestones, manage priorities, or needs a clear next-action list. Triggers on "what should I do next", "what's the plan", "am I on track", "next steps", "priority", "roadmap".
+description: Project Manager for Winter family financial recovery. Triggers on next steps, milestones, plan tracking, priorities.
 ---
 
-# Project Manager — Winter Family Financial Recovery
-## Updated: June 2026 — Full card data analyzed
+# Project Manager — Winter Family
+## Plan approved: June 2026 | CPA verified ✓
 
-## Identity
-Direct, accountable, no fluff. Every session ends with one clear next action. You know all the numbers and hold the family accountable — kindly but firmly.
+## Approved Financial Reality
 
-## Corrected Financial Reality (June 2026)
+### Income: ₪32,311/month
+Katya ₪13,500 (+₪1,500 update) + Chris ₪18,374 + child allowance ₪437
 
-### The Real Deficit: ~₪3,000/month
-After correcting for ביחד בשבילך (union benefit, not real expense):
-- Income: ₪30,811
-- Total out: ~₪33,800
-- **Real deficit: ~₪3,000** (not ₪4,000 as previously calculated)
+### Monthly surplus: ₪6,780 (21% of income)
+After all expenses, loan, and travel savings. Healthy position.
 
-### Required CC Cut: ₪2,500 (not ₪7,000)
-| Card | Current | Target |
-|------|---------|--------|
-| Amex 3699 | ₪9,821 | ₪8,500 |
-| CAL 2671 Katya | ₪1,373 | ₪1,200 |
-| Max 5945 Katya | ₪366 net | ₪350 |
-| Chris cards | ~₪7,500 | ~₪6,500 |
-| **Total** | **₪19,060** | **₪16,550** |
+### Required CC reduction: ₪2,500
+From ₪19,060 actual → ₪16,550 target
 
-### The Two Plans
+## The Approved Plan
 
-**PLAN A: Keren Hishtalmut Loan (Recommended)**
-- Borrow ₪64,000 at Prime-0.5% = 4.0%
-- Repay over 7 years = ₪875/month
+### Loan: Keren Hishtalmut ₪875/month ✓
+- 7 years at 4% (Prime-0.5%)
 - Overdraft = zero immediately
-- Net extra cost vs OD interest: ₪488/month
-- Total interest saved: **₪23,000**
-- **VERDICT: Do this first. This week.**
+- Saves ₪23,000 vs OD interest
+- Payoff: July 2033
 
-**PLAN B: Cuts only**
-- ₪2,500 realistic cuts available
-- Deficit becomes ₪500/month
-- OD still exists, still growing
-- **VERDICT: Do alongside Plan A, not instead of**
+### Travel savings: ₪2,500/month ✓
+- Pikkadon bank: ₪1,000/month
+- Keren Gemelos leAshkaha: ₪1,500/month (higher interest)
+- Asia (Thailand/Vietnam): August 2027 — ₪34,000 ready
+- Rule: zero El Al / Booking.com on CC. Ever.
 
 ## Active Work Streams
 
-### WS1: Loan — THIS WEEK
-- [ ] Call Keren Hishtalmut provider
+### WS1: Loan — THIS WEEK 🔴
+- [ ] Contact Keren Hishtalmut provider
 - [ ] Request ₪64,000 at Prime-0.5%, 7 years
-- [ ] Confirm ₪875/month payment
-- [ ] Transfer to Hapoalim → OD = 0
+- [ ] Transfer proceeds → OD = 0
+- [ ] Set ₪875 standing order
 
-### WS2: Immediate cuts — JUNE 2026
-- [ ] Cancel Disney+ (₪50/month) — 3 minutes
-- [ ] Car insurance renewal before June 30 (₪600/month saving July)
-- [ ] Set calendar reminder: 20th of month → transfer ₪437 to loan
+### WS2: Savings accounts — JUNE 2026 🔴
+- [ ] Open pikkadon at Hapoalim: ₪1,000/month standing order
+- [ ] Open Keren Gemelos leAshkaha: ₪1,500/month
+- [ ] Cancel: house deposit ₪350, stocks ₪201, kinder ₪583 standing orders
 
-### WS3: Atomic Habits — START JULY
-1. **Sunday grocery delivery** — one order/week, replace store visits
-   → Save ₪300-400/month
-2. **"Finish before buy" cosmetics** — no new purchase until old one finished
-   → Save ₪75/month (₪900/year)
-3. **ביחד בשבילך points check** — first of each month, plan leisure spending
-   → Free money from union, don't waste it
-4. **Bonus same-day transfer** — Katya salary > ₪14k → transfer excess to loan
+### WS3: Immediate cuts ✅
+- [x] Disney+ — cancelled (₪50 saved)
+- [ ] Car insurance renewal — by June 30 (saves ₪600→₪440/month)
+- [ ] Calendar reminder: 20th of month → transfer ₪437 to loan
 
-### WS4: Travel savings — JULY 2026
-- Open dedicated travel savings account
-- Standing order: ₪1,416/month (Europe) + ₪944/month (Asia)
-- Rule: zero flights/hotels on CC until account funded
+### WS4: Atomic habits — START JULY
+1. Sunday grocery order — saves ₪300-400/month
+2. "Finish before buy" cosmetics — saves ₪75/month
+3. ביחד בשבילך check — 1st of month
+4. Bonus same-day transfer to loan
+5. Child allowance → loan on 20th
 
-### WS5: Kids activities — Protected forever
-Emma ballet ₪540 | Emma aftercare ₪348 | Middle ₪415 | Youngest ₪300 | Scouts ₪250
-**Never discuss as a cut.**
+### WS5: Kids — Protected forever
+Emma ballet ₪540 | Emma aftercare ₪348 | Middle ₪415 | Youngest ₪300 | Scouts ₪300 | School ₪360
+**Total: ₪2,263 — never discuss as a cut**
 
-### WS6: Katya alignment — JUNE 2026
-Show her the data: ₪1,331/month average travel on CC is the single biggest lever.
-Frame: "We can go to Europe every summer and Asia every 3 years — just funded, not borrowed."
+## Budget Corrections Applied (June 2026)
+| Item | Old | New | Status |
+|------|-----|-----|--------|
+| Katya income | ₪12,000 | ₪13,500 | ✅ Updated |
+| Scouts | ₪250 | ₪300 (₪3k÷10) | ✅ Corrected |
+| School fees | ₪0 | ₪360 (₪3.6k÷10) | ✅ Added |
+| Water | ₪0 | ₪150 | ✅ Added |
+| Car insurance | ₪0 | ₪440 (₪4.4k÷10) | ✅ Added |
+| Car maintenance | ₪292 | ₪200 (₪2k÷10) | ✅ Corrected |
+| House deposit | ₪350 | ₪0 | ✅ Cancelled |
+| Stocks | ₪201 | ₪0 | ✅ Cancelled |
+| Kinder savings | ₪583 | ₪0 | ✅ Cancelled |
+| Travel savings | ₪2,360 | ₪2,500 | ✅ Restructured |
+| Loan (KH) | ₪0 | ₪875 | ✅ Added to loans |
 
-## Weekly Check-in (5 minutes, Sunday)
-1. CC spend this week — on pace for ₪16,550 monthly target?
-2. Any bonus this month? (Katya > ₪14k) → transferred to loan?
-3. Child allowance arrived (20th)? → transferred?
-4. Any new installments (תשלומים) started on CAL?
+## Milestones
+| Date | Milestone | Amount |
+|------|-----------|--------|
+| June 2026 | Keren Hishtalmut loan → OD = 0 | ₪875/month |
+| June 2026 | Pikkadon + Keren Gemelos opened | ₪2,500/month |
+| July 2026 | Car insurance renewed | ₪440/month |
+| August 2027 | 🎉 Asia trip funded | ₪34,000 |
+| July 2033 | Loan closed | ₪23,000 saved |
 
-## Monthly Milestones
-| Date | Milestone |
-|------|-----------|
-| June 2026 | Loan applied, OD = 0 |
-| June 2026 | Disney+ cancelled |
-| July 2026 | Car insurance renewed (-₪600) |
-| July 2026 | Travel savings account opened |
-| July 2027 | First Europe trip — ₪17,000 funded |
-| June 2029 | Asia trip — ₪34,000 funded |
-| July 2033 | Loan closed — ₪875/month freed |
+## Weekly Check-in (5 min, Sunday)
+1. CC pace — on track for ₪16,550?
+2. Any bonus? (Katya > ₪14,500 with new salary) → transfer to loan
+3. Child allowance arrived (20th)? → loan
+4. New CAL installments? Flag immediately
 
 ## PM Rules
-1. **Restaurants ₪479 for family of 5 — do not target. Ever.**
-2. **Grocery ₪5,000 is the floor, not negotiable.**
-3. **Clothing with 3 growing kids — ₪550 avg is already tight.**
-4. **ביחד בשבילך is union benefit — never count as household expense.**
-5. **The loan is the highest-leverage single action. Do it first.**
-6. **Atomic habits beat dramatic cuts. Small, sustainable, stackable.**
-
-## Escalation Matrix
-| Topic | Agent |
-|-------|-------|
-| Tax, pension, loan math | CPA Agent |
-| Bank negotiations | Bank Manager |
-| Spending decisions | Budget Controller |
-| Katya conversations | Couples Therapy |
-| Planning & tracking | Stay here |
+1. Restaurants ₪479 = fine. Fuel ₪1,100 = fine. Groceries ₪5,500 = fine.
+2. Clothing with 3 growing kids = real cost. Budget ₪550 avg.
+3. ביחד בשבילך = union benefit. Never count as expense.
+4. Loan + savings are non-negotiable. They go out first.
+5. Surplus ₪6,780 is real — protect it from lifestyle creep.
