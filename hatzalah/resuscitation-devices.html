@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>החייאה בזוג ומכשירים — חובשים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #1a1a1a;
+    --elevated: #242424;
+    --text: #f5f5f5;
+    --muted: #999;
+    --accent: #ff6b35;
+    --accent-alt: #f7931e;
+    --border: #333;
+    --green: #4ade80;
+    --red: #f87171;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 24px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .back-link {
+    position: absolute;
+    top: 50%; left: 20px;
+    transform: translateY(-50%);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  header p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .score-strip {
+    background: var(--elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 7px 24px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .score-strip strong { color: var(--accent); }
+  .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .formula-box {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0 8px;
+  }
+  .formula-box h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  .formula-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .formula-item.wide { grid-column: 1 / -1; }
+  .formula-item strong { color: var(--accent-alt); }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 14px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fg {
+    background: linear-gradient(90deg, var(--accent), var(--accent-alt));
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 10px;
+  }
+  .section-heading h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .section-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+  .section-badge.multi { background: var(--accent-alt); }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .q-card.correct { border-color: var(--green); }
+  .q-card.wrong-final { border-color: var(--red); }
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    white-space: pre-line;
+  }
+  .q-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .mc-options { display: flex; flex-direction: column; gap: 7px; }
+  .mc-option {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--text);
+    text-align: right;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .mc-option:hover:not(:disabled) { border-color: var(--accent); background: rgba(255,107,53,0.05); }
+  .mc-option:disabled { cursor: default; }
+  .mc-option.chosen-correct { border-color: var(--green); background: rgba(74,222,128,0.07); color: var(--green); }
+  .mc-option.chosen-wrong { border-color: var(--red); background: rgba(248,113,113,0.07); color: var(--red); }
+  .mc-option.reveal-correct { border-color: var(--green); }
+  .answer-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .ans-input {
+    flex: 1;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.93rem;
+    text-align: center;
+    direction: rtl;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .ans-input:focus { border-color: var(--accent); }
+  .ans-input.wrong-flash { border-color: var(--red); }
+  .ans-input:disabled { opacity: 0.5; cursor: not-allowed; }
+  .check-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .check-btn:hover:not(:disabled) { background: var(--accent-alt); }
+  .check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .feedback {
+    margin-top: 7px;
+    font-size: 0.83rem;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+  .feedback.hint { color: var(--accent-alt); }
+  .solution-box {
+    display: none;
+    margin-top: 10px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent-alt);
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+  .solution-box.visible { display: block; }
+  .sol-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent-alt);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .sol-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    white-space: pre-line;
+    line-height: 1.75;
+    color: var(--text);
+  }
+  .sol-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 11px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    cursor: pointer;
+    margin-top: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .sol-toggle:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+  .reset-btn {
+    display: block;
+    margin: 28px auto 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 0.83rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .more-btn {
+    display: block;
+    margin: 20px auto 0;
+    background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(247,147,30,0.12));
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .more-btn:hover { background: rgba(255,107,53,0.2); transform: scale(1.02); }
+  .more-section { display: none; }
+  .more-section.visible { display: block; }
+  .topic-intro {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 18px 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .topic-intro strong { color: var(--text); }
+  .topic-intro-toggle {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+    float: left;
+    padding: 0;
+  }
+  .topic-intro-body { margin-top: 8px; }
+  .topic-intro-body.hidden { display: none; }
+  .speak-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s;
+    margin-top: 1px;
+  }
+  .speak-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .speak-btn.speaking { border-color: var(--accent-alt); color: var(--accent-alt); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .hint-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 7px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .hint-btn:hover { border-color: var(--accent-alt); color: var(--accent-alt); }
+  .section-retry-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 11px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .section-retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.8rem; }
+    .formula-grid { grid-template-columns: 1fr; }
+    .formula-item.wide { grid-column: 1; }
+    .answer-row { flex-direction: column; align-items: stretch; }
+    .check-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-link">← דף הבית</a>
+  <h1>החייאה עם מכשירים</h1>
+  <p>resuscitation with devices · קורס חובשים</p>
+</header>
+
+<div class="score-strip">
+  נכון: <strong id="sc-ok">0</strong> &nbsp;/&nbsp; ענית: <strong id="sc-done">0</strong> &nbsp;/&nbsp; סה"כ: <strong id="sc-total">14</strong>
+</div>
+
+<div class="content">
+
+  <div class="topic-intro">
+    <button class="topic-intro-toggle" onclick="this.closest('.topic-intro').querySelector('.topic-intro-body').classList.toggle('hidden');this.textContent=this.textContent==='▸ הסתר'?'▾ הסבר':'▸ הסתר'">▾ הסבר</button>
+    <strong>מנתב אוויר, סקשן, מפוח הנשמה ומיכל חמצן</strong>
+    <div class="topic-intro-body">
+      סדר פריסת הציוד בהחייאת מכשירים הוא D-CAB: מפוח הנשמה (עם מנתב אוויר) ← שואב הפרשות (סקשן) ← דפיברילטור.<br>מנתב האוויר (AW) חייב להיות בגודל מתאים — לא גדול מדי ולא קטן מדי — ואסור להחדירו למטופל בהכרה.<br>משך השימוש במיכל חמצן מחושב לפי נוסחה: (נפח המכל × לחץ אטמוספרי) ÷ קצב הזרימה.
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <h3>מושגי מפתח</h3>
+    <div class="formula-grid">
+      <div class="formula-item"><strong>D-CAB:</strong> מפוח ← מנתב אוויר ← סקשן ← דפיברילטור</div>
+      <div class="formula-item"><strong>AW:</strong> מנתב אוויר — לא למטופל בהכרה</div>
+      <div class="formula-item"><strong>נפח הנשמה מבוגר:</strong> 800 סמ"ק (מקס' 1000)</div>
+      <div class="formula-item"><strong>משך הנשמה:</strong> שנייה אחת</div>
+      <div class="formula-item"><strong>נוסחת חמצן:</strong> (נפח × לחץ÷15) ÷ LPM = דקות</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <span id="prog-text">0 מתוך 14</span>
+    <div class="progress-bar-bg"><div class="progress-bar-fg" id="prog-bar"></div></div>
+  </div>
+
+  <div class="section-heading">
+    <h2>שאלה בסיסית</h2>
+    <span class="section-badge">8 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-single', Q_SINGLE)">↺ נסה שוב</button>
+  </div>
+  <div id="q-single"></div>
+
+  <div class="section-heading">
+    <h2>הבנה מעמיקה</h2>
+    <span class="section-badge multi">6 שאלות</span>
+    <div class="section-line"></div>
+    <button class="section-retry-btn" onclick="retrySection('q-multi', Q_MULTI)">↺ נסה שוב</button>
+  </div>
+  <div id="q-multi"></div>
+
+  <button class="more-btn" id="more-btn" onclick="loadMore()">+ רוצה עוד שאלות?</button>
+
+  <div class="more-section" id="more-section">
+    <div class="section-heading">
+      <h2>תרגול נוסף</h2>
+      <span class="section-badge">5 שאלות</span>
+      <div class="section-line"></div>
+      <button class="section-retry-btn" onclick="retrySection('q-extra', Q_EXTRA)">↺ נסה שוב</button>
+    </div>
+    <div id="q-extra"></div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
+</div>
+
+<script>
+const Q_SINGLE = [
+  {
+    "id": "d1",
+    "type": "mc",
+    "text": "מהו תפקיד מנתב האוויר (AW - AirWay)?",
+    "options": [
+      "להוליך את האוויר \"בסלטות\" לכיוון קנה הנשימה ולמנוע חסימה כתוצאה מספאזם",
+      "להזרים חמצן ישירות לריאות",
+      "למדוד את קצב הנשימה",
+      "לשאוב הפרשות מדרכי הנשימה"
+    ],
+    "answer": 0,
+    "hint": "הוא לא מונע צניחת בסיס הלשון, אלא מכוון את זרימת האוויר.",
+    "solution": "מנתב האוויר מוליך את האוויר לכיוון קנה הנשימה, ומונע סגירת נתיב האוויר כתוצאה מספאזם."
+  },
+  {
+    "id": "d2",
+    "type": "mc",
+    "text": "כיצד מודדים את הגודל המתאים של מנתב האוויר?",
+    "options": [
+      "ממרכז הפה לכיוון הלסת, או מזווית הפה לכיוון תנוך האוזן",
+      "מהאף לסנטר",
+      "מהעין לאוזן השנייה",
+      "אין צורך למדוד, גודל אחיד לכולם"
+    ],
+    "answer": 0,
+    "hint": "ישנן שתי דרכים למדידה, שתיהן מתייחסות לפה.",
+    "solution": "מודדים ממרכז הפה לכיוון הלסת, או מזווית הפה לכיוון תנוך האוזן."
+  },
+  {
+    "id": "d3",
+    "type": "mc",
+    "text": "מה עלול לקרות אם מנתב האוויר גדול מדי?",
+    "options": [
+      "גירוי להקאה, פציעה ודימום, ואף לרינגוספאזם (סגירת מיתרי קול)",
+      "שום דבר, אפשר להשתמש בכל גודל",
+      "המנתב ייצא לבד מיד",
+      "המטופל יתחיל לנשום טוב יותר"
+    ],
+    "answer": 0,
+    "hint": "מנתב גדול מדי מגרה אזורים רגישים בגרון.",
+    "solution": "מנתב גדול מדי עלול לגרום לגירוי להקאה, פציעה ודימום, ולרינגוספאזם."
+  },
+  {
+    "id": "d4",
+    "type": "mc",
+    "text": "מה עלול לקרות אם מנתב האוויר קטן מדי?",
+    "options": [
+      "הוא ידחוק את הלשון מטה ועלול להפוך בעצמו לגוף זר הגורם לחנק",
+      "הוא תמיד ייצא מהפה",
+      "אין שום סיכון",
+      "הוא ימנע חנק ביעילות רבה יותר"
+    ],
+    "answer": 0,
+    "hint": "במקום לפתוח את נתיב האוויר, הוא עלול לחסום אותו.",
+    "solution": "מנתב קטן מדי ידחוק את הלשון מטה ועלול להפוך בעצמו לגוף זר הגורם לחנק."
+  },
+  {
+    "id": "d5",
+    "type": "mc",
+    "text": "מהו כלל הברזל לגבי מנתב אוויר ומטופל בהכרה?",
+    "options": [
+      "אין להחדיר מנתב אוויר לחולה בהכרה",
+      "חובה להחדיר מנתב אוויר לכל מטופל",
+      "יש להחדיר מנתב רק לילדים בהכרה",
+      "אין הבדל בין מטופל בהכרה לחסר הכרה"
+    ],
+    "answer": 0,
+    "hint": "מטופל בהכרה עלול להגיב ברפלקס הקאה חזק להחדרת המנתב.",
+    "solution": "אין להחדיר מנתב אוויר לחולה בהכרה."
+  },
+  {
+    "id": "d6",
+    "type": "mc",
+    "text": "מהו תפקיד מכשיר הסקשן (שואב הפרשות)?",
+    "options": [
+      "לשאוב ולסלק הפרשות נוזליות מדרכי הנשימה, מהר יותר מסילוק ידני",
+      "להזרים חמצן למטופל",
+      "למדוד דופק",
+      "לתת שוק חשמלי"
+    ],
+    "answer": 0,
+    "hint": "הוא מייעל את סילוק ההפרשות בהשוואה לניקוי ידני.",
+    "solution": "הסקשן נועד לשאיבה וסילוק הפרשות נוזליות מדרכי הנשימה, מהר יותר מסילוק ידני."
+  },
+  {
+    "id": "d7",
+    "type": "mc",
+    "text": "מהם חלקי מפוח ההנשמה (אמבו)?",
+    "options": [
+      "מפוח, מסיכה, מסנן ויראלי, צינורית חמצן ושקית העשרה",
+      "רק מפוח ומסיכה בלבד",
+      "מיכל חמצן בלבד",
+      "אלקטרודות ומדבקות"
+    ],
+    "answer": 0,
+    "hint": "למפוח יש 5 חלקים עיקריים שהוזכרו בשיעור.",
+    "solution": "חלקי מפוח ההנשמה: מפוח, מסיכה, מסנן ויראלי, צינורית חמצן ושקית העשרה."
+  },
+  {
+    "id": "d8",
+    "type": "mc",
+    "text": "מהו כלל הבטיחות הראשון בעת שימוש במיכל חמצן?",
+    "options": [
+      "ברז ראשי נפתח ראשון ונסגר ראשון",
+      "אפשר לפתוח ולסגור בכל סדר",
+      "יש להשתמש במיכל רק כשהוא עומד",
+      "אין חשיבות לסדר הפתיחה"
+    ],
+    "answer": 0,
+    "hint": "זהו סדר קבוע לפתיחה וסגירה של הברז הראשי.",
+    "solution": "ברז ראשי נפתח ראשון ונסגר ראשון."
+  }
+];
+
+const Q_MULTI = [
+  {
+    "id": "d9",
+    "type": "mc",
+    "text": "מהו סדר פריסת הציוד הנכון בהחייאה עם מכשירים, לפי D-CAB?",
+    "options": [
+      "מפוח הנשמה (עם AW) מחובר ← מנתב אוויר ← שואב הפרשות (סקשן) ← דפיברילטור",
+      "דפיברילטור ← מפוח הנשמה ← סקשן ← מנתב אוויר",
+      "מנתב אוויר ← דפיברילטור ← סקשן ← מפוח הנשמה",
+      "סקשן ← דפיברילטור ← מנתב אוויר ← מפוח הנשמה"
+    ],
+    "answer": 0,
+    "hint": "האותיות D-CAB מרמזות על סדר הפריסה, כשה-D (Defibrillator) מגיע אחרון.",
+    "solution": "סדר פריסת הציוד: מפוח הנשמה מחובר ← מנתב אוויר ← שואב הפרשות ← דפיברילטור."
+  },
+  {
+    "id": "d10",
+    "type": "mc",
+    "text": "מהו יחס העיסויים/הנשמות בהחייאה עם מכשירים על ידי החובשים?",
+    "options": [
+      "30 עיסויים : 2 הנשמות",
+      "15 עיסויים : 2 הנשמות",
+      "5 עיסויים : 1 הנשמה",
+      "50 עיסויים : 5 הנשמות"
+    ],
+    "answer": 0,
+    "hint": "זהו אותו יחס כמו בהחייאה בסיסית ללא מכשירים.",
+    "solution": "היחס הוא 30 עיסויים ל-2 הנשמות, גם בהחייאה עם מכשירים."
+  },
+  {
+    "id": "d11",
+    "type": "mc",
+    "text": "באיזה משך זמן מומלץ שתהיה כל הנשמה בעת שימוש במפוח הנשמה?",
+    "options": [
+      "שנייה אחת",
+      "חצי שנייה",
+      "5 שניות",
+      "10 שניות"
+    ],
+    "answer": 0,
+    "hint": "הנשמה ארוכה מדי או קצרה מדי עלולה לפגוע ביעילות.",
+    "solution": "כל הנשמה צריכה להימשך שנייה אחת."
+  },
+  {
+    "id": "d12",
+    "type": "mc",
+    "text": "מהו נפח מפוח ההנשמה המומלץ למבוגר?",
+    "options": [
+      "800 סמ\"ק (מקסימום 1000 סמ\"ק)",
+      "100 סמ\"ק",
+      "5000 סמ\"ק",
+      "300 סמ\"ק"
+    ],
+    "answer": 0,
+    "hint": "זהו נפח גדול משמעותית מהנפח המומלץ לילד.",
+    "solution": "נפח מפוח ההנשמה למבוגר: סחיטה מקסימלית 800 סמ\"ק, נפח כולל עד 1000 סמ\"ק."
+  },
+  {
+    "id": "d13",
+    "type": "input",
+    "text": "לפי הנוסחה בשיעור, אם למיכל חמצן נייד יש נפח של 2.4 ליטר, השעון מראה לחץ אטמוספרי של 1500 (יחידות psi), ומזרימים חמצן בקצב של 10 LPM (ליטר לדקה) — לכמה דקות יספיק המיכל?",
+    "note": "כתוב רק את המספר (בדקות)",
+    "answer": [
+      "24"
+    ],
+    "hint": "שלב א: חלק את הלחץ (1500) ב-15 כדי לקבל את הלחץ האטמוספרי בפועל. שלב ב: הכפל בנפח המיכל. שלב ג: חלק בקצב הזרימה.",
+    "solution": "1500 ÷ 15 = 100\n2.4 × 100 = 240 ליטר חמצן זמינים\n240 ÷ 10 LPM = 24 דקות"
+  },
+  {
+    "id": "d14",
+    "type": "mc",
+    "text": "מדוע חובה להשתמש במנתב אוויר (AW) בזמן שימוש במפוח הנשמה?",
+    "options": [
+      "כדי לשמור על נתיב אוויר פתוח ולאפשר הנשמה יעילה",
+      "כי החוק מחייב זאת בלבד, בלי סיבה קלינית",
+      "כדי לקצר את זמן ההנשמה",
+      "אין קשר בין השניים"
+    ],
+    "answer": 0,
+    "hint": "ללא נתיב אוויר פתוח, ההנשמה עלולה להיות לא יעילה.",
+    "solution": "מנתב האוויר שומר על נתיב אוויר פתוח, ולכן חובה בעת שימוש במפוח הנשמה."
+  }
+];
+
+const Q_EXTRA = [
+  {
+    "id": "d15",
+    "type": "mc",
+    "text": "מהם שני סוגי הקטטרים (הצינוריות) שניתן להשתמש בהם עם מכשיר הסקשן?",
+    "options": [
+      "גמיש וקשיח",
+      "ארוך וקצר בלבד",
+      "אדום וכחול",
+      "חד-פעמי ורב-פעמי בלבד"
+    ],
+    "answer": 0,
+    "hint": "הבחירה תלויה בסוג ההפרשות ובמיקום.",
+    "solution": "שימוש בסקשן דורש קטטר גמיש או קשיח."
+  },
+  {
+    "id": "d16",
+    "type": "mc",
+    "text": "אם החליטו על הפסקת עיסויים בגלל אי-יעילות הסקשן, תוך כמה זמן יש לחזור לעיסויים?",
+    "options": [
+      "תוך 10 שניות",
+      "תוך דקה שלמה",
+      "תוך 5 דקות",
+      "אין הגבלת זמן"
+    ],
+    "answer": 0,
+    "hint": "הפסקה בעיסויים חייבת להיות קצרה ככל האפשר.",
+    "solution": "יש לחזור לעיסויים תוך 10 שניות."
+  },
+  {
+    "id": "d17",
+    "type": "mc",
+    "text": "מהו נפח מפוח ההנשמה המומלץ לילד?",
+    "options": [
+      "300-400 סמ\"ק",
+      "1000 סמ\"ק",
+      "50 סמ\"ק",
+      "5000 סמ\"ק"
+    ],
+    "answer": 0,
+    "hint": "זהו נפח קטן משמעותית מזה של מבוגר.",
+    "solution": "נפח ההנשמה המומלץ לילד: סחיטה מקסימלית 300-400 סמ\"ק."
+  },
+  {
+    "id": "d18",
+    "type": "mc",
+    "text": "מהי בדיקת התקינות שיש לבצע במפוח הנשמה לפני השימוש?",
+    "options": [
+      "לאטום את פתח יציאת האוויר בכף היד ולוודא שאין בריחת אוויר בעת סחיטת המפוח",
+      "לבדוק את צבע המפוח",
+      "לשקול את המפוח",
+      "לבדוק את תאריך התפוגה בלבד"
+    ],
+    "answer": 0,
+    "hint": "הבדיקה מוודאת שהמפוח אטום ולא \"מדליף\" אוויר.",
+    "solution": "בודקים תקינות על ידי אטימת פתח יציאת האוויר בכף היד וסחיטת המפוח, לוודא שאין בריחת אוויר."
+  },
+  {
+    "id": "d19",
+    "type": "mc",
+    "text": "מדוע יש להרחיק מיכל חמצן מאש וממקורות חום?",
+    "options": [
+      "כי אי-הקפדה על כללי הבטיחות עלולה לגרום לפיצוץ או לפציעה קשה",
+      "כי זה משפיע על טעם החמצן",
+      "אין באמת סיכון",
+      "כדי לשמור על ניקיון המיכל בלבד"
+    ],
+    "answer": 0,
+    "hint": "חמצן דחוס בקרבת חום או אש הוא שילוב מסוכן ביותר.",
+    "solution": "אי-הקפדה על כללי הבטיחות (חום, אש, שמן) עלולה לגרום לפיצוץ או פציעה קשה."
+  }
+];
+
+const ALL_Q = [...Q_SINGLE, ...Q_MULTI];
+function findQ(qid) {
+  return [...ALL_Q, ...Q_EXTRA].find(function(x) { return x.id === qid; });
+}
+const state = { answered: {}, correct: {}, attempts: {} };
+let streak = 0;
+const _secDone = {};
+
+function findSection(qid) {
+  if (Q_SINGLE.some(function(q){return q.id===qid;})) return ['q-single', Q_SINGLE];
+  if (Q_MULTI.some(function(q){return q.id===qid;})) return ['q-multi', Q_MULTI];
+  if (Q_EXTRA.some(function(q){return q.id===qid;})) return ['q-extra', Q_EXTRA];
+  return null;
+}
+function checkSectionDone(cid, qs) {
+  if (_secDone[cid]) return;
+  if (qs.every(function(q){return q.id in state.answered;})) {
+    _secDone[cid] = true;
+    celebrateSectionDone();
+  }
+}
+
+function norm(s) {
+  return s.toLowerCase().replace(/[\s%₪,]/g, '');
+}
+function isCorrect(raw, accepted) {
+  const n = norm(raw);
+  return accepted.some(a => norm(a) === n);
+}
+
+function speakQ(qid) {
+  if (!('speechSynthesis' in window)) return;
+  const q = findQ(qid);
+  const btn = document.getElementById('spk-' + qid);
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(q.text.replace(/\n/g, ' '));
+  utt.lang = 'he-IL';
+  utt.rate = 0.85;
+  utt.onstart = () => btn.classList.add('speaking');
+  utt.onend = () => btn.classList.remove('speaking');
+  speechSynthesis.speak(utt);
+}
+
+function showHint(qid) {
+  const box = document.getElementById('hintbox-' + qid);
+  const btn = document.getElementById('hintbtn-' + qid);
+  if (box.style.display === 'none') {
+    box.style.display = 'block';
+    btn.textContent = '💡 הסתר רמז';
+  } else {
+    box.style.display = 'none';
+    btn.textContent = '💡 רמז';
+  }
+}
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function retrySection(containerId, questions) {
+  delete _secDone[containerId];
+  streak = 0;
+  questions.forEach(q => {
+    delete state.answered[q.id];
+    delete state.correct[q.id];
+    delete state.attempts[q.id];
+  });
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  shuffleArr(questions).forEach(q => c.appendChild(renderCard(q)));
+  updateScore();
+}
+
+function updateScore() {
+  const done = Object.keys(state.answered).length;
+  const ok = Object.values(state.correct).filter(Boolean).length;
+  document.getElementById('sc-ok').textContent = ok;
+  document.getElementById('sc-done').textContent = done;
+  document.getElementById('sc-total').textContent = ALL_Q.length;
+  const pct = done / ALL_Q.length * 100;
+  document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
+  document.getElementById('prog-bar').style.width = pct + '%';
+}
+
+function renderCard(q) {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'card-' + q.id;
+
+  let body = '';
+  if (q.type === 'mc') {
+    const opts = q.options.map((o, i) =>
+      `<button class="mc-option" id="opt-${q.id}-${i}" onclick="handleMC('${q.id}',${i})">${o}</button>`
+    ).join('');
+    body = `<div class="mc-options">${opts}</div><div class="feedback" id="fb-${q.id}"></div>`;
+  } else {
+    body = `<div class="answer-row">
+      <input class="ans-input" id="inp-${q.id}" type="text" placeholder="התשובה"
+        onkeydown="if(event.key==='Enter')checkInput('${q.id}')">
+      <button class="check-btn" id="btn-${q.id}" onclick="checkInput('${q.id}')">בדוק</button>
+    </div><div class="feedback" id="fb-${q.id}"></div>`;
+  }
+
+  const safeText = q.text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const safeSol  = q.solution.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  card.innerHTML = `
+    <div class="q-header">
+      <span class="q-num">${q.id}</span>
+      <div style="flex:1">
+        <div class="q-text">${safeText}</div>
+        ${q.note ? `<div class="q-note">${q.note}</div>` : ''}
+        <button class="hint-btn" id="hintbtn-${q.id}" onclick="showHint('${q.id}')">💡 רמז</button>
+        <div class="feedback hint" id="hintbox-${q.id}" style="display:none">${q.hint.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</div>
+      </div>
+      <button class="speak-btn" id="spk-${q.id}" onclick="speakQ('${q.id}')" title="הקרא שאלה">🔊</button>
+    </div>
+    ${body}
+    <div class="solution-box" id="sol-${q.id}">
+      <div class="sol-label">פתרון</div>
+      <div class="sol-text">${safeSol}</div>
+    </div>
+    <button class="sol-toggle" id="soltog-${q.id}" onclick="toggleSol('${q.id}')" style="display:none">הצג פתרון</button>
+  `;
+  return card;
+}
+
+function handleMC(qid, chosen) {
+  if (state.answered[qid]) return;
+  const q = findQ(qid);
+  const correct = chosen === q.answer;
+  q.options.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qid}-${i}`);
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('reveal-correct');
+  });
+  const chosenBtn = document.getElementById(`opt-${qid}-${chosen}`);
+  const fb = document.getElementById('fb-' + qid);
+  const card = document.getElementById('card-' + qid);
+  if (correct) {
+    chosenBtn.classList.add('chosen-correct');
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    card.classList.add('correct');
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    streak++; celebrateCorrect(streak);
+  } else {
+    chosenBtn.classList.add('chosen-wrong');
+    fb.textContent = '✗ לא בדיוק — לחץ על 💡 לרמז';
+    fb.className = 'feedback hint';
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    streak = 0; celebrateWrong();
+  }
+  state.answered[qid] = true;
+  state.correct[qid] = correct;
+  updateScore();
+  const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
+}
+
+function checkInput(qid) {
+  if (state.answered[qid]) return;
+  const q = findQ(qid);
+  const input = document.getElementById('inp-' + qid);
+  const fb = document.getElementById('fb-' + qid);
+  const card = document.getElementById('card-' + qid);
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  if (isCorrect(raw, q.answer)) {
+    fb.textContent = '✓ נכון!'; fb.className = 'feedback correct';
+    card.classList.add('correct');
+    input.disabled = true;
+    document.getElementById('btn-' + qid).disabled = true;
+    document.getElementById('soltog-' + qid).style.display = 'inline-block';
+    state.answered[qid] = true; state.correct[qid] = true;
+    streak++; celebrateCorrect(streak);
+    updateScore();
+    const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
+  } else {
+    state.attempts[qid] = (state.attempts[qid] || 0) + 1;
+    if (state.attempts[qid] === 1) {
+      fb.textContent = '✗ לא נכון — לחץ על 💡 לרמז';
+      fb.className = 'feedback hint';
+      input.classList.add('wrong-flash');
+      setTimeout(() => input.classList.remove('wrong-flash'), 900);
+      streak = 0; celebrateWrong();
+    } else {
+      fb.textContent = '✗ התשובה: ' + q.answer[0];
+      fb.className = 'feedback wrong';
+      input.disabled = true;
+      document.getElementById('btn-' + qid).disabled = true;
+      card.classList.add('wrong-final');
+      document.getElementById('sol-' + qid).classList.add('visible');
+      state.answered[qid] = true; state.correct[qid] = false;
+      updateScore();
+      const sec = findSection(qid); if (sec) checkSectionDone(sec[0], sec[1]);
+    }
+  }
+}
+
+function toggleSol(qid) {
+  const box = document.getElementById('sol-' + qid);
+  const btn = document.getElementById('soltog-' + qid);
+  if (box.classList.contains('visible')) {
+    box.classList.remove('visible'); btn.textContent = 'הצג פתרון';
+  } else {
+    box.classList.add('visible'); btn.textContent = 'הסתר פתרון';
+  }
+}
+
+function loadMore() {
+  document.getElementById('more-btn').style.display = 'none';
+  document.getElementById('more-section').classList.add('visible');
+  Q_EXTRA.forEach(q => document.getElementById('q-extra').appendChild(renderCard(q)));
+  updateScore();
+}
+
+function resetAll() {
+  streak = 0;
+  Object.keys(_secDone).forEach(k => delete _secDone[k]);
+  state.answered = {}; state.correct = {}; state.attempts = {};
+  document.getElementById('q-single').innerHTML = '';
+  document.getElementById('q-multi').innerHTML = '';
+  document.getElementById('q-extra').innerHTML = '';
+  document.getElementById('more-section').classList.remove('visible');
+  document.getElementById('more-btn').style.display = 'block';
+  init();
+}
+
+function init() {
+  Q_SINGLE.forEach(q => document.getElementById('q-single').appendChild(renderCard(q)));
+  Q_MULTI.forEach(q => document.getElementById('q-multi').appendChild(renderCard(q)));
+  updateScore();
+}
+
+init();
+</script>
+<script src="../celebrate.js"></script>
+</body>
+</html>
