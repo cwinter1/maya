@@ -71,6 +71,20 @@
   }
   .score-strip strong { color: var(--accent); }
   .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .grade-banner { display: none; margin: 22px 0; }
+  .grade-banner.visible { display: block; }
+  .grade-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 24px; text-align: center; }
+  .grade-card.pass { border-color: var(--green); }
+  .grade-card.fail { border-color: var(--red); }
+  .grade-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .grade-pct { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 10vw, 4rem); letter-spacing: 3px; line-height: 1; }
+  .grade-card.pass .grade-pct { color: var(--green); }
+  .grade-card.fail .grade-pct { color: var(--red); }
+  .grade-msg { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .grade-study { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); text-align: right; }
+  .grade-study h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1px; margin-bottom: 10px; color: var(--text); }
+  .grade-study ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .grade-study li { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px; padding: 9px 14px; font-size: 0.85rem; }
   .formula-box {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -466,6 +480,18 @@
     <div id="q-extra"></div>
   </div>
 
+  <div class="grade-banner" id="grade-banner">
+    <div class="grade-card" id="grade-card">
+      <div class="grade-label">ציון סופי</div>
+      <div class="grade-pct" id="grade-pct">0%</div>
+      <div class="grade-msg" id="grade-msg"></div>
+      <div class="grade-study" id="grade-study" style="display:none">
+        <h3>כדאי לחזור על:</h3>
+        <ul id="grade-study-list"></ul>
+      </div>
+    </div>
+  </div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
@@ -474,6 +500,7 @@ const Q_SINGLE = [
   {
     "id": "k1",
     "type": "mc",
+    "topic": "חלוקת גילאים ותמותה",
     "text": "כיצד מתחלקים הגילאים בהחייאת ילדים?",
     "options": [
       "לפי משקל בלבד",
@@ -488,6 +515,7 @@ const Q_SINGLE = [
   {
     "id": "k2",
     "type": "mc",
+    "topic": "חלוקת גילאים ותמותה",
     "text": "מהו הגורם המרכזי לתמותה בילדים ותינוקות קטנים?",
     "options": [
       "גורם כלייתי",
@@ -502,6 +530,7 @@ const Q_SINGLE = [
   {
     "id": "k3",
     "type": "mc",
+    "topic": "טכניקת עיסויים ודופק בתינוק/ילד",
     "text": "היכן בודקים דופק בתינוק?",
     "options": [
       "באצבע",
@@ -516,6 +545,7 @@ const Q_SINGLE = [
   {
     "id": "k4",
     "type": "mc",
+    "topic": "טכניקת עיסויים ודופק בתינוק/ילד",
     "text": "כיצד מבצעים עיסויים בתינוק (בעזרת מטפל יחיד)?",
     "options": [
       "בעזרת שתי אצבעות",
@@ -530,6 +560,7 @@ const Q_SINGLE = [
   {
     "id": "k5",
     "type": "mc",
+    "topic": "יחסי עיסויים-הנשמות ו-AED",
     "text": "מהו יחס עיסויים/הנשמות בהחייאת תינוק על ידי 2 מטפלים?",
     "options": [
       "15 עיסויים : 2 הנשמות",
@@ -544,6 +575,7 @@ const Q_SINGLE = [
   {
     "id": "k6",
     "type": "mc",
+    "topic": "טכניקת עיסויים ודופק בתינוק/ילד",
     "text": "היכן בודקים דופק בילד (מעל גיל שנה)?",
     "options": [
       "באצבע היד",
@@ -558,6 +590,7 @@ const Q_SINGLE = [
   {
     "id": "k7",
     "type": "mc",
+    "topic": "טכניקת עיסויים ודופק בתינוק/ילד",
     "text": "כיצד מבצעים עיסויים בילד?",
     "options": [
       "בעזרת מרפק",
@@ -572,6 +605,7 @@ const Q_SINGLE = [
   {
     "id": "k8",
     "type": "mc",
+    "topic": "זיהוי חנק והחלטת טיפול",
     "text": "מהו הסימן האוניברסלי לחנק?",
     "options": [
       "הנפגע מדבר בקול רם",
@@ -589,6 +623,7 @@ const Q_MULTI = [
   {
     "id": "k9",
     "type": "mc",
+    "topic": "יחסי עיסויים-הנשמות ו-AED",
     "text": "מה ההבדל העיקרי בשימוש ב-AED בין מבוגר לתינוק/ילד?",
     "options": [
       "משתמשים במכשיר שונה לחלוטין",
@@ -603,6 +638,7 @@ const Q_MULTI = [
   {
     "id": "k10",
     "type": "mc",
+    "topic": "זיהוי חנק והחלטת טיפול",
     "text": "מה עושים במקרה של חסימת נתיב אוויר קלה (המטופל משתעל ביעילות)?",
     "options": [
       "מבצעים לחיצות בטן מיידיות",
@@ -617,6 +653,7 @@ const Q_MULTI = [
   {
     "id": "k11",
     "type": "mc",
+    "topic": "זיהוי חנק והחלטת טיפול",
     "text": "מה מאפיין חסימת נתיב אוויר חמורה?",
     "options": [
       "המטופל נראה רגוע לחלוטין",
@@ -631,6 +668,7 @@ const Q_MULTI = [
   {
     "id": "k12",
     "type": "mc",
+    "topic": "טיפול בחנק לפי אוכלוסייה",
     "text": "מהן הפעולות לטיפול בחנק מגוף זר במבוגר/ילד עם חסימה חמורה?",
     "options": [
       "רק לחיצות בטן, ללא טפיחות גב",
@@ -645,6 +683,7 @@ const Q_MULTI = [
   {
     "id": "k13",
     "type": "mc",
+    "topic": "טיפול בחנק לפי אוכלוסייה",
     "text": "כיצד מטפלים בחנק אצל תינוק עם חסימה חמורה (בשונה ממבוגר)?",
     "options": [
       "5 לחיצות בטן בלבד, כמו במבוגר",
@@ -659,6 +698,7 @@ const Q_MULTI = [
   {
     "id": "k14",
     "type": "mc",
+    "topic": "טיפול בחנק לפי אוכלוסייה",
     "text": "באילו אוכלוסיות מבצעים לחיצות חזה (ולא לחיצות בטן) לטיפול בחנק, גם אצל מבוגרים?",
     "options": [
       "גברים בלבד",
@@ -676,6 +716,7 @@ const Q_EXTRA = [
   {
     "id": "k15",
     "type": "mc",
+    "topic": "זיהוי חנק והחלטת טיפול",
     "text": "אם המטופל המוחנק מאבד הכרה, מה עושים ראשית (במקרה זה בלבד)?",
     "options": [
       "בודקים דופק במשך דקה שלמה קודם כל",
@@ -690,6 +731,7 @@ const Q_EXTRA = [
   {
     "id": "k16",
     "type": "mc",
+    "topic": "טכניקת עיסויים ודופק בתינוק/ילד",
     "text": "מהו קצב העיסויים המומלץ בהחייאת תינוק וילד?",
     "options": [
       "אין קצב מומלץ",
@@ -704,6 +746,7 @@ const Q_EXTRA = [
   {
     "id": "k17",
     "type": "mc",
+    "topic": "טכניקת עיסויים ודופק בתינוק/ילד",
     "text": "מהו עומק העיסויים המומלץ בתינוק ובילד?",
     "options": [
       "אין הגבלת עומק",
@@ -718,6 +761,7 @@ const Q_EXTRA = [
   {
     "id": "k18",
     "type": "mc",
+    "topic": "זיהוי חנק והחלטת טיפול",
     "text": "מדוע \"ראיות נסיבתיות\" (כמו אוכל או חפצים קטנים בסביבה) חשובות בזיהוי חנק בתינוק?",
     "options": [
       "הן מעידות תמיד על מחלה כרונית",
@@ -732,6 +776,7 @@ const Q_EXTRA = [
   {
     "id": "k19",
     "type": "mc",
+    "topic": "יחסי עיסויים-הנשמות ו-AED",
     "text": "מהו יחס עיסויים/הנשמות בהחייאת ילד על ידי מטפל יחיד?",
     "options": [
       "50 עיסויים : 5 הנשמות",
@@ -832,6 +877,51 @@ function updateScore() {
   const pct = done / ALL_Q.length * 100;
   document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
   document.getElementById('prog-bar').style.width = pct + '%';
+  updateGrade();
+}
+
+function gradedSet() {
+  const extraOpen = document.getElementById('more-section').classList.contains('visible');
+  return extraOpen ? [...ALL_Q, ...Q_EXTRA] : ALL_Q;
+}
+
+function updateGrade() {
+  const banner = document.getElementById('grade-banner');
+  const gset = gradedSet();
+  if (!gset.every(function(q){ return q.id in state.answered; })) {
+    banner.classList.remove('visible');
+    return;
+  }
+  let okCount = 0;
+  const wrongTopics = [];
+  gset.forEach(function(q) {
+    if (state.correct[q.id]) okCount++;
+    else if (wrongTopics.indexOf(q.topic) === -1) wrongTopics.push(q.topic);
+  });
+  const finalPct = Math.round(okCount / gset.length * 100);
+  const pass = finalPct >= 80;
+  const card = document.getElementById('grade-card');
+  card.className = 'grade-card ' + (pass ? 'pass' : 'fail');
+  document.getElementById('grade-pct').textContent = finalPct + '%';
+  document.getElementById('grade-msg').textContent = pass
+    ? 'עבר/ה! ציון תקין (80% ומעלה).'
+    : 'מתחת ל-80% — כדאי לחזור על הנושאים הבאים לפני המבחן:';
+  const studyBox = document.getElementById('grade-study');
+  const list = document.getElementById('grade-study-list');
+  list.innerHTML = '';
+  if (!pass && wrongTopics.length) {
+    studyBox.style.display = 'block';
+    wrongTopics.forEach(function(t) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      list.appendChild(li);
+    });
+  } else {
+    studyBox.style.display = 'none';
+  }
+  const wasVisible = banner.classList.contains('visible');
+  banner.classList.add('visible');
+  if (!wasVisible) banner.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function renderCard(q) {

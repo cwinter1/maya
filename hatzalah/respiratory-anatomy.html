@@ -71,6 +71,20 @@
   }
   .score-strip strong { color: var(--accent); }
   .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .grade-banner { display: none; margin: 22px 0; }
+  .grade-banner.visible { display: block; }
+  .grade-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 24px; text-align: center; }
+  .grade-card.pass { border-color: var(--green); }
+  .grade-card.fail { border-color: var(--red); }
+  .grade-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .grade-pct { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 10vw, 4rem); letter-spacing: 3px; line-height: 1; }
+  .grade-card.pass .grade-pct { color: var(--green); }
+  .grade-card.fail .grade-pct { color: var(--red); }
+  .grade-msg { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .grade-study { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); text-align: right; }
+  .grade-study h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1px; margin-bottom: 10px; color: var(--text); }
+  .grade-study ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .grade-study li { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px; padding: 9px 14px; font-size: 0.85rem; }
   .formula-box {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -466,6 +480,18 @@
     <div id="q-extra"></div>
   </div>
 
+  <div class="grade-banner" id="grade-banner">
+    <div class="grade-card" id="grade-card">
+      <div class="grade-label">ציון סופי</div>
+      <div class="grade-pct" id="grade-pct">0%</div>
+      <div class="grade-msg" id="grade-msg"></div>
+      <div class="grade-study" id="grade-study" style="display:none">
+        <h3>כדאי לחזור על:</h3>
+        <ul id="grade-study-list"></ul>
+      </div>
+    </div>
+  </div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
@@ -474,6 +500,7 @@ const Q_SINGLE = [
   {
     "id": "r1",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "מערכת הנשימה מתחלקת לשני חלקים עיקריים. מהם?",
     "options": [
       "עצמות וסחוסים",
@@ -488,6 +515,7 @@ const Q_SINGLE = [
   {
     "id": "r2",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "אילו איברים נכללים בדרכי האוויר העליונות?",
     "options": [
       "פה, אף, לוע",
@@ -502,6 +530,7 @@ const Q_SINGLE = [
   {
     "id": "r3",
     "type": "input",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "מהו שמו הלועזי (הלטיני) של קנה הנשימה?",
     "note": "כתוב מילה אחת",
     "answer": [
@@ -515,6 +544,7 @@ const Q_SINGLE = [
   {
     "id": "r4",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "מהו תפקיד האפיגלוטיס?",
     "options": [
       "לסגור את פתח קנה הנשימה בעת בליעה, כדי למנוע כניסת מזון ונוזלים",
@@ -529,6 +559,7 @@ const Q_SINGLE = [
   {
     "id": "r5",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "מדוע נשימה דרך האף בריאה יותר מנשימה דרך הפה?",
     "options": [
       "האוויר עובר באף שינויים של חימום, לחות וניקוי",
@@ -543,6 +574,7 @@ const Q_SINGLE = [
   {
     "id": "r6",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "כמה אונות (חלקים) יש בריאה הימנית וכמה בשמאלית?",
     "options": [
       "2 בימנית, 3 בשמאלית",
@@ -557,6 +589,7 @@ const Q_SINGLE = [
   {
     "id": "r7",
     "type": "mc",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "היכן מתבצע חילוף הגזים (חמצן ופחמן דו-חמצני) בריאות?",
     "options": [
       "בקנה הנשימה",
@@ -571,6 +604,7 @@ const Q_SINGLE = [
   {
     "id": "r8",
     "type": "input",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "מהו שם התהליך שבו עוברים חמצן ופחמן דו-חמצני בין הנימים לנאדיות?",
     "note": "כתוב מילה אחת בעברית",
     "answer": [
@@ -585,6 +619,7 @@ const Q_MULTI = [
   {
     "id": "r9",
     "type": "mc",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "מהם שלושת התהליכים הנדרשים לחילוף גזים יעיל במערכת הנשימה?",
     "options": [
       "חימום, ניקוי ולחות",
@@ -599,6 +634,7 @@ const Q_MULTI = [
   {
     "id": "r10",
     "type": "mc",
+    "topic": "מכניקת הנשימה",
     "text": "מהו ההבדל בין שאיפה לנשיפה מבחינת צריכת אנרגיה?",
     "options": [
       "שתיהן תהליכים פעילים",
@@ -613,6 +649,7 @@ const Q_MULTI = [
   {
     "id": "r11",
     "type": "mc",
+    "topic": "מכניקת הנשימה",
     "text": "מה קורה בגוף כאשר בית החזה מתרחב בזמן שאיפה?",
     "options": [
       "קנה הנשימה נסגר",
@@ -627,6 +664,7 @@ const Q_MULTI = [
   {
     "id": "r12",
     "type": "mc",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "מהו ההבדל בין \"נשימה ריאתית\" ל\"נשימה תאית\"?",
     "options": [
       "אין הבדל, זה אותו תהליך",
@@ -641,6 +679,7 @@ const Q_MULTI = [
   {
     "id": "r13",
     "type": "mc",
+    "topic": "מכניקת הנשימה",
     "text": "אילו שרירים מסייעים לתהליך השאיפה הפעיל?",
     "options": [
       "שרירי הבטן בלבד",
@@ -655,6 +694,7 @@ const Q_MULTI = [
   {
     "id": "r14",
     "type": "mc",
+    "topic": "מכניקת הנשימה",
     "text": "כיצד מתואר קרום הפלאורה וכיצד הוא תורם לנשימה?",
     "options": [
       "קרום כפול הדבוק לריאות ולבית החזה, המאפשר לריאות להימשך כשבית החזה מתרחב",
@@ -672,6 +712,7 @@ const Q_EXTRA = [
   {
     "id": "r15",
     "type": "mc",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "מהו הרכיב שאליו נקשר החמצן בכדוריות הדם האדומות?",
     "options": [
       "לויקוציטים",
@@ -686,6 +727,7 @@ const Q_EXTRA = [
   {
     "id": "r16",
     "type": "mc",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "מה קורה לפחמן הדו-חמצני (CO2) שנוצר בתאי הגוף?",
     "options": [
       "הוא עובר בדיפוזיה מהתאים לדם, ומהדם לנאדיות, ומסולק בנשיפה",
@@ -700,6 +742,7 @@ const Q_EXTRA = [
   {
     "id": "r17",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "מהו תפקיד הסימפונות (ברונכוסים)?",
     "options": [
       "להוליך אוויר מהקנה אל הריאות, ולהתפצל שוב ושוב עד לנאדיות",
@@ -714,6 +757,7 @@ const Q_EXTRA = [
   {
     "id": "r18",
     "type": "mc",
+    "topic": "חילופי גזים ופיזיולוגיה",
     "text": "מדוע חסימה במערכת הנשימה (כמו חנק) עלולה להיות מסכנת חיים במיוחד?",
     "options": [
       "כי היא גורמת לכאב ראש בלבד",
@@ -728,6 +772,7 @@ const Q_EXTRA = [
   {
     "id": "r19",
     "type": "mc",
+    "topic": "דרכי אוויר עליונות ותחתונות",
     "text": "מהם דרכי האוויר התחתונות?",
     "options": [
       "פה, אף, לוע",
@@ -828,6 +873,51 @@ function updateScore() {
   const pct = done / ALL_Q.length * 100;
   document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
   document.getElementById('prog-bar').style.width = pct + '%';
+  updateGrade();
+}
+
+function gradedSet() {
+  const extraOpen = document.getElementById('more-section').classList.contains('visible');
+  return extraOpen ? [...ALL_Q, ...Q_EXTRA] : ALL_Q;
+}
+
+function updateGrade() {
+  const banner = document.getElementById('grade-banner');
+  const gset = gradedSet();
+  if (!gset.every(function(q){ return q.id in state.answered; })) {
+    banner.classList.remove('visible');
+    return;
+  }
+  let okCount = 0;
+  const wrongTopics = [];
+  gset.forEach(function(q) {
+    if (state.correct[q.id]) okCount++;
+    else if (wrongTopics.indexOf(q.topic) === -1) wrongTopics.push(q.topic);
+  });
+  const finalPct = Math.round(okCount / gset.length * 100);
+  const pass = finalPct >= 80;
+  const card = document.getElementById('grade-card');
+  card.className = 'grade-card ' + (pass ? 'pass' : 'fail');
+  document.getElementById('grade-pct').textContent = finalPct + '%';
+  document.getElementById('grade-msg').textContent = pass
+    ? 'עבר/ה! ציון תקין (80% ומעלה).'
+    : 'מתחת ל-80% — כדאי לחזור על הנושאים הבאים לפני המבחן:';
+  const studyBox = document.getElementById('grade-study');
+  const list = document.getElementById('grade-study-list');
+  list.innerHTML = '';
+  if (!pass && wrongTopics.length) {
+    studyBox.style.display = 'block';
+    wrongTopics.forEach(function(t) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      list.appendChild(li);
+    });
+  } else {
+    studyBox.style.display = 'none';
+  }
+  const wasVisible = banner.classList.contains('visible');
+  banner.classList.add('visible');
+  if (!wasVisible) banner.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function renderCard(q) {

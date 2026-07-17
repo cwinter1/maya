@@ -71,6 +71,20 @@
   }
   .score-strip strong { color: var(--accent); }
   .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .grade-banner { display: none; margin: 22px 0; }
+  .grade-banner.visible { display: block; }
+  .grade-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 24px; text-align: center; }
+  .grade-card.pass { border-color: var(--green); }
+  .grade-card.fail { border-color: var(--red); }
+  .grade-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .grade-pct { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 10vw, 4rem); letter-spacing: 3px; line-height: 1; }
+  .grade-card.pass .grade-pct { color: var(--green); }
+  .grade-card.fail .grade-pct { color: var(--red); }
+  .grade-msg { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .grade-study { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); text-align: right; }
+  .grade-study h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1px; margin-bottom: 10px; color: var(--text); }
+  .grade-study ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .grade-study li { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px; padding: 9px 14px; font-size: 0.85rem; }
   .formula-box {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -468,13 +482,25 @@
     <div id="q-extra"></div>
   </div>
 
+  <div class="grade-banner" id="grade-banner">
+    <div class="grade-card" id="grade-card">
+      <div class="grade-label">ציון סופי</div>
+      <div class="grade-pct" id="grade-pct">0%</div>
+      <div class="grade-msg" id="grade-msg"></div>
+      <div class="grade-study" id="grade-study" style="display:none">
+        <h3>כדאי לחזור על:</h3>
+        <ul id="grade-study-list"></ul>
+      </div>
+    </div>
+  </div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
 <script>
 const Q_SINGLE = [
   {
-    id: 'h1', type: 'mc',
+    id: 'h1', type: 'mc', topic: 'משולש החיים',
     text: 'אילו שלוש מערכות מרכיבות את "משולש החיים"?',
     options: [
       'מערכת העצבים, מערכת הנשימה, מערכת הלב וכלי הדם',
@@ -487,7 +513,7 @@ const Q_SINGLE = [
     solution: 'משולש החיים מורכב ממערכת העצבים (המוח), מערכת הנשימה, ומערכת הלב וכלי הדם (הקרדיווסקולרית).'
   },
   {
-    id: 'h2', type: 'input',
+    id: 'h2', type: 'input', topic: 'מערכת העצבים',
     text: 'איזה איבר משמש כמרכז השליטה והבקרה על כלל מערכות הגוף?',
     note: 'כתוב מילה אחת',
     answer: ['המוח', 'מוח'],
@@ -495,7 +521,7 @@ const Q_SINGLE = [
     solution: 'המוח הוא מרכז השליטה והבקרה של כלל מערכות הגוף, והוא רגיש מאוד לרמות החמצן שהוא מקבל.'
   },
   {
-    id: 'h3', type: 'mc',
+    id: 'h3', type: 'mc', topic: 'מערכת העצבים',
     text: 'תוך כמה זמן בערך נגרם נזק בלתי הפיך למערכת העצבים כשאין חמצן?',
     options: ['1-2 דקות', '6-10 דקות', '20-30 דקות', 'כשעה'],
     answer: 1,
@@ -503,7 +529,7 @@ const Q_SINGLE = [
     solution: 'ללא חמצן, מערכת העצבים (המוח) ניזוקה נזק בלתי הפיך תוך 6-10 דקות.'
   },
   {
-    id: 'h4', type: 'mc',
+    id: 'h4', type: 'mc', topic: 'משולש החיים',
     text: 'מהו זמן ההגעה הממוצע של אמבולנס, לפי השיעור?',
     options: ['3 דקות', '9 דקות', '15 דקות', '30 דקות'],
     answer: 1,
@@ -511,7 +537,7 @@ const Q_SINGLE = [
     solution: 'זמן ההגעה הממוצע של אמבולנס הוא כ-9 דקות — יותר מזמן הנזק האפשרי למוח (6-10 דקות).'
   },
   {
-    id: 'h5', type: 'mc',
+    id: 'h5', type: 'mc', topic: 'מערכת הנשימה',
     text: 'מה גורם לחסימת נתיב האוויר אצל אדם שאיבד הכרה?',
     options: [
       'עלייה חדה בלחץ הדם',
@@ -524,7 +550,7 @@ const Q_SINGLE = [
     solution: 'העדר טונוס שרירים גורם לצניחת בסיס הלשון, שחוסמת את קנה הנשימה.'
   },
   {
-    id: 'h6', type: 'mc',
+    id: 'h6', type: 'mc', topic: 'מערכת הנשימה',
     text: 'מהו התפקיד המרכזי של מערכת הנשימה?',
     options: [
       'שליטה על תנועת השרירים',
@@ -537,7 +563,7 @@ const Q_SINGLE = [
     solution: 'תפקידה המרכזי של מערכת הנשימה הוא לאפשר חילוף גזים — קליטת חמצן (O2) וסילוק פחמן דו-חמצני (CO2).'
   },
   {
-    id: 'h7', type: 'input',
+    id: 'h7', type: 'input', topic: 'מערכת הלב וכלי הדם',
     text: 'היכן בודקים דופק בזמן החייאה — ב_____ ראשי?',
     note: 'כתוב מילה אחת',
     answer: ['עורק', 'בעורק'],
@@ -545,7 +571,7 @@ const Q_SINGLE = [
     solution: 'בודקים דופק בעורק ראשי (למשל בצוואר) — כאשר אין דופק, מערכת הלב וכלי הדם אינה עובדת.'
   },
   {
-    id: 'h8', type: 'mc',
+    id: 'h8', type: 'mc', topic: 'מערכת הלב וכלי הדם',
     text: 'מהו התפקיד העיקרי של מערכת הלב וכלי הדם?',
     options: [
       'לשלוט על קצב הנשימה',
@@ -561,7 +587,7 @@ const Q_SINGLE = [
 
 const Q_MULTI = [
   {
-    id: 'h9', type: 'mc',
+    id: 'h9', type: 'mc', topic: 'מערכת העצבים',
     text: 'לאילו שני חלקים מתחלקת מערכת העצבים?',
     options: [
       'מערכת עורקים ומערכת ורידים',
@@ -574,7 +600,7 @@ const Q_MULTI = [
     solution: 'מערכת העצבים מתחלקת למערכת העצבים המרכזית (Central Nervous System, CNS — מוח וחוט שדרה) ולמערכת העצבים ההיקפית (Peripheral Nervous System, PNS).'
   },
   {
-    id: 'h10', type: 'mc',
+    id: 'h10', type: 'mc', topic: 'מערכת העצבים',
     text: 'מדוע דווקא מערכת העצבים היא הרגישה ביותר מבין מערכות משולש החיים?',
     options: [
       'כי נזק לה מתרחש הכי מהר ללא חמצן — תוך 6-10 דקות בלבד',
@@ -587,7 +613,7 @@ const Q_MULTI = [
     solution: 'מערכת העצבים היא הרגישה ביותר לחוסר חמצן — נזק בלתי הפיך נגרם לה תוך 6-10 דקות בלבד, בעוד ששאר המערכות "שורדות" זמן ארוך יותר.'
   },
   {
-    id: 'h11', type: 'mc',
+    id: 'h11', type: 'mc', topic: 'משולש החיים',
     text: 'מה קורה כאשר אחת ממערכות משולש החיים נפגעת?',
     options: [
       'שאר המערכות דווקא מתחזקות',
@@ -600,7 +626,7 @@ const Q_MULTI = [
     solution: 'בעיה באחת ממערכות משולש החיים גורמת לקריסה של שאר המערכות אחריה, מכיוון שהן תלויות זו בזו.'
   },
   {
-    id: 'h12', type: 'mc',
+    id: 'h12', type: 'mc', topic: 'מערכת הלב וכלי הדם',
     text: 'אילו שלושה סימנים בודקים כדי להחליט האם להתחיל החייאה מיידית?',
     options: [
       'חום גוף, לחץ דם וגובה',
@@ -613,7 +639,7 @@ const Q_MULTI = [
     solution: 'בודקים הכרה, נשימה ודופק. כאשר אין הכרה, אין נשימה ואין דופק — זה הזמן להתחיל החייאה מיידית.'
   },
   {
-    id: 'h13', type: 'mc',
+    id: 'h13', type: 'mc', topic: 'משולש החיים',
     text: 'מדוע חשוב שהנוכחים בזירה יתחילו החייאה מיד, ולא ימתינו לצוות מקצועי?',
     options: [
       'כי משטרה חייבת להגיע ולאשר את הטיפול קודם',
@@ -626,7 +652,7 @@ const Q_MULTI = [
     solution: 'מכיוון שנזק בלתי הפיך למוח עלול להיגרם תוך 6-10 דקות, וזמן הגעת אמבולנס ממוצע הוא כ-9 דקות — אם הנוכחים בזירה לא יתחילו החייאה, גם מאמצי הצוות המקצועי עלולים להסתיים ללא הצלחה.'
   },
   {
-    id: 'h14', type: 'mc',
+    id: 'h14', type: 'mc', topic: 'מערכת הנשימה',
     text: 'מהם שני התהליכים המרכזיים שמתבצעים במערכת הנשימה?',
     options: [
       'קליטת חמצן (O2) וסילוק פחמן דו-חמצני (CO2)',
@@ -642,7 +668,7 @@ const Q_MULTI = [
 
 const Q_EXTRA = [
   {
-    id: 'h15', type: 'mc',
+    id: 'h15', type: 'mc', topic: 'מערכת הנשימה',
     text: 'איזה מהאיברים הבאים אינו חלק ממערכת הנשימה?',
     options: ['ריאות', 'קנה הנשימה', 'כבד', 'לוע'],
     answer: 2,
@@ -650,7 +676,7 @@ const Q_EXTRA = [
     solution: 'הכבד אינו חלק ממערכת הנשימה. מערכת הנשימה כוללת: אף, פה, לוע, קנה נשימה (טרכיאה), סימפונות (ברונכוסים), נאדיות וריאות.'
   },
   {
-    id: 'h16', type: 'mc',
+    id: 'h16', type: 'mc', topic: 'מערכת הלב וכלי הדם',
     text: 'מהם שלושת סוגי כלי הדם העיקריים במערכת הלב וכלי הדם?',
     options: [
       'עצבים, שרירים ועצמות',
@@ -663,7 +689,7 @@ const Q_EXTRA = [
     solution: 'שלושת סוגי כלי הדם העיקריים הם עורקים (מובילים דם מהלב), ורידים (מחזירים דם אל הלב) ונימים (מקשרים ביניהם, שם מתבצע חילוף החומרים).'
   },
   {
-    id: 'h17', type: 'mc',
+    id: 'h17', type: 'mc', topic: 'מערכת העצבים',
     text: 'מה תפקידה של מערכת העצבים ביחס לשתי המערכות האחרות במשולש החיים?',
     options: [
       'ייצור חמצן חדש עבור הגוף',
@@ -676,7 +702,7 @@ const Q_EXTRA = [
     solution: 'בין תפקידי מערכת העצבים: תיאום ופיקוח בין מערכת הנשימה למערכת הלב וכלי הדם.'
   },
   {
-    id: 'h18', type: 'mc',
+    id: 'h18', type: 'mc', topic: 'מערכת הנשימה',
     text: 'מהם שני הסימנים שמעידים שאדם מבוגר אינו נושם?',
     options: [
       'אין עליית בית חזה, וכן כחלון (גוון כחול) בשפתיים ובפנים',
@@ -689,7 +715,7 @@ const Q_EXTRA = [
     solution: 'סימנים לכך שמבוגר אינו נושם: אין עלייה נראית של בית החזה, וכן כחלון (גוון כחול) בשפתיים ובפנים.'
   },
   {
-    id: 'h19', type: 'mc',
+    id: 'h19', type: 'mc', topic: 'מערכת הלב וכלי הדם',
     text: 'מה יש לעשות במקרה של דום לב (חוסר בפעימות לב)?',
     options: [
       'להמתין בלי לבצע פעולה',
@@ -790,6 +816,51 @@ function updateScore() {
   const pct = done / ALL_Q.length * 100;
   document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
   document.getElementById('prog-bar').style.width = pct + '%';
+  updateGrade();
+}
+
+function gradedSet() {
+  const extraOpen = document.getElementById('more-section').classList.contains('visible');
+  return extraOpen ? [...ALL_Q, ...Q_EXTRA] : ALL_Q;
+}
+
+function updateGrade() {
+  const banner = document.getElementById('grade-banner');
+  const gset = gradedSet();
+  if (!gset.every(function(q){ return q.id in state.answered; })) {
+    banner.classList.remove('visible');
+    return;
+  }
+  let okCount = 0;
+  const wrongTopics = [];
+  gset.forEach(function(q) {
+    if (state.correct[q.id]) okCount++;
+    else if (wrongTopics.indexOf(q.topic) === -1) wrongTopics.push(q.topic);
+  });
+  const finalPct = Math.round(okCount / gset.length * 100);
+  const pass = finalPct >= 80;
+  const card = document.getElementById('grade-card');
+  card.className = 'grade-card ' + (pass ? 'pass' : 'fail');
+  document.getElementById('grade-pct').textContent = finalPct + '%';
+  document.getElementById('grade-msg').textContent = pass
+    ? 'עבר/ה! ציון תקין (80% ומעלה).'
+    : 'מתחת ל-80% — כדאי לחזור על הנושאים הבאים לפני המבחן:';
+  const studyBox = document.getElementById('grade-study');
+  const list = document.getElementById('grade-study-list');
+  list.innerHTML = '';
+  if (!pass && wrongTopics.length) {
+    studyBox.style.display = 'block';
+    wrongTopics.forEach(function(t) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      list.appendChild(li);
+    });
+  } else {
+    studyBox.style.display = 'none';
+  }
+  const wasVisible = banner.classList.contains('visible');
+  banner.classList.add('visible');
+  if (!wasVisible) banner.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function renderCard(q) {

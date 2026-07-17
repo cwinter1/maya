@@ -71,6 +71,20 @@
   }
   .score-strip strong { color: var(--accent); }
   .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .grade-banner { display: none; margin: 22px 0; }
+  .grade-banner.visible { display: block; }
+  .grade-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 24px; text-align: center; }
+  .grade-card.pass { border-color: var(--green); }
+  .grade-card.fail { border-color: var(--red); }
+  .grade-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .grade-pct { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 10vw, 4rem); letter-spacing: 3px; line-height: 1; }
+  .grade-card.pass .grade-pct { color: var(--green); }
+  .grade-card.fail .grade-pct { color: var(--red); }
+  .grade-msg { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .grade-study { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); text-align: right; }
+  .grade-study h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1px; margin-bottom: 10px; color: var(--text); }
+  .grade-study ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .grade-study li { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px; padding: 9px 14px; font-size: 0.85rem; }
   .formula-box {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -466,6 +480,18 @@
     <div id="q-extra"></div>
   </div>
 
+  <div class="grade-banner" id="grade-banner">
+    <div class="grade-card" id="grade-card">
+      <div class="grade-label">ציון סופי</div>
+      <div class="grade-pct" id="grade-pct">0%</div>
+      <div class="grade-msg" id="grade-msg"></div>
+      <div class="grade-study" id="grade-study" style="display:none">
+        <h3>כדאי לחזור על:</h3>
+        <ul id="grade-study-list"></ul>
+      </div>
+    </div>
+  </div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
@@ -474,6 +500,7 @@ const Q_SINGLE = [
   {
     "id": "m1",
     "type": "mc",
+    "topic": "תפקיד החובש וגבולות סמכות",
     "text": "מהו תפקידו העיקרי של החובש?",
     "options": [
       "לקבוע את מותו של מטופל",
@@ -488,6 +515,7 @@ const Q_SINGLE = [
   {
     "id": "m2",
     "type": "mc",
+    "topic": "תפקיד החובש וגבולות סמכות",
     "text": "איזו מהתכונות הבאות אינה חלק ממהותו המקצועית של החובש?",
     "options": [
       "התעלמות מעבודת צוות",
@@ -502,6 +530,7 @@ const Q_SINGLE = [
   {
     "id": "m3",
     "type": "mc",
+    "topic": "תפקיד החובש וגבולות סמכות",
     "text": "מה אסור לחובש לעשות בשום מקרה?",
     "options": [
       "למדוד דופק",
@@ -516,6 +545,7 @@ const Q_SINGLE = [
   {
     "id": "m4",
     "type": "mc",
+    "topic": "תפקיד החובש וגבולות סמכות",
     "text": "מה משמעות המונח \"חריגה מסמכות טיפולית\"?",
     "options": [
       "מתן מים לנפגע צמא",
@@ -530,6 +560,7 @@ const Q_SINGLE = [
   {
     "id": "m5",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהן שתי השפות שמהן מקורן רוב המילים בטרמינולוגיה הרפואית?",
     "options": [
       "אנגלית וצרפתית",
@@ -544,6 +575,7 @@ const Q_SINGLE = [
   {
     "id": "m6",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהו \"שורש המילה\" (Root Word) בטרמינולוגיה רפואית?",
     "options": [
       "מילה שמופיעה בסוף המילה בלבד",
@@ -558,6 +590,7 @@ const Q_SINGLE = [
   {
     "id": "m7",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "המונח \"היפותרמיה\" מורכב מ\"היפו\" (נמוך) ו\"תרם\" (חום). מה משמעות המונח?",
     "options": [
       "דופק מהיר",
@@ -572,6 +605,7 @@ const Q_SINGLE = [
   {
     "id": "m8",
     "type": "input",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהי משמעות הסיומת \"-itis\" (למשל ב-peritonitis)?",
     "note": "כתוב מילה אחת בעברית",
     "answer": [
@@ -586,6 +620,7 @@ const Q_MULTI = [
   {
     "id": "m9",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהי משמעות מילת הקידומת \"Bi-\"?",
     "options": [
       "אחרי",
@@ -600,6 +635,7 @@ const Q_MULTI = [
   {
     "id": "m10",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהי משמעות מילת השורש \"Cardio\"?",
     "options": [
       "לב",
@@ -614,6 +650,7 @@ const Q_MULTI = [
   {
     "id": "m11",
     "type": "mc",
+    "topic": "קיצורים רפואיים",
     "text": "מהו הקיצור הרפואי CVA ומה משמעותו?",
     "options": [
       "אי ספיקת לב",
@@ -628,6 +665,7 @@ const Q_MULTI = [
   {
     "id": "m12",
     "type": "mc",
+    "topic": "קיצורים רפואיים",
     "text": "מהו הקיצור הרפואי COPD?",
     "options": [
       "דלקת ריאות חריפה",
@@ -642,6 +680,7 @@ const Q_MULTI = [
   {
     "id": "m13",
     "type": "mc",
+    "topic": "מונחי מיקום ותנוחה",
     "text": "מהי \"תנוחת Trendelenburg\"?",
     "options": [
       "עמידה",
@@ -656,6 +695,7 @@ const Q_MULTI = [
   {
     "id": "m14",
     "type": "mc",
+    "topic": "מונחי מיקום ותנוחה",
     "text": "במונחי תנועה (Positional Terminology), מה משמעות \"Flexion\"?",
     "options": [
       "קירוב לגוף",
@@ -673,6 +713,7 @@ const Q_EXTRA = [
   {
     "id": "m15",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהי משמעות מילת השורש \"Nephro\"?",
     "options": [
       "עור",
@@ -687,6 +728,7 @@ const Q_EXTRA = [
   {
     "id": "m16",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מונח רפואי המשלב \"Appendo\" (תוספתן) עם הסיומת \"-ectomy\" מתאר:",
     "options": [
       "כריתת התוספתן",
@@ -701,6 +743,7 @@ const Q_EXTRA = [
   {
     "id": "m17",
     "type": "mc",
+    "topic": "טרמינולוגיה רפואית - שורשים וקידומות",
     "text": "מהי משמעות מילת הקידומת \"Hypo-\"?",
     "options": [
       "אחרי",
@@ -715,6 +758,7 @@ const Q_EXTRA = [
   {
     "id": "m18",
     "type": "mc",
+    "topic": "מונחי מיקום ותנוחה",
     "text": "מונח המיקום \"Distal\" מתאר איבר ש:",
     "options": [
       "קרוב לנקודת החיבור של הגפה לגוף",
@@ -729,6 +773,7 @@ const Q_EXTRA = [
   {
     "id": "m19",
     "type": "mc",
+    "topic": "קיצורים רפואיים",
     "text": "מהו הקיצור הרפואי IV ומה משמעותו?",
     "options": [
       "תוך-שרירי",
@@ -829,6 +874,51 @@ function updateScore() {
   const pct = done / ALL_Q.length * 100;
   document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
   document.getElementById('prog-bar').style.width = pct + '%';
+  updateGrade();
+}
+
+function gradedSet() {
+  const extraOpen = document.getElementById('more-section').classList.contains('visible');
+  return extraOpen ? [...ALL_Q, ...Q_EXTRA] : ALL_Q;
+}
+
+function updateGrade() {
+  const banner = document.getElementById('grade-banner');
+  const gset = gradedSet();
+  if (!gset.every(function(q){ return q.id in state.answered; })) {
+    banner.classList.remove('visible');
+    return;
+  }
+  let okCount = 0;
+  const wrongTopics = [];
+  gset.forEach(function(q) {
+    if (state.correct[q.id]) okCount++;
+    else if (wrongTopics.indexOf(q.topic) === -1) wrongTopics.push(q.topic);
+  });
+  const finalPct = Math.round(okCount / gset.length * 100);
+  const pass = finalPct >= 80;
+  const card = document.getElementById('grade-card');
+  card.className = 'grade-card ' + (pass ? 'pass' : 'fail');
+  document.getElementById('grade-pct').textContent = finalPct + '%';
+  document.getElementById('grade-msg').textContent = pass
+    ? 'עבר/ה! ציון תקין (80% ומעלה).'
+    : 'מתחת ל-80% — כדאי לחזור על הנושאים הבאים לפני המבחן:';
+  const studyBox = document.getElementById('grade-study');
+  const list = document.getElementById('grade-study-list');
+  list.innerHTML = '';
+  if (!pass && wrongTopics.length) {
+    studyBox.style.display = 'block';
+    wrongTopics.forEach(function(t) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      list.appendChild(li);
+    });
+  } else {
+    studyBox.style.display = 'none';
+  }
+  const wasVisible = banner.classList.contains('visible');
+  banner.classList.add('visible');
+  if (!wasVisible) banner.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function renderCard(q) {

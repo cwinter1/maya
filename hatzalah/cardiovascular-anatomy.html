@@ -71,6 +71,20 @@
   }
   .score-strip strong { color: var(--accent); }
   .content { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .grade-banner { display: none; margin: 22px 0; }
+  .grade-banner.visible { display: block; }
+  .grade-card { background: var(--elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 24px; text-align: center; }
+  .grade-card.pass { border-color: var(--green); }
+  .grade-card.fail { border-color: var(--red); }
+  .grade-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .grade-pct { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem, 10vw, 4rem); letter-spacing: 3px; line-height: 1; }
+  .grade-card.pass .grade-pct { color: var(--green); }
+  .grade-card.fail .grade-pct { color: var(--red); }
+  .grade-msg { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .grade-study { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); text-align: right; }
+  .grade-study h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1px; margin-bottom: 10px; color: var(--text); }
+  .grade-study ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .grade-study li { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px; padding: 9px 14px; font-size: 0.85rem; }
   .formula-box {
     background: var(--elevated);
     border: 1px solid var(--border);
@@ -466,6 +480,18 @@
     <div id="q-extra"></div>
   </div>
 
+  <div class="grade-banner" id="grade-banner">
+    <div class="grade-card" id="grade-card">
+      <div class="grade-label">ציון סופי</div>
+      <div class="grade-pct" id="grade-pct">0%</div>
+      <div class="grade-msg" id="grade-msg"></div>
+      <div class="grade-study" id="grade-study" style="display:none">
+        <h3>כדאי לחזור על:</h3>
+        <ul id="grade-study-list"></ul>
+      </div>
+    </div>
+  </div>
+
   <button class="reset-btn" onclick="resetAll()">אפס הכול</button>
 </div>
 
@@ -474,6 +500,7 @@ const Q_SINGLE = [
   {
     "id": "c1",
     "type": "mc",
+    "topic": "מבנה הלב",
     "text": "מכמה חדרים ועליות בנוי הלב?",
     "options": [
       "עלייה אחת וחדר אחד",
@@ -488,6 +515,7 @@ const Q_SINGLE = [
   {
     "id": "c2",
     "type": "mc",
+    "topic": "מבנה הלב",
     "text": "איזה צד של הלב עשיר בחמצן?",
     "options": [
       "הצד הימני",
@@ -502,6 +530,7 @@ const Q_SINGLE = [
   {
     "id": "c3",
     "type": "mc",
+    "topic": "מבנה הלב",
     "text": "מהו תפקיד מסתמי הלב?",
     "options": [
       "לאפשר זרימת דם בכיוון אחד בלבד",
@@ -516,6 +545,7 @@ const Q_SINGLE = [
   {
     "id": "c4",
     "type": "input",
+    "topic": "מבנה הלב",
     "text": "איך נקרא גם המסתם המיטרלי?",
     "note": "כתוב את השם המקוצר (שתי מילים)",
     "answer": [
@@ -530,6 +560,7 @@ const Q_SINGLE = [
   {
     "id": "c5",
     "type": "mc",
+    "topic": "מבנה הלב",
     "text": "מהם שלושת המרכיבים העיקריים של מערכת הלב וכלי הדם?",
     "options": [
       "לב, ריאות ומוח",
@@ -544,6 +575,7 @@ const Q_SINGLE = [
   {
     "id": "c6",
     "type": "mc",
+    "topic": "כלי דם",
     "text": "מהו התפקיד העיקרי של העורקים?",
     "options": [
       "לאחסן חמצן",
@@ -558,6 +590,7 @@ const Q_SINGLE = [
   {
     "id": "c7",
     "type": "mc",
+    "topic": "כלי דם",
     "text": "מהו התפקיד העיקרי של הוורידים?",
     "options": [
       "לווסת לחץ דם בלבד",
@@ -572,6 +605,7 @@ const Q_SINGLE = [
   {
     "id": "c8",
     "type": "mc",
+    "topic": "כלי דם",
     "text": "היכן מתרחש חילוף החומרים בין הדם לתאי הגוף?",
     "options": [
       "בוורידים הגדולים",
@@ -589,6 +623,7 @@ const Q_MULTI = [
   {
     "id": "c9",
     "type": "mc",
+    "topic": "כלי דם",
     "text": "מהו ההבדל העיקרי בין עורק לוריד מבחינת מבנה וזרימה?",
     "options": [
       "עורקים מובילים דם רק לריאות",
@@ -603,6 +638,7 @@ const Q_MULTI = [
   {
     "id": "c10",
     "type": "mc",
+    "topic": "מחזור הדם",
     "text": "מהו \"המחזור הקטן\" (Pulmonary Circulation)?",
     "options": [
       "מסלול הדם מהמוח ללב",
@@ -617,6 +653,7 @@ const Q_MULTI = [
   {
     "id": "c11",
     "type": "mc",
+    "topic": "מחזור הדם",
     "text": "מהו \"המחזור הגדול\" (Systemic Circulation)?",
     "options": [
       "מסלול הדם מהלב לריאות בלבד",
@@ -631,6 +668,7 @@ const Q_MULTI = [
   {
     "id": "c12",
     "type": "mc",
+    "topic": "מחזור הדם",
     "text": "מהו ההבדל בין סיסטולה לדיאסטולה?",
     "options": [
       "שתיהן מתארות הרפיה",
@@ -645,6 +683,7 @@ const Q_MULTI = [
   {
     "id": "c13",
     "type": "mc",
+    "topic": "מערכת ההולכה החשמלית",
     "text": "מהו תפקיד ה-SA Node (הקוצב הראשי)?",
     "options": [
       "לסנן רעלים מהדם",
@@ -659,6 +698,7 @@ const Q_MULTI = [
   {
     "id": "c14",
     "type": "mc",
+    "topic": "הרכב הדם",
     "text": "מהם שלושת מרכיבי הדם העיקריים (לפי אחוזים בגוף)?",
     "options": [
       "מים, מלח וסוכר בלבד",
@@ -676,6 +716,7 @@ const Q_EXTRA = [
   {
     "id": "c15",
     "type": "mc",
+    "topic": "הרכב הדם",
     "text": "מהו תפקידן העיקרי של הטסיות (תרומבוציטים)?",
     "options": [
       "מייצרות הורמונים",
@@ -690,6 +731,7 @@ const Q_EXTRA = [
   {
     "id": "c16",
     "type": "mc",
+    "topic": "הרכב הדם",
     "text": "מהו תפקידן העיקרי של כדוריות הדם הלבנות?",
     "options": [
       "נשיאת חמצן לתאים",
@@ -704,6 +746,7 @@ const Q_EXTRA = [
   {
     "id": "c17",
     "type": "mc",
+    "topic": "כלי דם",
     "text": "מדוע כלי הדם הקורונריים (הכליליים) חשובים במיוחד?",
     "options": [
       "הם חלק ממערכת העיכול",
@@ -718,6 +761,7 @@ const Q_EXTRA = [
   {
     "id": "c18",
     "type": "mc",
+    "topic": "מערכת ההולכה החשמלית",
     "text": "מה עלול לקרות אם הקוצב הראשי (SA Node) אינו מתפקד כראוי?",
     "options": [
       "הלב יעבוד ביעילות רבה יותר",
@@ -732,6 +776,7 @@ const Q_EXTRA = [
   {
     "id": "c19",
     "type": "mc",
+    "topic": "הרכב הדם",
     "text": "מהו תפקידה העיקרי של הפלסמה בדם?",
     "options": [
       "נוזל הנושא חלבונים, פקטורי קרישה ונוגדנים של מערכת החיסון",
@@ -832,6 +877,51 @@ function updateScore() {
   const pct = done / ALL_Q.length * 100;
   document.getElementById('prog-text').textContent = done + ' מתוך ' + ALL_Q.length;
   document.getElementById('prog-bar').style.width = pct + '%';
+  updateGrade();
+}
+
+function gradedSet() {
+  const extraOpen = document.getElementById('more-section').classList.contains('visible');
+  return extraOpen ? [...ALL_Q, ...Q_EXTRA] : ALL_Q;
+}
+
+function updateGrade() {
+  const banner = document.getElementById('grade-banner');
+  const gset = gradedSet();
+  if (!gset.every(function(q){ return q.id in state.answered; })) {
+    banner.classList.remove('visible');
+    return;
+  }
+  let okCount = 0;
+  const wrongTopics = [];
+  gset.forEach(function(q) {
+    if (state.correct[q.id]) okCount++;
+    else if (wrongTopics.indexOf(q.topic) === -1) wrongTopics.push(q.topic);
+  });
+  const finalPct = Math.round(okCount / gset.length * 100);
+  const pass = finalPct >= 80;
+  const card = document.getElementById('grade-card');
+  card.className = 'grade-card ' + (pass ? 'pass' : 'fail');
+  document.getElementById('grade-pct').textContent = finalPct + '%';
+  document.getElementById('grade-msg').textContent = pass
+    ? 'עבר/ה! ציון תקין (80% ומעלה).'
+    : 'מתחת ל-80% — כדאי לחזור על הנושאים הבאים לפני המבחן:';
+  const studyBox = document.getElementById('grade-study');
+  const list = document.getElementById('grade-study-list');
+  list.innerHTML = '';
+  if (!pass && wrongTopics.length) {
+    studyBox.style.display = 'block';
+    wrongTopics.forEach(function(t) {
+      const li = document.createElement('li');
+      li.textContent = t;
+      list.appendChild(li);
+    });
+  } else {
+    studyBox.style.display = 'none';
+  }
+  const wasVisible = banner.classList.contains('visible');
+  banner.classList.add('visible');
+  if (!wasVisible) banner.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function renderCard(q) {
